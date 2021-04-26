@@ -1,0 +1,20 @@
+[Unit]
+Description=Tomcat Prod
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+User=tomcat
+Group=tomcat
+
+Environment="CATALINA_PID=/home/tomcat/latest/tomcat-run.pid"
+Environment="JAVA_HOME=/usr/lib/jvm/java-14-openjdk-amd64/"
+Environment="CATALINA_HOME=/home/tomcat/latest/"
+Environment="CATALINA_OPTS=-Xmx750M -Dapi.config.location=/home/tomcat/config-prod.properties"
+
+ExecStart=/home/tomcat/latest/bin/startup.sh
+ExecStop=/home/tomcat/latest/bin/shutdown.sh
+
+[Install]
+WantedBy=multi-user.target

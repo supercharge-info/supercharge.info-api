@@ -1,0 +1,246 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>supercharge.info API</name>
+    <packaging>pom</packaging>
+
+    <groupId>info.supercharge.api</groupId>
+    <artifactId>supercharge.info-api</artifactId>
+    <version>4.8.0-SNAPSHOT</version>
+
+
+    <properties>
+        <spring-version>5.3.6</spring-version>
+        <supercharger-service-build-timestamp>${maven.build.timestamp}</supercharger-service-build-timestamp>
+
+        <!-- compile source/target -->
+        <maven.compiler.source>14</maven.compiler.source>
+        <maven.compiler.target>14</maven.compiler.target>
+
+        <!-- file encoding -->
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- access the timestamp with ${maven.build.timestamp}  -->
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss z</maven.build.timestamp.format>
+
+        <!-- Turn of javadoc entirely to save time. Source code will be available for most projects. -->
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+    </properties>
+
+    <scm>
+        <developerConnection>scm:git:git@git.redshiftsoft.com:apps/tesla-supercharger-service.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <modules>
+        <module>service-dao</module>
+        <module>service-war</module>
+        <module>web-scrape</module>
+        <module>integration-tests-remote</module>
+        <module>integration-tests-local</module>
+    </modules>
+
+    <dependencyManagement>
+
+        <dependencies>
+
+            <!-- ====================================================================================| redshiftsoft -->
+
+            <dependency>
+                <groupId>com.redshiftsoft.lib.common</groupId>
+                <artifactId>redshift-common</artifactId>
+                <version>1.26</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.redshiftsoft.lib.jee</groupId>
+                <artifactId>redshift-jee</artifactId>
+                <version>2.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.redshiftsoft.lib.db</groupId>
+                <artifactId>redshift-db-jdbc</artifactId>
+                <version>3.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.redshiftsoft.lib.mail</groupId>
+                <artifactId>redshift-mail</artifactId>
+                <version>1.3</version>
+            </dependency>
+
+            <!-- ====================================================================================| third party -->
+
+            <!-- JDBC DRIVER: Postgres -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.2.20</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>30.1.1-jre</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.12.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-dbcp2</artifactId>
+                <version>2.8.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>1.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>1.3.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>rome</groupId>
+                <artifactId>rome</artifactId>
+                <version>1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>1.6.2</version>
+            </dependency>
+
+            <!-- ====================================================================================| third party spring -->
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+
+
+            <!-- ====================================================================================| provided web API -->
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>4.0.1</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet.jsp</groupId>
+                <artifactId>javax.servlet.jsp-api</artifactId>
+                <version>2.3.3</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- ====================================================================================| test -->
+
+            <dependency>
+                <groupId>com.redshiftsoft.lib.test-http-client</groupId>
+                <artifactId>redshift-test-http-client</artifactId>
+                <version>1.6</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://github.com/mockito/mockito-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.9.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring-version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+
+        <pluginManagement>
+
+            <plugins>
+
+                <!-- Skip upload of jar/war artifacts to remote repository. -->
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+
+                <!-- Configure the test plugin to use *_UT and *_IT test files. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.0</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*_UT.java</include>
+                            <include>**/*_IT.java</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+
+    </build>
+
+
+</project>

@@ -1,0 +1,20 @@
+[Unit]
+Description=Tomcat Test
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+User=tomcat_test
+Group=tomcat_test
+
+Environment="CATALINA_PID=/home/tomcat_test/latest/tomcat-run.pid"
+Environment="JAVA_HOME=/usr/lib/jvm/java-14-openjdk-amd64/"
+Environment="CATALINA_HOME=/home/tomcat_test/latest/"
+Environment="CATALINA_OPTS=-Xmx250M -Dapi.config.location=/home/tomcat_test/config-test.properties"
+
+ExecStart=/home/tomcat_test/latest/bin/startup.sh
+ExecStop=/home/tomcat_test/latest/bin/shutdown.sh
+
+[Install]
+WantedBy=multi-user.target

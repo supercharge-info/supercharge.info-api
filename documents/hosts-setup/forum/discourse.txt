@@ -1,0 +1,11 @@
+# Reference
+
+* Web: https://payments.discourse.org
+
+* Git Hub: https://github.com/discourse/discourse
+
+* Install: https://github.com/discourse/discourse/blob/master/docs/INSTALL.md
+
+* Single Sign On: https://meta.discourse.org/t/official-single-sign-on-for-discourse-sso/13045
+
+* API Docs: https://docs.discourse.org/

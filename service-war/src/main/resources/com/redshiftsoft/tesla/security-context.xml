@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="accountSupplier" class="com.redshiftsoft.tesla.web.mvc.user.ThreadScopeSecurityFilterAccountFunction"/>
+
+    <bean id="loginPasswordHashLogic" class="kdw.common.secure.passwordhashing.PasswordHashLogic"/>
+
+    <!-- Require login for everything EXCEPT these URLs -->
+    <bean id="loginConstraint" class="kdw.common.jee.web.filter.security.constraints.LoginConstraintInverse">
+        <property name="urlPatterns">
+            <list>
+                <value>^/css/.*</value>
+                <value>^/scripts/.*</value>
+                <value>^/</value>
+
+                <!-- SiteController -->
+                <value>^/supercharge/allSites</value>
+                <value>^/supercharge/sites</value>
+
+                <value>^/supercharge/discuss</value>
+                <value>^/supercharge/site/stallCount</value>
+
+                <value>^/supercharge/allChanges</value>
+                <value>^/supercharge/changes</value>
+
+                <value>^/supercharge/databaseInfo</value>
+                <value>^/supercharge/country</value>
+                <value>^/supercharge/countryAll</value>
+                <value>^/supercharge/region</value>
+
+                <value>^/supercharge/login</value>
+                <value>^/supercharge/login/out</value>
+                <value>^/supercharge/login/check</value>
+
+                <value>^/supercharge/user/create.*</value>
+
+                <value>^/supercharge/changeProposal/submit</value>
+                <value>^/supercharge/changeProposal/list</value>
+
+                <value>^/supercharge/version.*</value>
+
+                <value>^/supercharge/feature/check.*</value>
+                <value>^/supercharge/feature/list.*</value>
+
+                <value>^/supercharge/userConfig.*</value>
+
+                <value>^/supercharge/password/reset.*</value>
+                <value>^/supercharge/password/login.*</value>
+
+                <value>^/supercharge/feed/.*</value>
+
+                <value>^/supercharge/discourse/sso</value>
+            </list>
+        </property>
+        <property name="logEnabled" value="false"/>
+        <property name="accountSupplier" ref="accountSupplier"/>
+    </bean>
+
+
+    <bean id="roleConstraintEditor" class="kdw.common.jee.web.filter.security.constraints.RoleConstraint">
+        <property name="urlPatterns">
+            <list>
+                <value>^/supercharge/siteadmin/.*</value>
+                <value>^/supercharge/validation.*</value>
+                <value>^/supercharge/changes/delete/.*</value>
+            </list>
+        </property>
+        <property name="requiredRole" value="editor"/>
+        <property name="logEnabled" value="false"/>
+        <property name="accountSupplier" ref="accountSupplier"/>
+    </bean>
+
+    <bean id="roleConstraintFeature" class="kdw.common.jee.web.filter.security.constraints.RoleConstraint">
+        <property name="urlPatterns">
+            <list>
+                <value>^/supercharge/feature/load.*</value>
+                <value>^/supercharge/feature/edit.*</value>
+            </list>
+        </property>
+        <property name="requiredRole" value="feature"/>
+        <property name="logEnabled" value="false"/>
+        <property name="accountSupplier" ref="accountSupplier"/>
+    </bean>
+
+    <bean id="roleConstraintAdmin" class="kdw.common.jee.web.filter.security.constraints.RoleConstraint">
+        <property name="urlPatterns">
+            <list>
+                <value>^/supercharge/system/.*</value>
+                <value>^/supercharge/siteadmin/delete.*</value>
+                <value>^/supercharge/changeProposal/clear.*</value>
+                <value>^/supercharge/setLastModifiedToNow.*</value>
+                <value>^/supercharge/feature/delete.*</value>
+            </list>
+        </property>
+        <property name="requiredRole" value="admin"/>
+        <property name="logEnabled" value="false"/>
+        <property name="accountSupplier" ref="accountSupplier"/>
+    </bean>
+
+
+    <bean id="securityFilter" class="kdw.common.jee.web.filter.security.SecurityFilter">
+        <property name="constraints">
+            <list>
+                <ref bean="loginConstraint"/>
+                <ref bean="roleConstraintEditor"/>
+                <ref bean="roleConstraintFeature"/>
+                <ref bean="roleConstraintAdmin"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

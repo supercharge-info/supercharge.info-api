@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       ">
+
+    <!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+    CONFIG:  Configuration properties are read from 'dev-config.properties' in the classpath unless overriding
+    values are provided at the file indicated by system property: api.config.location
+    = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =  -->
+
+    <!--suppress SpringXmlModelInspection -->
+    <context:property-placeholder ignore-resource-not-found="true"
+                                  location="
+            classpath:/com/redshiftsoft/tesla/build.properties,
+            classpath:/com/redshiftsoft/tesla/dev-config.properties,
+            file:${api.config.location:/non-existing-path.properties}
+            "/>
+
+    <!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+    DATASOURCE
+    = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =  -->
+
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close" lazy-init="true">
+
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="${db.url}"/>
+        <property name="defaultSchema" value="${db.schema}"/>
+        <property name="username" value="${db.user}"/>
+        <property name="password" value="${db.password}"/>
+
+        <property name="initialSize" value="2"/>
+        <property name="maxTotal" value="6"/>
+
+        <property name="defaultAutoCommit" value="false"/>
+    </bean>
+
+    <!--
+     SPRING transaction manager.
+    -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="nestedTransactionAllowed" value="true"/>
+        <property name="validateExistingTransaction" value="true"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="databaseProductName" value="PostgreSQL"/>
+    </bean>
+
+
+    <!-- Enable the configuration of transactional behavior based on annotations. -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+    <!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+    DAOs
+    = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =  -->
+
+    <context:component-scan base-package="com.redshiftsoft.tesla.dao"/>
+
+
+</beans>

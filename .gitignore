@@ -1,0 +1,10 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Build Files
+target/
+
+
+# Open office lock files
+*.ods#

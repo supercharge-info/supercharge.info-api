@@ -1,0 +1,135 @@
+#-------------------------------------------------------------------------------------
+# OS setup
+#-------------------------------------------------------------------------------------
+apt-get update
+apt-get upgrade
+
+# Update timezone
+dpkg-reconfigure tzdata
+
+# Set hostname
+echo "super01.supercharge.info" > /etc/hostname
+
+#-------------------------------------------------------------------------------------
+# java
+#-------------------------------------------------------------------------------------
+apt install sudo apt install openjdk-14-jre-headless
+
+
+#-------------------------------------------------------------------------------------
+# tomcat user
+#-------------------------------------------------------------------------------------
+
+# create users
+useradd --create-home --shell /bin/bash tomcat
+useradd --create-home --shell /bin/bash tomcat_test
+
+# set passwords
+passwd tomcat
+passwd tomcat_test
+
+# For deploying web apps
+usermod -a -G www-data tomcat
+usermod -a -G www-data tomcat_test
+
+
+#-------------------------------------------------------------------------------------
+# tomcat
+#-------------------------------------------------------------------------------------
+wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.45/bin/apache-tomcat-9.0.45.tar.gz
+tar -xvf apache-tomcat-9.0.45.tar.gz
+ln -fs -T apache-tomcat-9.0.45 latest
+
+rm -rf latest/webapps/examples/
+rm -rf latest/webapps/docs/
+rm -rf latest/webapps/ROOT/
+rm -rf latest/webapps/host-manager/
+rm -rf latest/webapps/manager/
+
+
+#-------------------------------------------------------------------------------------
+# tomcat and systemd
+#-------------------------------------------------------------------------------------
+
+copy tomcat-prod.service /etc/systemd/system
+copy tomcat-test.service /etc/systemd/system
+
+chmod go-w /etc/systemd/system/tomcat-prod.service
+chmod go-w /etc/systemd/system/tomcat-test.service
+
+systemctl enable tomcat-prod.service
+systemctl enable tomcat-test.service
+
+
+#-------------------------------------------------------------------------------------
+# sshd config
+#-------------------------------------------------------------------------------------
+
+/etc/ssh/sshd_config
+PermitRootLogin no
+AllowUsers tomcat tomcat_test
+
+systemctl restart ssh
+
+
+#-------------------------------------------------------------------------------------
+# Postgres
+#-------------------------------------------------------------------------------------
+apt-get install postgresql postgresql-client
+
+sudo -u postgres psql postgres
+
+\password postgres
+
+
+#-------------------------------------------------------------------------------------
+# Postgres - backup cron
+#-------------------------------------------------------------------------------------
+
+mkdir /home/tomcat/database-backup
+mkdir /home/tomcat_test/database-backup
+
+chown tomcat:tomcat /home/tomcat/database-backup
+chown tomcat_test:tomcat_test /home/tomcat_test/database-backup
+
+# daily database backup
+35 23 * * * pg_dump postgres --schema=supercharge | gzip > /home/tomcat/database-backup/supercharge-prod-$(date --iso).sql.gz
+36 23 * * * pg_dump test     --schema=supercharge | gzip > /home/tomcat_test/database-backup/supercharge-test-$(date --iso).sql.gz
+37 23 * * * find /home/tomcat/database-backup/      -mtime +60 -delete
+38 23 * * * find /home/tomcat_test/database-backup/ -mtime +30 -delete
+
+
+
+#-------------------------------------------------------------------------------------
+# Apache
+#-------------------------------------------------------------------------------------
+apt-get install apache2
+a2enmod proxy
+a2enmod proxy_http
+a2enmod rewrite
+a2enmod ssl
+a2enmod expires
+
+mkdir /var/www/supercharge.info
+chown www-data:www-data /var/www
+chown tomcat:www-data /var/www/supercharge.info
+chmod -R ug+rwx /var/www/
+
+# copy host config to /etc/apache2/sites-available
+
+systemctl restart apache2
+
+#-------------------------------------------------------------------------------------
+# Apache SSL
+#-------------------------------------------------------------------------------------
+
+apt-get install cerbot
+
+# certificate renewal
+30 13 * * * certbot -n --apache --domain supercharge.info
+
+
+
+
+
+

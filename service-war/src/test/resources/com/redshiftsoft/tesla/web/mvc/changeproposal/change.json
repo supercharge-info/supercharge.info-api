@@ -1,0 +1,23 @@
+{
+  "id" : 100,
+  "locationId" : "buckeyesupercharger",
+  "name" : "Buckeye, AZ",
+  "status" : "PERMIT",
+  "address" : {
+    "street" : "416 S Watson RD",
+    "city" : "Buckeye",
+    "state" : "AZ",
+    "zip" : "85326",
+    "country" : "USA"
+  },
+  "gps" : {
+    "latitude" : 33.443011,
+    "longitude" : -112.556876
+  },
+  "dateOpened" : "2014-12-25",
+  "stallCount" : 12,
+  "hours" : "M-F 9:00 - 17:00",
+  "elevationMeters" : 1200,
+  "urlDiscuss" : "http://www.teslamotorsclub.com/showthread.php/25317-Supercharger-Buckeye-AZ",
+  "changeDescription" : "This is a change of everything."
+}

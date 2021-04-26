@@ -1,0 +1,34 @@
+package com.redshiftsoft.tesla.web.mvc.site;
+
+import com.redshiftsoft.tesla.dao.site.Site;
+import kdw.common.string.StringTools;
+
+import java.util.function.Function;
+
+public class SiteDTOFunction implements Function<Site, SiteDTO> {
+
+    @Override
+    public SiteDTO apply(Site site) {
+        SiteDTO siteDTO = new SiteDTO();
+
+        siteDTO.setId(site.getId());
+        siteDTO.setLocationId(site.getLocationId());
+        siteDTO.setName(site.getName());
+        siteDTO.setStatus(site.getStatus());
+        siteDTO.setAddress(AddressDTOFunctions.transform(site.getAddress()));
+        siteDTO.setGps(site.getGps());
+        siteDTO.setUrlDiscuss(StringTools.isNotEmpty(site.getUrlDiscuss()));
+        siteDTO.setDateOpened(site.getDateOpened());
+        siteDTO.setStallCount(site.getStallCount());
+        siteDTO.setHours(site.getHours());
+        siteDTO.setCounted(site.isCounted());
+        siteDTO.setEnabled(site.isEnabled());
+        siteDTO.setElevationMeters(site.getElevationMeters());
+        siteDTO.setPowerKilowatt(site.getPowerKilowatt());
+        siteDTO.setSolarCanopy(site.isSolarCanopy());
+        siteDTO.setBattery(site.isBattery());
+
+        return siteDTO;
+    }
+
+}

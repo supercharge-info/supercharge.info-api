@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla.dao.user;
 
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUsers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class RoleDao_UT {
 
     @Resource

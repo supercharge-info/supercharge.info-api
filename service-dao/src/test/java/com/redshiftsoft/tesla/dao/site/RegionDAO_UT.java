@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla.dao.site;
 
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class RegionDAO_UT {
 
     @Resource

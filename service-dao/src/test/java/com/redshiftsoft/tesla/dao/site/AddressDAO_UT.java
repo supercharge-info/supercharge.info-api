@@ -1,6 +1,7 @@
 package com.redshiftsoft.tesla.dao.site;
 
 
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestSiteCreator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +17,7 @@ import static org.junit.Assert.*;
 @Transactional
 @Rollback(value = true)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class AddressDAO_UT {
 
     @Resource

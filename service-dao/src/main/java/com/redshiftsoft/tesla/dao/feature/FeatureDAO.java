@@ -48,14 +48,6 @@ public class FeatureDAO extends BaseDAO {
     }
 
     /**
-     * Get feature by Id.
-     */
-    public Feature getMaxNumber(int featureId) {
-        String SELECT_SQL = "SELECT * FROM feature WHERE feature_id=?";
-        return getJdbcTemplate().queryForObject(SELECT_SQL, FEATURE_ROW_MAPPER, featureId);
-    }
-
-    /**
      * List all
      */
     public List<Feature> list() {

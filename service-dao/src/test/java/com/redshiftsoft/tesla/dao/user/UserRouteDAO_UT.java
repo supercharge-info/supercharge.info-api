@@ -1,6 +1,7 @@
 package com.redshiftsoft.tesla.dao.user;
 
 import com.google.common.collect.Lists;
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUserRouteWaypoints;
 import com.redshiftsoft.tesla.dao.TestUsers;
 import kdw.common.math.RandomUtils;
@@ -18,7 +19,7 @@ import static org.junit.Assert.*;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class UserRouteDAO_UT {
 
     @Resource

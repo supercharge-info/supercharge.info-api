@@ -5,6 +5,7 @@ import com.redshiftsoft.tesla.dao.changelog.ChangeLogDAO;
 import com.redshiftsoft.tesla.dao.dbinfo.DBInfoDAO;
 import com.redshiftsoft.tesla.web.mvc.CachingHandler;
 import com.redshiftsoft.tesla.web.mvc.PageDTO;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -80,6 +81,7 @@ public class ChangeLogController {
         return new PageDTO<>(draw, length, filteredList.size(), allList.size(), pageList);
     }
 
+    @PreAuthorize("hasAnyRole('editor')")
     @Transactional
     @RequestMapping(method = RequestMethod.GET, value = "/changes/delete/{changeId}")
     @ResponseBody

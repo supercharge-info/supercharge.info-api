@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla.dao.user;
 
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUsers;
 import kdw.common.math.RandomUtils;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class UserDAO_Exists_UT {
 
     private static final RandomUtils randomUtils = RandomUtils.fast();

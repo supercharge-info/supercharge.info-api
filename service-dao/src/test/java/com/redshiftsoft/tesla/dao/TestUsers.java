@@ -2,6 +2,7 @@ package com.redshiftsoft.tesla.dao;
 
 import com.redshiftsoft.tesla.dao.user.User;
 import kdw.common.math.RandomUtils;
+import kdw.common.secure.passwordhashing.PasswordHashLogic;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -12,6 +13,7 @@ public class TestUsers {
 
     private static final RandomUtils randomUtils = RandomUtils.fast();
     private static final List<String> POSSIBLE_ROLES = Arrays.asList("admin", "editor", "feature");
+    private static final PasswordHashLogic passwordHashLogic = new PasswordHashLogic();
 
     public static User createUser() {
         User userIn = new User();
@@ -37,8 +39,13 @@ public class TestUsers {
         List<String> roles = randomUtils.getElements(POSSIBLE_ROLES, roleCount);
         userIn.setRoles(roles);
 
-        userIn.setPasswordHash(randomUtils.getString(64, 'a', 'z'));
-        userIn.setPasswordSalt(randomUtils.getString(64, 'a', 'z'));
+        //
+        // Password = password
+        //
+        String salt = passwordHashLogic.generateNewSalt();
+        userIn.setPasswordSalt(salt);
+        userIn.setPasswordHash(passwordHashLogic.hash("password", salt));
+
         userIn.setCreationDate(LocalDateTime.now().toInstant(ZoneOffset.UTC));
 
         if (randomUtils.getBoolean()) {

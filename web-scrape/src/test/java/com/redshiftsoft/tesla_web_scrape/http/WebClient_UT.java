@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla_web_scrape.http;
 
+import com.redshiftsoft.tesla_web_scrape.TeslaWebClientConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -12,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/com/redshiftsoft/tesla_web_scrape/web-scrape-context.xml"})
+@ContextConfiguration(classes = TeslaWebClientConfiguration.class)
 public class WebClient_UT {
 
     @Resource

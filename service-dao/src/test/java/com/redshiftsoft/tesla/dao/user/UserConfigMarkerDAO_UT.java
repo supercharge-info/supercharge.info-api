@@ -1,6 +1,7 @@
 package com.redshiftsoft.tesla.dao.user;
 
 import com.google.common.collect.Lists;
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUserConfigs;
 import com.redshiftsoft.tesla.dao.TestUsers;
 import org.junit.Test;
@@ -16,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class UserConfigMarkerDAO_UT {
 
     @Resource

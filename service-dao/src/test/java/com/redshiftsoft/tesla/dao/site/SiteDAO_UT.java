@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla.dao.site;
 
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestSiteCreator;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
 import kdw.common.math.RandomUtils;
@@ -20,7 +21,7 @@ import static org.junit.Assert.*;
 @Transactional
 @Rollback(value = true)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class SiteDAO_UT {
 
     @Resource

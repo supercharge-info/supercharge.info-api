@@ -4,7 +4,7 @@ import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserRoute;
 import com.redshiftsoft.tesla.dao.user.UserRouteDAO;
 import com.redshiftsoft.tesla.dao.user.UserRouteWaypoint;
-import com.redshiftsoft.tesla.web.ThreadScope;
+import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
 import org.junit.After;
 import org.junit.Before;
@@ -34,12 +34,12 @@ public class UserRouteController_UT {
 
         threadUser.setUsername("testUser");
         threadUser.setId(123);
-        ThreadScope.setUser(threadUser);
+        Security.setAuth(threadUser);
     }
 
     @After
     public void afterTest() {
-        ThreadScope.clearUser();
+        Security.clearAuth();
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla.dao.feature;
 
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import kdw.common.math.RandomUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +20,7 @@ import static org.junit.Assert.*;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class FeatureDAO_UT {
 
     private static final RandomUtils randomUtils = RandomUtils.fast();

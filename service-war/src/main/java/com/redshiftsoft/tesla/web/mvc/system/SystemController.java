@@ -1,6 +1,7 @@
 package com.redshiftsoft.tesla.web.mvc.system;
 
 import com.google.common.collect.Maps;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +14,7 @@ import java.util.Properties;
 @RequestMapping("/system")
 public class SystemController {
 
+    @PreAuthorize("hasRole('admin')")
     @RequestMapping(value = "/properties", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, String> systemProperties() {

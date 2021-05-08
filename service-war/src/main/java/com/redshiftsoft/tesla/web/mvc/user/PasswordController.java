@@ -4,15 +4,16 @@ import com.redshiftsoft.tesla.dao.login.LoginDAO;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.tesla.dao.user.UserResetPwdDAO;
-import com.redshiftsoft.tesla.web.ThreadScope;
+import com.redshiftsoft.tesla.web.filter.CookieHelper;
+import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
 import com.redshiftsoft.tesla.web.mvc.RedirectURLBuilder;
 import com.redshiftsoft.tesla.web.mvc.user.email.PasswordResetEmailSender;
 import com.redshiftsoft.tesla.web.mvc.user.validation.PasswordValidation;
 import com.redshiftsoft.tesla.web.mvc.userlogin.LoginAttemptFactory;
 import com.redshiftsoft.tesla.web.mvc.userlogin.LoginCookie;
-import kdw.common.jee.web.servletapi.CookieHelper;
 import kdw.common.secure.passwordhashing.PasswordHashLogic;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,12 +49,13 @@ public class PasswordController {
     private PasswordResetEmailSender emailSender;
 
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     @RequestMapping("/change")
     @ResponseBody
     public JsonResponse change(@RequestParam(value = "password", required = false) String password,
                                HttpServletResponse response) {
-        User user = ThreadScope.getUser();
+        User user = Security.user();
         List<String> errors = passwordValidation.validate(password, user.getUsername());
         if (!errors.isEmpty()) {
             return JsonResponse.fail(errors).withStatus(response, SC_BAD_REQUEST);

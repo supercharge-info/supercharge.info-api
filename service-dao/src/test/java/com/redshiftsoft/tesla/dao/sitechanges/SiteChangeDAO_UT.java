@@ -1,6 +1,7 @@
 package com.redshiftsoft.tesla.dao.sitechanges;
 
 import com.google.common.collect.Lists;
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
 import com.redshiftsoft.tesla.dao.TestUsers;
 import com.redshiftsoft.tesla.dao.site.Site;
@@ -26,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 @Transactional
 @Rollback(value = true)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class SiteChangeDAO_UT {
 
     @Resource

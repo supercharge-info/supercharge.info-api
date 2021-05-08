@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla.dao.user;
 
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUsers;
 import kdw.common.math.RandomUtils;
 import org.junit.Test;
@@ -16,7 +17,7 @@ import static org.junit.Assert.*;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class UserResetPwdDAO_UT {
 
     @Resource

@@ -10,15 +10,15 @@ import com.redshiftsoft.tesla.dao.site.SiteDAO;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import com.redshiftsoft.tesla.dao.sitechanges.SiteChangeDAO;
 import com.redshiftsoft.tesla.dao.user.User;
-import com.redshiftsoft.tesla.web.ThreadScope;
+import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.List;
 import java.util.logging.Level;
@@ -57,6 +57,7 @@ public class SiteEditController {
     //
     // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+    @PreAuthorize("hasAnyRole('editor')")
     @RequestMapping(method = RequestMethod.GET, value = "/load")
     @ResponseBody
     public SiteEditDTO load(@RequestParam("siteId") Integer siteId) {
@@ -71,6 +72,7 @@ public class SiteEditController {
     //
     // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+    @PreAuthorize("hasAuthority('editor')")
     @RequestMapping(method = RequestMethod.GET, value = "/loadAll")
     @ResponseBody
     public List<SiteEditDTO> loadAll() {
@@ -87,12 +89,13 @@ public class SiteEditController {
     //
     // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+    @PreAuthorize("hasAnyRole('editor')")
     @Transactional
     @RequestMapping(method = RequestMethod.POST, value = "/edit")
     @ResponseBody
-    public JsonResponse saveOrEdit(HttpServletRequest request, @RequestBody SiteEditDTO newOrModifiedSite) {
+    public JsonResponse saveOrEdit(@RequestBody SiteEditDTO newOrModifiedSite) {
         try {
-            User user = ThreadScope.getUser();
+            User user = Security.user();
             return doSaveNewOrEdit(user, newOrModifiedSite);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -156,6 +159,7 @@ public class SiteEditController {
     //
     // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+    @PreAuthorize("hasRole('admin')")
     @RequestMapping(method = RequestMethod.GET, value = "/delete")
     @ResponseBody
     @Transactional
@@ -171,6 +175,7 @@ public class SiteEditController {
     //
     // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+    @PreAuthorize("hasAnyRole('editor')")
     @RequestMapping(method = RequestMethod.GET, value = "/changeDetail")
     @ResponseBody
     @Transactional

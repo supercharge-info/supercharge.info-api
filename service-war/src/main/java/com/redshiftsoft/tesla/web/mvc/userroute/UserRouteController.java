@@ -3,8 +3,9 @@ package com.redshiftsoft.tesla.web.mvc.userroute;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserRoute;
 import com.redshiftsoft.tesla.dao.user.UserRouteDAO;
-import com.redshiftsoft.tesla.web.ThreadScope;
+import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -30,20 +31,22 @@ public class UserRouteController {
         this.userRouteDao = userRouteDao;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
     public List<UserRouteDTO> get() {
-        User threadUser = ThreadScope.getUser();
+        User threadUser = Security.user();
         List<UserRoute> userRouteList = userRouteDao.getByUserId(threadUser.getId());
         return DTO_FUNCTION.apply(userRouteList);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
     public RouteSaveJsonResponse save(@RequestBody UserRouteDTO userRouteDto) {
-        User threadUser = ThreadScope.getUser();
+        User threadUser = Security.user();
         Integer userId = threadUser.getId();
         UserRoute userRoute = FROM_DTO_FUNCTION.apply(userRouteDto);
         LOG.info("userId=" + userId + "; " + userRouteDto);
@@ -59,11 +62,12 @@ public class UserRouteController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     @RequestMapping(method = RequestMethod.GET, value = "/delete/{routeId}")
     @ResponseBody
     public JsonResponse delete(@PathVariable Integer routeId) {
-        User threadUser = ThreadScope.getUser();
+        User threadUser = Security.user();
         Integer userId = threadUser.getId();
         LOG.info("userId=" + userId + "; routeId=" + routeId);
         if (userRouteDao.getByIdAndUserId(userId, routeId) != null) {
@@ -74,10 +78,11 @@ public class UserRouteController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     @RequestMapping(method = RequestMethod.GET, value = "/count")
     @ResponseBody
     public UserRouteCountDTO count() {
-        return new UserRouteCountDTO(userRouteDao.count(ThreadScope.getUser().getId()));
+        return new UserRouteCountDTO(userRouteDao.count(Security.user().getId()));
     }
 }

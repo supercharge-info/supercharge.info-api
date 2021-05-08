@@ -20,11 +20,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.redshiftsoft.lib.jee</groupId>
-            <artifactId>redshift-jee</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.redshiftsoft.lib.db</groupId>
             <artifactId>redshift-db-jdbc</artifactId>
         </dependency>
@@ -71,6 +66,23 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Jar Tests Package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
     </build>
 
 </project>

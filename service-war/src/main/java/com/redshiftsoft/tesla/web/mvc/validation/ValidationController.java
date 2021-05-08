@@ -4,6 +4,7 @@ import com.redshiftsoft.tesla.dao.validation.ValidationDAO;
 import com.redshiftsoft.tesla.dao.validation.ValidationResult;
 import com.redshiftsoft.tesla_web_scrape.WebCompare;
 import com.redshiftsoft.tesla_web_scrape.http.WebClient;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +30,7 @@ public class ValidationController {
     /**
      * Results of DB validations.
      */
+    @PreAuthorize("hasAnyRole('editor')")
     @RequestMapping(method = RequestMethod.GET, value = "/database")
     @ResponseBody
     public List<ValidationResult> doDatabaseValidations() {
@@ -36,12 +38,14 @@ public class ValidationController {
     }
 
 
+    @PreAuthorize("hasAnyRole('editor')")
     @RequestMapping(method = RequestMethod.GET, value = "/webscrape")
     @ResponseBody
     public String getWebScapeValidationReport() throws IOException {
         return webCompare.execute();
     }
 
+    @PreAuthorize("hasAnyRole('editor')")
     @RequestMapping(method = RequestMethod.GET, value = "/tesla-source")
     @ResponseBody
     public RawJson viewTeslaJson() {

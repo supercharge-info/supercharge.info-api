@@ -2,6 +2,7 @@ package com.redshiftsoft.tesla.web.mvc.dbinfo;
 
 import com.redshiftsoft.tesla.dao.dbinfo.DBInfo;
 import com.redshiftsoft.tesla.dao.dbinfo.DBInfoDAO;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +23,7 @@ public class DBInfoController {
         return new DBInfo(lastModified);
     }
 
+    @PreAuthorize("hasRole('admin')")
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/setLastModifiedToNow")
     public String setLastModifiedToNow() {

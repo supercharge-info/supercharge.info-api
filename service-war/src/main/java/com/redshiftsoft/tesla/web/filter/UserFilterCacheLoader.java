@@ -6,7 +6,7 @@ import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.tesla.web.mvc.userlogin.LoginCookie;
 
-class UserFilterCacheLoader extends CacheLoader<String, User> {
+public class UserFilterCacheLoader extends CacheLoader<String, User> {
 
     private final UserDAO userDAO;
 

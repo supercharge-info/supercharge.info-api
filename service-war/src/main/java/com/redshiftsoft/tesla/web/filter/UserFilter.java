@@ -3,9 +3,7 @@ package com.redshiftsoft.tesla.web.filter;
 
 import com.google.common.cache.LoadingCache;
 import com.redshiftsoft.tesla.dao.user.User;
-import com.redshiftsoft.tesla.web.ThreadScope;
 import com.redshiftsoft.tesla.web.mvc.userlogin.LoginCookie;
-import kdw.common.jee.web.servletapi.CookieHelper;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -37,15 +35,17 @@ public class UserFilter implements Filter {
                 try {
                     String cookieValue = cookie.getValue();
                     User user = cache.get(cookieValue);
-                    ThreadScope.setUser(user);
+                    Security.setAuth(user);
                 } catch (Throwable e) {
                     LOG.warning("cache loader threw exception: " + e.getMessage());
                     CookieHelper.removeCookie((HttpServletResponse) res, LoginCookie.NAME);
                 }
+            } else {
+                Security.setAnonymousAuth();
             }
             filterChain.doFilter(req, res);
         } finally {
-            ThreadScope.clearUser();
+            Security.clearAuth();
         }
 
     }

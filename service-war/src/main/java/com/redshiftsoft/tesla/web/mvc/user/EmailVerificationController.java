@@ -4,11 +4,12 @@ import com.google.common.cache.LoadingCache;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.tesla.dao.user.UserResetPwdDAO;
-import com.redshiftsoft.tesla.web.ThreadScope;
+import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
 import com.redshiftsoft.tesla.web.mvc.RedirectURLBuilder;
 import com.redshiftsoft.tesla.web.mvc.user.email.UserEditEmailSender;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,11 +39,12 @@ public class EmailVerificationController {
         this.userCache = userCache;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     @RequestMapping(value = "/verify", method = {RequestMethod.GET})
     public String verifyEmail(HttpServletRequest request,
                               @RequestParam(value = "key") String key) {
-        User user = ThreadScope.getUser();
+        User user = Security.user();
         Optional<Integer> userIdOption = userResetPwdDAO.validateKey(key);
         if (userIdOption.isPresent()) {
             userDAO.updateEmailVerified(user.getId(), true);
@@ -57,7 +59,7 @@ public class EmailVerificationController {
     @RequestMapping(value = "/send", method = {RequestMethod.GET})
     @ResponseBody
     public JsonResponse verifyEmailSend() {
-        userEditEmailSender.send(ThreadScope.getUser());
+        userEditEmailSender.send(Security.user());
         return JsonResponse.success();
     }
 }

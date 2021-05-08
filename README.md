@@ -32,27 +32,3 @@ API for https://supercharge.info
 
 1. Local/development configuration is read from `classpath:/com/redshiftsoft/tesla/dev-config.properties`.
 2. In test/prod the system property `api.config.location` specifies configuration file.
-
----
-
-## Project Structure
-
-- **integration-tests-local** -- start tomcat locally and runs integration tests
-- **integration-tests-remote** -- hits server in prod and makes some assertions
-- **service-dao**-- the DAOs
-- **service-war** -- the war
-- **web-scrape** -- implements web scrape of Tesla's website.
-
-## API User Roles
-
-* editor -- can edit supercharge sites
-* admin -- can view system properties, memory usage, delete sites etc.
-* feature -- can edit the site features page
-
-## Tests Users
-
-* no_roles password=password
-* editor_only password=password
-* feature_only password=password
-* admin_only password=password
-* admin_editor password=password

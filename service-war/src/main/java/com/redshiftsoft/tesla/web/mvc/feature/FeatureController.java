@@ -4,6 +4,7 @@ import com.redshiftsoft.tesla.dao.feature.Feature;
 import com.redshiftsoft.tesla.dao.feature.FeatureDAO;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
 import kdw.common.math.NumberUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -27,8 +28,9 @@ public class FeatureController {
 
     // load a single site into the edit form
     @Transactional
-    @RequestMapping(method = RequestMethod.GET, value = "/load/{featureId}")
     @ResponseBody
+    @PreAuthorize("hasAnyRole('feature')")
+    @RequestMapping(method = RequestMethod.GET, value = "/load/{featureId}")
     public FeatureDTO load(@PathVariable Integer featureId) {
         Feature feature = featureDAO.getById(featureId);
         return FeatureFunctions.TO_DTO.apply(feature);
@@ -36,6 +38,7 @@ public class FeatureController {
 
     @Transactional
     @ResponseBody
+    @PreAuthorize("hasAnyRole('feature')")
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public JsonResponse edit(@RequestBody FeatureDTO featureDTO) {
         try {
@@ -67,16 +70,17 @@ public class FeatureController {
     }
 
     @Transactional
-    @RequestMapping(method = RequestMethod.GET, value = "/delete/{featureId}")
     @ResponseBody
+    @PreAuthorize("hasAnyRole('admin')")
+    @RequestMapping(method = RequestMethod.GET, value = "/delete/{featureId}")
     public JsonResponse deleteChange(@PathVariable Integer featureId) {
         featureDAO.delete(featureId);
         return JsonResponse.success();
     }
 
     @Transactional
-    @RequestMapping(method = RequestMethod.GET, value = "/check")
     @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/check")
     public JsonResponse checkForNewFeatures(HttpServletResponse response,
                                             @CookieValue(name = FeatureCookie.COOKIE_NAME, required = false) String lastSeenFeatureId) {
         Integer lastSeenFeatureIdInt = NumberUtils.parse(lastSeenFeatureId, Integer.class);

@@ -11,7 +11,8 @@
 
 
     <properties>
-        <spring-version>5.3.6</spring-version>
+        <spring-version>5.3.7</spring-version>
+        <spring-security-version>5.4.6</spring-security-version>
         <supercharger-service-build-timestamp>${maven.build.timestamp}</supercharger-service-build-timestamp>
 
         <!-- compile source/target -->
@@ -38,8 +39,6 @@
         <module>service-dao</module>
         <module>service-war</module>
         <module>web-scrape</module>
-        <module>integration-tests-remote</module>
-        <module>integration-tests-local</module>
     </modules>
 
     <dependencyManagement>
@@ -52,12 +51,6 @@
                 <groupId>com.redshiftsoft.lib.common</groupId>
                 <artifactId>redshift-common</artifactId>
                 <version>1.26</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.redshiftsoft.lib.jee</groupId>
-                <artifactId>redshift-jee</artifactId>
-                <version>2.2</version>
             </dependency>
 
             <dependency>
@@ -152,6 +145,16 @@
                 <artifactId>spring-webmvc</artifactId>
                 <version>${spring-version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>${spring-security-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>${spring-security-version}</version>
+            </dependency>
 
 
             <!-- ====================================================================================| provided web API -->
@@ -170,14 +173,6 @@
                 <scope>provided</scope>
             </dependency>
 
-            <!-- ====================================================================================| test -->
-
-            <dependency>
-                <groupId>com.redshiftsoft.lib.test-http-client</groupId>
-                <artifactId>redshift-test-http-client</artifactId>
-                <version>1.6</version>
-                <scope>test</scope>
-            </dependency>
 
         </dependencies>
 
@@ -185,10 +180,18 @@
 
     <dependencies>
 
+
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.1.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -235,6 +238,21 @@
                             <include>**/*_IT.java</include>
                         </includes>
                     </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.3.1</version>
+                    <configuration>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.0</version>
                 </plugin>
 
             </plugins>

@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla.dao.sitestallcount;
 
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.Rollback;
@@ -15,7 +16,7 @@ import static org.junit.Assert.*;
 @Transactional
 @Rollback(value = true)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class SiteStallCountDAO_UT {
 
     @Resource

@@ -4,11 +4,12 @@ package com.redshiftsoft.tesla.web.mvc.user;
 import com.google.common.cache.LoadingCache;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
-import com.redshiftsoft.tesla.web.ThreadScope;
+import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
 import com.redshiftsoft.tesla.web.mvc.user.validation.EmailValidation;
 import kdw.common.string.StringTools;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,12 +37,13 @@ public class UserEditController {
         this.cache = cache;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     @ResponseBody
     public JsonResponse edit(@RequestBody UserEditDTO userEditDTO, HttpServletResponse response) {
 
-        User user = ThreadScope.getUser();
+        User user = Security.user();
 
         /* if the email is equal in all but case, is ok, let user change case, skip validation. */
         if (!StringTools.equalsIgnoreCase(user.getEmail(), userEditDTO.getEmail())) {

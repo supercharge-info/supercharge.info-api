@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla.dao.changelog;
 
+import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
 import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
@@ -22,7 +23,7 @@ import static org.junit.Assert.*;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/com/redshiftsoft/tesla/dao-context.xml"})
+@ContextConfiguration(classes = DAOConfiguration.class)
 public class ChangeLogDAO_UT {
 
     @Rule

@@ -4,10 +4,11 @@ import com.redshiftsoft.tesla.dao.login.LoginAttempt;
 import com.redshiftsoft.tesla.dao.login.LoginDAO;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
-import com.redshiftsoft.tesla.web.ThreadScope;
+import com.redshiftsoft.tesla.web.filter.CookieHelper;
+import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.forum.ForumClient;
-import kdw.common.jee.web.servletapi.CookieHelper;
 import kdw.common.secure.passwordhashing.PasswordHashLogic;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -88,10 +90,10 @@ public class UserLoginController {
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     @ResponseBody
     public UserLoginResponse loginCheck() {
-        User user = ThreadScope.getUser();
-        if (user != null) {
-            LOG.info("loginCheck success " + user);
-            return UserLoginResponse.success(user);
+        Optional<User> userOption = Security.userOption();
+        if (userOption.isPresent()) {
+            LOG.info("loginCheck success " + userOption.get());
+            return UserLoginResponse.success(userOption.get());
         }
         LOG.info("loginCheck fail");
         return UserLoginResponse.fail();
@@ -101,16 +103,17 @@ public class UserLoginController {
     public void logout(HttpServletResponse response) {
         LOG.info("logout");
         CookieHelper.removeCookie(response, LoginCookie.NAME);
-        User user = ThreadScope.getUser();
-        if (user != null && user.isEmailVerified()) {
-            forumClient.logout(user.getId());
+        Optional<User> userOption = Security.userOption();
+        if (userOption.isPresent() && userOption.get().isEmailVerified()) {
+            forumClient.logout(userOption.get().getId());
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(method = RequestMethod.GET, value = "/results")
     @ResponseBody
     public List<LoginAttemptDTO> getLoginResults() {
-        User user = ThreadScope.getUser();
+        User user = Security.user();
         List<LoginAttempt> attempts = loginDAO.getAttempts(user.getId(), 10);
         return attempts.stream().map(new LoginAttemptDTOFunction()).collect(Collectors.toList());
     }

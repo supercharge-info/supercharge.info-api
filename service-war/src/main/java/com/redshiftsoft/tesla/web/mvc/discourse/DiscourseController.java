@@ -6,7 +6,7 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 import com.redshiftsoft.tesla.dao.user.User;
-import com.redshiftsoft.tesla.web.ThreadScope;
+import com.redshiftsoft.tesla.web.filter.Security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import static kdw.common.string.StringTools.toUTF8BytesFromString;
@@ -59,13 +60,14 @@ public class DiscourseController {
         String payloadIn = new String(BASE_64.decode(payloadInBase64.trim()), StandardCharsets.UTF_8);
 
         LOG.info("***** payloadIn = " + payloadIn);
-        User user = ThreadScope.getUser();
+        Optional<User> userOption = Security.userOption();
 
-        if (user == null) {
+        if (userOption.isEmpty()) {
             LOG.severe("***** no user logged in, redirecting");
             return "redirect:" + SUPERCHARGE_SIGN_IN;
         }
 
+        User user = userOption.get();
         if (!user.isEmailVerified()) {
             LOG.severe("***** email not verified for user = " + user + ", redirecting.");
             return "redirect: " + SUPERCHARGE_VERIFY;

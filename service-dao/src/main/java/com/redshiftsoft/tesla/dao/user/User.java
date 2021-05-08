@@ -1,6 +1,5 @@
 package com.redshiftsoft.tesla.dao.user;
 
-import kdw.common.jee.web.filter.security.model.SecurityFilterAccount;
 import kdw.common.string.StringTools;
 
 import java.time.Instant;
@@ -8,7 +7,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class User implements Cloneable, SecurityFilterAccount {
+public class User implements Cloneable {
 
     public static final int MIN_LEN_USERNAME = 3;
     public static final int MAX_LEN_USERNAME = 40;
@@ -118,12 +117,10 @@ public class User implements Cloneable, SecurityFilterAccount {
     //
     // ------------------------------------------------------------
 
-    @Override
     public String getUsername() {
         return username;
     }
 
-    @Override
     public void setUsername(String username) {
         this.username = username;
     }
@@ -160,7 +157,6 @@ public class User implements Cloneable, SecurityFilterAccount {
         this.enabled = enabled;
     }
 
-    @Override
     public List<String> getRoles() {
         return new ArrayList<>(roles);
     }

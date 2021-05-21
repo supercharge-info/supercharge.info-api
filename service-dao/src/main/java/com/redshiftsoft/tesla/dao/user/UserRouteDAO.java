@@ -1,6 +1,5 @@
 package com.redshiftsoft.tesla.dao.user;
 
-import com.redshiftsoft.db.jdbc.Statements;
 import com.redshiftsoft.tesla.dao.BaseDAO;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -29,7 +28,7 @@ public class UserRouteDAO extends BaseDAO {
 
             stat.execute();
 
-            route.setId(Statements.getIntegerGeneratedKey(stat));
+            route.setId(getIntegerGeneratedKey(stat));
             userRouteWaypointDAO.insert(route.getId(), route.getWaypoints());
         } catch (SQLException e) {
             logAndThrowUnchecked(e);

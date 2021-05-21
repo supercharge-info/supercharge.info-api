@@ -1,6 +1,5 @@
 package com.redshiftsoft.tesla.dao;
 
-import com.redshiftsoft.db.jdbc.SQLExceptions;
 import kdw.common.string.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +9,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.Instant;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class BaseDAO {
@@ -32,7 +32,8 @@ public abstract class BaseDAO {
      * Logs the given SQL exception and re-throws it as a unchecked runtime exception.
      */
     public static void logAndThrowUnchecked(final SQLException e) {
-        SQLExceptions.logAndThrowUnchecked(e);
+        LOG.log(Level.SEVERE, e.getMessage(), e);
+        throw new IllegalStateException(e);
     }
     
     public static Instant getInstant(final ResultSet rs, int index) throws SQLException {
@@ -97,6 +98,29 @@ public abstract class BaseDAO {
             in = in.substring(0, maxLength);
         }
         return in;
+    }
+
+    /**
+     * Gets a single generated key resulting from the given statement (which should have been executed before this method
+     * is called). The key is assumed to be an integer.
+     *
+     * @param stat The statement from which to retrieve generated keys.
+     * @return Integer value.
+     */
+    protected static Integer getIntegerGeneratedKey(final Statement stat) throws SQLException {
+        ResultSet resultSet = stat.getGeneratedKeys();
+        resultSet.next();
+        return resultSet.getInt(1);
+    }
+
+    /**
+     * Convert an instant to a java.sql.Timestamp.
+     */
+    public static Timestamp toTimestamp(final Instant instant) {
+        if (instant == null) {
+            return null;
+        }
+        return new Timestamp(instant.toEpochMilli());
     }
 
 }

@@ -1,11 +1,12 @@
 package com.redshiftsoft.tesla.dao.changelog;
 
-import com.redshiftsoft.db.jdbc.Timestamps;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import static com.redshiftsoft.tesla.dao.BaseDAO.toTimestamp;
 
 public class InsertChangeLogPreparedStatementCreator implements PreparedStatementCreator {
 
@@ -22,7 +23,7 @@ public class InsertChangeLogPreparedStatementCreator implements PreparedStatemen
 
         int c = 1;
         stat.setInt(c++, changeLog.getSiteId());
-        stat.setTimestamp(c++, Timestamps.toTimestamp(changeLog.getDate()));
+        stat.setTimestamp(c++, toTimestamp(changeLog.getDate()));
         stat.setString(c++, changeLog.getChangeType().toString());
         stat.setString(c, changeLog.getSiteStatus().toString());
         return stat;

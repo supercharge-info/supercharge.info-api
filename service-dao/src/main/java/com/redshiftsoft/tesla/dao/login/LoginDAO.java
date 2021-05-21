@@ -1,6 +1,5 @@
 package com.redshiftsoft.tesla.dao.login;
 
-import com.redshiftsoft.db.jdbc.Timestamps;
 import com.redshiftsoft.tesla.dao.BaseDAO;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +45,7 @@ public class LoginDAO extends BaseDAO {
     public void insertAttempt(LoginAttempt attempt) {
         getJdbcTemplate().update(SQL_INSERT, attempt.getUser().getId(), attempt.getResult().name(),
                 attempt.getType().name(),
-                Timestamps.toTimestamp(attempt.getDate()),
+                toTimestamp(attempt.getDate()),
                 attempt.getRemoteIP(),
                 attempt.getLocale() == null ? null : attempt.getLocale().toString());
     }

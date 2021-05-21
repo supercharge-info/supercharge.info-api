@@ -1,11 +1,11 @@
 package com.redshiftsoft.tesla.dao.site;
 
-import com.redshiftsoft.db.jdbc.Timestamps;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import static com.redshiftsoft.tesla.dao.DAOTools.string;
 
@@ -31,7 +31,7 @@ public class AddressUpdateStatementCreator implements PreparedStatementCreator {
         stat.setString(c++, string(address.getState()));
         stat.setString(c++, string(address.getZip()));
         stat.setInt(c++, address.getCountryId());
-        stat.setTimestamp(c++, Timestamps.now());
+        stat.setTimestamp(c++, new Timestamp(System.currentTimeMillis()));
         stat.setInt(c, address.getId());
 
         return stat;

@@ -20,11 +20,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.redshiftsoft.lib.db</groupId>
-            <artifactId>redshift-db-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>

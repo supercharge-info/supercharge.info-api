@@ -1,6 +1,5 @@
 package com.redshiftsoft.tesla.dao.feature;
 
-import com.redshiftsoft.db.jdbc.Statements;
 import com.redshiftsoft.tesla.dao.BaseDAO;
 import com.redshiftsoft.tesla.dao.LocalDateUtil;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,7 +23,7 @@ public class FeatureDAO extends BaseDAO {
             stat.setTimestamp(2, LocalDateUtil.toSQLDate(feature.getAddedDate()));
             stat.setString(3, feature.getDescription());
             stat.execute();
-            Integer generatedId = Statements.getIntegerGeneratedKey(stat);
+            Integer generatedId = getIntegerGeneratedKey(stat);
             feature.setId(generatedId);
         } catch (SQLException e) {
             logAndThrowUnchecked(e);

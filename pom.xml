@@ -54,12 +54,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.redshiftsoft.lib.db</groupId>
-                <artifactId>redshift-db-jdbc</artifactId>
-                <version>3.3</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.redshiftsoft.lib.mail</groupId>
                 <artifactId>redshift-mail</artifactId>
                 <version>1.3</version>

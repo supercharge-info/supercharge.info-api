@@ -27,12 +27,6 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.redshiftsoft.lib.element</groupId>
-            <artifactId>redshift-element</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-
     </dependencies>
 
 

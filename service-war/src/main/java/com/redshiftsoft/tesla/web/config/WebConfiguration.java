@@ -2,9 +2,9 @@ package com.redshiftsoft.tesla.web.config;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.redshiftsoft.lib.mail.MailAuthentication;
-import com.redshiftsoft.lib.mail.MailClientConfig;
-import com.redshiftsoft.lib.mail.sender.MailSender;
+import com.redshiftsoft.mail.MailAuthentication;
+import com.redshiftsoft.mail.MailClientConfig;
+import com.redshiftsoft.mail.MailSender;
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
@@ -41,9 +41,13 @@ public class WebConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public MailSender mailSender(@Value("smtp.user") String smtpUser, @Value("smtp.password") String smtpPassword) {
+    public MailSender mailSender(
+            @Value("${smtp.user}") String smtpUser,
+            @Value("${smtp.password}") String smtpPassword,
+            @Value("${smtp.host}") String smtpHost,
+            @Value("${smtp.port}") String smtpPort) {
         MailAuthentication ma = new MailAuthentication(smtpUser, smtpPassword);
-        MailClientConfig config = new MailClientConfig("smtp.gmail.com", 25, "smtp", ma);
+        MailClientConfig config = new MailClientConfig(smtpHost, Integer.parseInt(smtpPort.trim()), "smtp", ma);
         config.setStartTLSEnabled(true);
         config.setStartTLSRequired(true);
         return new MailSender(config);

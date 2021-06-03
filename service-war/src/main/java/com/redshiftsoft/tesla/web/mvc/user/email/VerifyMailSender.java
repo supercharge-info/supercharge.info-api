@@ -1,7 +1,7 @@
 package com.redshiftsoft.tesla.web.mvc.user.email;
 
-import com.redshiftsoft.lib.mail.Email;
-import com.redshiftsoft.lib.mail.sender.MailSender;
+import com.redshiftsoft.mail.Email;
+import com.redshiftsoft.mail.MailSender;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserResetPwdDAO;
 

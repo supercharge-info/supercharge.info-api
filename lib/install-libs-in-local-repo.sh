@@ -14,4 +14,3 @@ LIB_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 
 mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile="${LIB_DIR}/redshift-common-1.26.jar"
-mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile="${LIB_DIR}/redshift-mail-1.3.jar"

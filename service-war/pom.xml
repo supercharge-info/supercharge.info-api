@@ -37,13 +37,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- ====================================================================================| redshiftsoft -->
-
-        <dependency>
-            <groupId>com.redshiftsoft.lib.mail</groupId>
-            <artifactId>redshift-mail</artifactId>
-        </dependency>
-
         <!-- ====================================================================================| third party -->
 
         <dependency>

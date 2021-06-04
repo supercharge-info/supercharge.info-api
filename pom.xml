@@ -6,7 +6,7 @@
 
     <groupId>info.supercharge.api</groupId>
     <artifactId>supercharge.info-api</artifactId>
-    <version>4.8.1</version>
+    <version>4.8.2-SNAPSHOT</version>
 
 
     <properties>
@@ -31,7 +31,7 @@
 
     <scm>
         <developerConnection>scm:git:git@git.redshiftsoft.com:apps/tesla-supercharger-service.git</developerConnection>
-        <tag>supercharge.info-api-4.8.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <modules>

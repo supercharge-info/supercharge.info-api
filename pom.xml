@@ -30,7 +30,7 @@
     </properties>
 
     <scm>
-        <developerConnection>scm:git:git@git.redshiftsoft.com:apps/tesla-supercharger-service.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:supercharge-info/supercharge.info-api.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 

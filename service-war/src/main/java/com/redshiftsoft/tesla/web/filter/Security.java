@@ -1,6 +1,7 @@
 package com.redshiftsoft.tesla.web.filter;
 
 import com.redshiftsoft.tesla.dao.user.User;
+import com.redshiftsoft.util.Conditions;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,6 +35,7 @@ public class Security {
     /* Should only be called in context where we know a user is present. */
     public static User user() {
         Optional<Authentication> auth = authentication();
+        Conditions.checkArgument(auth.isPresent(), "No user in current context.");
         return (User) auth.get().getPrincipal();
     }
 

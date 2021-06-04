@@ -13,7 +13,6 @@ API for https://supercharge.info
 
 ## Build
 
-- `lib/install-libs-in-local-repo.sh` (do this once, see script for details)
 - `mvn -DskipTests install`
 
 ## Test
@@ -25,8 +24,8 @@ API for https://supercharge.info
 ## Deploy
 
 1. Verify tests pass.
-2. `deployable-build.sh` (enter to accept suggested release version)
-3. `deploy.sh test <version>`
+2. `release.sh` (enter to accept suggested release version)
+3. `deploy.sh <test|prod> <version>`
 
 ## Configuration
 

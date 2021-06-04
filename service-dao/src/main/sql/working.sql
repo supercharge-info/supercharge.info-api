@@ -20,7 +20,7 @@ from users u
 join user_role ur on u.user_id=ur.user_id 
 join roles r on r.role_id = ur.role_id
 where ur.role_id is not NULL
- AND u.username ='BTaylor32185'
+  AND u.username = ''
 order by username asc;
 
 -- =============================================================
@@ -43,16 +43,10 @@ from user_role ur
 
 
 insert into user_role
-values ((select user_id from users where username = 'BTaylor32185'),
-        (select role_id from roles r where r.role_name = 'BTaylor32185'),
+values ((select user_id from users where username = ''),
+        (select role_id from roles r where r.role_name = 'editor'),
         now());
 
-select *
-from users
-where user_id = 955185292;
-select *
-from users
-where username = 'keith';
 
 -- =============================================================
 -- user_config
@@ -116,12 +110,6 @@ from login l
 join users u on u.user_id = l.user_id
 order by login_time desc;
 
--- recent logins joined with user -- FOR USERS WITH PRIVILEGES
-select u.username, u.roles, l.*
-from login l
-join users u on u.user_id = l.user_id
-where u.roles is not null and u.roles <> '' and u.username <> 'keith'
-order by login_time desc;
 
 -- =============================================================
 -- user_reset_password
@@ -248,95 +236,5 @@ select * from changelog where site_id=1882;
 
 update changelog set change_type='ADD' where id=3350;
 
--- ========================================================================================
--- This file just contains useful queries for working with tables in the schema.
--- ========================================================================================
-
---
--- Sixty day moving average of sites...still needs work.
---
-select date(opened_date), t1 - t2 from
-  (
-    select s.opened_date,
-      s.site_id,
-      s.name,
-      (select count(*)
-       from site s2
-       where s2.status = 'OPEN'
-             and s2.opened_date <= s.opened_date
-             and s2.counted = true) as t1,
-      (select count(*)
-       from site s3
-       where s3.status = 'OPEN'
-             and s3.opened_date <= s.opened_date - '60 day'::INTERVAL
-             and s3.counted = true) as t2
-    from site s
-    where status='OPEN'
-          and counted = true
-    order by opened_date asc
-  ) a;
-
-  
--- ###########################################################################
---
--- scratch
---
--- ###########################################################################
-
-select * from site where status='CLOSED_TEMP';
-
-select * from site s limit 1;
-
-select *
-from site s
-join address a on s.address_id=a.address_id
-where 1=2
-or
-strpos(s.developer_notes, '>') > 0
-or
-strpos(s.developer_notes, '<') > 0
-or
-strpos(s."name", '>') > 0
-or
-strpos(s."name", '<') > 0
-or
-strpos(s.location_id, '>') > 0
-or
-strpos(s.location_id, '<') > 0
-or
-strpos(s.hours, '>') > 0
-or
-strpos(s.hours, '<') > 0
-or
-strpos(a.street, '>') > 0
-or
-strpos(a.street, '<') > 0
-or
-strpos(a.city, '>') > 0
-or
-strpos(a.city, '<') > 0
-or
-strpos(a.state, '>') > 0
-or
-strpos(a.state, '<') > 0
-or
-strpos(a.zip, '>') > 0
-or
-strpos(a.zip, '<') > 0
-;
-
-
-select * from users u where u.email ilike '%darren%';
-
-select * from user_reset_password urp;
-
-update users 
-set password_salt = (select password_salt  from users u2 where u2.username='keith'),
-    password_hash = (select password_hash  from users u2 where u2.username='keith')
-    where user_id = 50598;
-   
-   
-select version();   
-   
    
    

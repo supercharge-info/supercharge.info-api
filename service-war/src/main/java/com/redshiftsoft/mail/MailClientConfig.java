@@ -51,16 +51,6 @@ public class MailClientConfig implements Serializable {
         setAuthentication(authentication);
     }
 
-    /**
-     * COPY constructor.  Copies entire state of configuration object.
-     */
-    public MailClientConfig(final MailClientConfig config) {
-        this(config.getHost(), config.getPort(), config.getProtocol(), new MailAuthentication(config.getAuthentication()));
-        this.setStartTLSEnabled(config.isStartTLSEnabled());
-        this.setStartTLSRequired(config.isStartTLSRequired());
-        this.setTrustedHosts(config.getTrustedHosts());
-    }
-
     // --------------------------------------------
     //
     // --------------------------------------------

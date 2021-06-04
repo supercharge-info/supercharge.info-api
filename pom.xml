@@ -45,14 +45,6 @@
 
         <dependencies>
 
-            <!-- ====================================================================================| redshiftsoft -->
-
-            <dependency>
-                <groupId>com.redshiftsoft.lib.common</groupId>
-                <artifactId>redshift-common</artifactId>
-                <version>1.26</version>
-            </dependency>
-
             <!-- ====================================================================================| third party -->
 
             <!-- JDBC DRIVER: Postgres -->

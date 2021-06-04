@@ -7,7 +7,7 @@ import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.tesla.web.filter.CookieHelper;
 import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.forum.ForumClient;
-import kdw.common.secure.passwordhashing.PasswordHashLogic;
+import com.redshiftsoft.util.PasswordHashLogic;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.redshiftsoft.tesla.web.mvc.userlogin.LoginAttemptFactory.*;
-import static kdw.common.string.StringTools.isEmpty;
+import static com.redshiftsoft.util.StringTools.isEmpty;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 
 @Controller

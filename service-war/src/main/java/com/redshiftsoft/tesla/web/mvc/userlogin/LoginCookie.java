@@ -2,13 +2,14 @@ package com.redshiftsoft.tesla.web.mvc.userlogin;
 
 import com.google.common.io.BaseEncoding;
 import com.redshiftsoft.tesla.dao.user.User;
-import kdw.common.secure.passwordhashing.PasswordHashLogic;
+import com.redshiftsoft.util.PasswordHashLogic;
 
 import javax.servlet.http.Cookie;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static kdw.common.string.StringTools.isNotEmpty;
+import static com.redshiftsoft.util.StringTools.isNotEmpty;
+
 
 /**
  * The format of the value is: <b>part1-part2</b>

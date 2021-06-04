@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import static kdw.common.string.StringTools.toUTF8BytesFromString;
+import static com.redshiftsoft.util.StringTools.toUTF8BytesFromString;
 
 /**
  * https://meta.discourse.org/t/official-single-sign-on-for-discourse-sso/13045

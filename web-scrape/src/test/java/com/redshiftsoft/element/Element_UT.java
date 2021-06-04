@@ -1,6 +1,6 @@
 package com.redshiftsoft.element;
 
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 import org.junit.Test;
 
 import java.util.Collection;

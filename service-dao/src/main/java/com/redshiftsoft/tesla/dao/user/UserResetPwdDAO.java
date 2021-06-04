@@ -1,9 +1,7 @@
 package com.redshiftsoft.tesla.dao.user;
 
 import com.redshiftsoft.tesla.dao.BaseDAO;
-import kdw.common.secure.password.PasswordConstraint;
-import kdw.common.secure.password.PasswordConstraintBuilder;
-import kdw.common.secure.password.PasswordGenerator;
+import com.redshiftsoft.util.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,10 +10,6 @@ import java.util.Optional;
 @Component
 public class UserResetPwdDAO extends BaseDAO {
 
-    /* Min number of characters, x, is selected such that B^x > 2^128, where B is the size of the key character set.
-      That is, there are more possible reset keys than there are unique values in a 128-bit UUID. */
-    public static final int RESET_KEY_MIN_LENGTH = 25;
-    public static final int RESET_KEY_MAX_LENGTH = 26;
 
     /**
      * Generate and insert the reset key that will be emailed and then used for validation.
@@ -70,14 +64,8 @@ public class UserResetPwdDAO extends BaseDAO {
      * Generates the reset key that is email to a user so that they can reset their user
      */
     private String generateKey() {
-        PasswordConstraint constraint = PasswordConstraintBuilder
-                .create()
-                .withSpecialCharsNone()
-                .withExcludeAmbiguousChars(true)
-                .withMinLength(RESET_KEY_MIN_LENGTH)
-                .withMaxLength(RESET_KEY_MAX_LENGTH)
-                .build();
-        return PasswordGenerator.generatePassword(constraint);
+        // 26^26 ~= 10^36
+        return RandomUtils.secure().getString(26, 'a', 'z');
     }
 
 }

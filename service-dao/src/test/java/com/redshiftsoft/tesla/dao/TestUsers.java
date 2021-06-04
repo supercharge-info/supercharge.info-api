@@ -1,8 +1,8 @@
 package com.redshiftsoft.tesla.dao;
 
 import com.redshiftsoft.tesla.dao.user.User;
-import kdw.common.math.RandomUtils;
-import kdw.common.secure.passwordhashing.PasswordHashLogic;
+import com.redshiftsoft.util.PasswordHashLogic;
+import com.redshiftsoft.util.RandomUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

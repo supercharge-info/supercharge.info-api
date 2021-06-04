@@ -1,7 +1,7 @@
 package com.redshiftsoft.tesla.dao.changelog;
 
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 
 import java.time.Instant;
 

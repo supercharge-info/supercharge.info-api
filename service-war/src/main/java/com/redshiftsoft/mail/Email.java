@@ -1,6 +1,6 @@
 package com.redshiftsoft.mail;
 
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;

@@ -2,7 +2,7 @@ package com.redshiftsoft.tesla.dao;
 
 
 import com.redshiftsoft.tesla.dao.site.*;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

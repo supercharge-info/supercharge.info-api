@@ -12,7 +12,7 @@ import com.redshiftsoft.tesla.web.mvc.user.email.PasswordResetEmailSender;
 import com.redshiftsoft.tesla.web.mvc.user.validation.PasswordValidation;
 import com.redshiftsoft.tesla.web.mvc.userlogin.LoginAttemptFactory;
 import com.redshiftsoft.tesla.web.mvc.userlogin.LoginCookie;
-import kdw.common.secure.passwordhashing.PasswordHashLogic;
+import com.redshiftsoft.util.PasswordHashLogic;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;

@@ -5,7 +5,7 @@ import com.redshiftsoft.tesla.dao.sitechanges.SiteChange;
 import com.redshiftsoft.tesla.dao.sitechanges.SiteChangeBuilder;
 import com.redshiftsoft.tesla.dao.sitechanges.SiteChangeDAO;
 import com.redshiftsoft.tesla.dao.user.User;
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

@@ -1,7 +1,7 @@
 package com.redshiftsoft.tesla.dao.dbinfo;
 
 import com.redshiftsoft.tesla.dao.BaseDAO;
-import kdw.common.math.NumberUtils;
+import com.redshiftsoft.util.NumberUtils;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;

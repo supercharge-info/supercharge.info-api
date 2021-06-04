@@ -2,7 +2,7 @@ package com.redshiftsoft.tesla_web_scrape.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kdw.common.math.NumberUtils;
+import com.redshiftsoft.util.NumberUtils;
 
 import java.util.List;
 import java.util.Objects;

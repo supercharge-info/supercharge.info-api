@@ -2,7 +2,7 @@ package com.redshiftsoft.tesla.dao.user;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUsers;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

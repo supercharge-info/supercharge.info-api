@@ -1,6 +1,6 @@
 package com.redshiftsoft.tesla.dao;
 
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 
 public class DAOTools {
 

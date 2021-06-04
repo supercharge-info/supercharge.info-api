@@ -1,7 +1,7 @@
 package com.redshiftsoft.tesla.dao;
 
 import com.redshiftsoft.tesla.dao.site.Address;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 
 public class TestAddressCreator {
 

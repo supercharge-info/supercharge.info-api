@@ -1,6 +1,7 @@
 package com.redshiftsoft.mail;
 
 import com.redshiftsoft.tesla.web.mvc.userconfig.UserConfigFromDTOFunction;
+import com.redshiftsoft.util.ThreadUtils;
 
 import javax.annotation.PreDestroy;
 import java.util.concurrent.ExecutorService;
@@ -50,11 +51,8 @@ public class MailSender {
                     mailClient.sendMail(email);
                 } catch (MailException e) {
                     mailQueue.add(email);
-                    try {
-                        Thread.sleep(60 * 1000);
-                    } catch (InterruptedException interruptedException) {
-                        interruptedException.printStackTrace();
-                    }
+                    LOG.info("WARN: sending email failed, sleeping for a while!");
+                    ThreadUtils.sleepSeconds(90);
                 } catch (InterruptedException e) {
                     LOG.log(Level.SEVERE, "did not expect to be interrupted", e);
                 }

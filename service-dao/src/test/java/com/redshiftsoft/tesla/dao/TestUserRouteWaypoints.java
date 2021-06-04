@@ -2,7 +2,7 @@ package com.redshiftsoft.tesla.dao;
 
 import com.google.common.collect.Lists;
 import com.redshiftsoft.tesla.dao.user.UserRouteWaypoint;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 
 import java.util.List;
 

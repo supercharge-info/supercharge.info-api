@@ -2,7 +2,7 @@ package com.redshiftsoft.tesla.web.mvc;
 
 import com.google.common.collect.Lists;
 import com.redshiftsoft.tesla.dao.dbinfo.DBInfoDAO;
-import kdw.common.thread.ThreadUtils;
+import com.redshiftsoft.util.ThreadUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

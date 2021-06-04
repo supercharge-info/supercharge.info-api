@@ -7,7 +7,7 @@ import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
 import com.redshiftsoft.tesla.web.mvc.user.validation.EmailValidation;
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

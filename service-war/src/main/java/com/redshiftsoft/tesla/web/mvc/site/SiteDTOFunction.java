@@ -1,7 +1,7 @@
 package com.redshiftsoft.tesla.web.mvc.site;
 
 import com.redshiftsoft.tesla.dao.site.Site;
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 
 import java.util.function.Function;
 

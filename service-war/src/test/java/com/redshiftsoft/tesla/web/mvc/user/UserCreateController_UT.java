@@ -9,7 +9,7 @@ import com.redshiftsoft.tesla.web.mvc.user.email.UserCreateEmailSender;
 import com.redshiftsoft.tesla.web.mvc.user.validation.EmailValidation;
 import com.redshiftsoft.tesla.web.mvc.user.validation.PasswordValidation;
 import com.redshiftsoft.tesla.web.mvc.user.validation.UsernameValidation;
-import kdw.common.secure.passwordhashing.PasswordHashLogic;
+import com.redshiftsoft.util.PasswordHashLogic;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;

@@ -1,6 +1,6 @@
 package com.redshiftsoft.element;
 
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 
 public class A extends Element {
 

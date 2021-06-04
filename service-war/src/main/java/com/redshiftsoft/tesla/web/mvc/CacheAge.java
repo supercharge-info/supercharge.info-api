@@ -1,6 +1,5 @@
 package com.redshiftsoft.tesla.web.mvc;
 
-import kdw.common.time.TimeRange;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -60,7 +59,7 @@ public class CacheAge {
     @Override
     public String toString() {
         return "CacheAge{" +
-                "cacheAge=" + new TimeRange(getCacheAgeMs()) +
+                "cacheAgeSec=" + (getCacheAgeMs() / 1000L) +
                 "; lastDBChange=" + DATE_TIME_FORMATTER.format(Instant.ofEpochMilli(lastDBChange).atZone(ZONE_ID)) +
                 '}';
     }

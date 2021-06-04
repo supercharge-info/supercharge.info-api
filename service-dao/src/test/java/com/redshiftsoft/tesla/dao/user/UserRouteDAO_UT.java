@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUserRouteWaypoints;
 import com.redshiftsoft.tesla.dao.TestUsers;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

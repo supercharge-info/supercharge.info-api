@@ -8,7 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.time.LocalDate;
 
-import static kdw.common.string.StringTools.isEmpty;
+import static com.redshiftsoft.util.StringTools.isEmpty;
+
 
 public class LocalDateDeserializer extends JsonDeserializer<LocalDate> {
 

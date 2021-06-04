@@ -1,6 +1,6 @@
 package com.redshiftsoft.element;
 
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 
 import java.util.ArrayList;
 import java.util.Arrays;

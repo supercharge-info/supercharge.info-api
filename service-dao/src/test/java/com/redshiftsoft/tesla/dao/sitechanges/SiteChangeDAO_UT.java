@@ -7,7 +7,7 @@ import com.redshiftsoft.tesla.dao.TestUsers;
 import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

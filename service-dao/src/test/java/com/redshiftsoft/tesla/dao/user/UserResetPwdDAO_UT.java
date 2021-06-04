@@ -2,7 +2,7 @@ package com.redshiftsoft.tesla.dao.user;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUsers;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -35,8 +35,7 @@ public class UserResetPwdDAO_UT {
 
         /* Insert key */
         String key = userResetPwdDAO.insertKey(user.getId());
-        assertTrue(key.length() >= UserResetPwdDAO.RESET_KEY_MIN_LENGTH);
-        assertTrue(key.length() <= UserResetPwdDAO.RESET_KEY_MAX_LENGTH);
+        assertEquals(key.length(), 26);
 
         /* Now test getting */
         Optional<Integer> userID = userResetPwdDAO.validateKey(key);

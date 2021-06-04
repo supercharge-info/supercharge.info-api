@@ -1,7 +1,7 @@
 package com.redshiftsoft.tesla.dao.user;
 
 import com.google.common.base.Preconditions;
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 
 public class UserConfigMarker {
 

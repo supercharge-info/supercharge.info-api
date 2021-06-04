@@ -8,7 +8,7 @@ import com.redshiftsoft.tesla.dao.site.RegionDAO;
 import com.redshiftsoft.tesla.dao.user.Unit;
 import com.redshiftsoft.tesla.dao.user.UserConfig;
 import com.redshiftsoft.tesla.dao.user.UserConfigMarker;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

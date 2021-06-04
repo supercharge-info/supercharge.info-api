@@ -1,6 +1,6 @@
 package com.redshiftsoft.mail;
 
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 
 import java.io.Serializable;
 

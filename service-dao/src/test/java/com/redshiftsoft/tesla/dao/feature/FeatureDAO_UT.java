@@ -1,7 +1,7 @@
 package com.redshiftsoft.tesla.dao.feature;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.dao.EmptyResultDataAccessException;

@@ -3,7 +3,7 @@ package com.redshiftsoft.tesla.web.mvc.user.validation;
 import com.google.common.collect.Lists;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.redshiftsoft.mail;
 
+import com.redshiftsoft.util.StringTools;
 import com.sun.mail.smtp.SMTPTransport;
-import kdw.common.string.StringTools;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;

@@ -1,6 +1,6 @@
 package com.redshiftsoft.tesla.dao.user;
 
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 
 import java.time.Instant;
 import java.time.ZoneId;

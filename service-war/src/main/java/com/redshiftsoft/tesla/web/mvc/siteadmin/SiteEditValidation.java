@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static kdw.common.string.StringTools.isEmpty;
+import static com.redshiftsoft.util.StringTools.isEmpty;
 
 @Component
 public class SiteEditValidation {

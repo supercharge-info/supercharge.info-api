@@ -1,7 +1,7 @@
 package com.redshiftsoft.element;
 
-import kdw.common.net.html.XMLEscape;
-import kdw.common.string.StringTools;
+import com.google.common.xml.XmlEscapers;
+import com.redshiftsoft.util.StringTools;
 
 public class Attribute {
 
@@ -20,12 +20,13 @@ public class Attribute {
 		this.value = valueIn;
 	}
 
+	@SuppressWarnings("UnstableApiUsage")
 	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder();
 		b.append(name);
 		b.append("='");
-		XMLEscape.escape(value, b);
+		b.append(XmlEscapers.xmlAttributeEscaper().escape(value));
 		b.append("'");
 		return b.toString();
 	}

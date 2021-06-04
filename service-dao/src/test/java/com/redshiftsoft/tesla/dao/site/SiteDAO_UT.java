@@ -3,7 +3,7 @@ package com.redshiftsoft.tesla.dao.site;
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestSiteCreator;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
-import kdw.common.math.RandomUtils;
+import com.redshiftsoft.util.RandomUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.dao.EmptyResultDataAccessException;

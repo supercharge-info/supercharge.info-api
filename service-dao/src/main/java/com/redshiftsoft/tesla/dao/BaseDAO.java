@@ -1,6 +1,6 @@
 package com.redshiftsoft.tesla.dao;
 
-import kdw.common.string.StringTools;
+import com.redshiftsoft.util.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;

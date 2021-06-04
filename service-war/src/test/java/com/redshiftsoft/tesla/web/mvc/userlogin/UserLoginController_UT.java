@@ -1,6 +1,6 @@
 package com.redshiftsoft.tesla.web.mvc.userlogin;
 
-import kdw.common.secure.passwordhashing.PasswordHashLogic;
+import com.redshiftsoft.util.PasswordHashLogic;
 import org.junit.Test;
 
 public class UserLoginController_UT {

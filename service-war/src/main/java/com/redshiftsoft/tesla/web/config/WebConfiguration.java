@@ -10,7 +10,7 @@ import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.tesla.web.filter.UserFilterCacheLoader;
 import com.redshiftsoft.tesla_web_scrape.TeslaWebClientConfiguration;
-import kdw.common.secure.passwordhashing.PasswordHashLogic;
+import com.redshiftsoft.util.PasswordHashLogic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -37,7 +37,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Bean
     public PasswordHashLogic loginPasswordHashLogic() {
-        return new kdw.common.secure.passwordhashing.PasswordHashLogic();
+        return new PasswordHashLogic();
     }
 
     @Bean

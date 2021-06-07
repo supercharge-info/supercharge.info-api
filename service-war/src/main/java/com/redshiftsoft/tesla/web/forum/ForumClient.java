@@ -51,8 +51,8 @@ public class ForumClient {
         LOG.info("url=" + url);
 
         HttpPost httpPost = new HttpPost(url);
-        httpPost.addHeader("Api-Key",API_KEY);
-        httpPost.addHeader("Api-Username",API_USER);
+        httpPost.addHeader("Api-Key", API_KEY);
+        httpPost.addHeader("Api-Username", API_USER);
 
         try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
             return response.getStatusLine().getStatusCode();

@@ -10,7 +10,6 @@ API for https://supercharge.info
 2. Maven
 3. Docker (currently used to create/run local test database)
 
-
 ## Build
 
 - `mvn -DskipTests install`

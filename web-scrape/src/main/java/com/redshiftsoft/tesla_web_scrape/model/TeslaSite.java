@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TeslaSite {
 
     private static final Pattern STALL_COUNT_PATTERN = Pattern.compile("(\\d+)\\s+Supercharg[er|ing]", Pattern.CASE_INSENSITIVE);

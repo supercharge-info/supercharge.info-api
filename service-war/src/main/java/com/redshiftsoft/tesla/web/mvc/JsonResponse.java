@@ -23,7 +23,7 @@ public class JsonResponse {
     @SuppressWarnings("unchecked")
     public <T> T withStatus(HttpServletResponse response, int code) {
         response.setStatus(code);
-        return (T)this;
+        return (T) this;
     }
 
     // - - - - - - - - - -

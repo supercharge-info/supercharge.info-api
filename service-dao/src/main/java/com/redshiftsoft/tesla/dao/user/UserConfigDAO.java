@@ -41,7 +41,7 @@ public class UserConfigDAO extends BaseDAO {
                 config.getZoom().orElse(null),
                 config.getChartsPageRegion().map(Region::getId).orElse(null),
                 config.getChartsPageCountry().map(Country::getId).orElse(null)
-                );
+        );
         userConfigMarkerDAO.insert(userId, config.getCustomMarkers());
     }
 

@@ -24,7 +24,7 @@ public class LocalDateUtil {
      * From a date returned by JDBC's rs.getDate()
      */
     public static LocalDate toLocalDate(Date date) {
-        if(date == null) {
+        if (date == null) {
             return null;
         }
         return toLocalDateTime(date).toLocalDate();

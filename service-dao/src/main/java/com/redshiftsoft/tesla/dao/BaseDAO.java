@@ -35,7 +35,7 @@ public abstract class BaseDAO {
         LOG.log(Level.SEVERE, e.getMessage(), e);
         throw new IllegalStateException(e);
     }
-    
+
     public static Instant getInstant(final ResultSet rs, int index) throws SQLException {
         Timestamp ts = rs.getTimestamp(index);
         if (ts == null) {

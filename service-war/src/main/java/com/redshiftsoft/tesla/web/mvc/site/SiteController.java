@@ -100,7 +100,7 @@ public class SiteController {
     @RequestMapping(method = RequestMethod.GET, value = "/discuss")
     public String siteDiscuss(@RequestParam("siteId") Integer siteId,
                               HttpServletResponse response) {
-        if(siteDAO.exists(siteId)) {
+        if (siteDAO.exists(siteId)) {
             Site site = siteDAO.getById(siteId);
             LOG.info(String.format("DISCUSS REDIRECT: siteId=%s, name=%s", siteId, site.getName()));
             return "redirect:" + site.getUrlDiscuss();

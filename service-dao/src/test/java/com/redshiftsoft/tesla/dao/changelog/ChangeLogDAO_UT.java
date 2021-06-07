@@ -4,6 +4,7 @@ import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
 import com.redshiftsoft.tesla.dao.site.Address;
 import com.redshiftsoft.tesla.dao.site.Site;
+import com.redshiftsoft.tesla.dao.site.SiteDAO;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,8 @@ public class ChangeLogDAO_UT {
     private ChangeLogDAO changeLogDAO;
     @Resource
     private TestSiteSaver testSiteSaver;
+    @Resource
+    private SiteDAO siteDAO;
 
     private Site testSite;
 
@@ -126,8 +129,18 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void getStatusDurations() {
-        changeLogDAO.insert(ChangeLog.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now()));
+        // given
+        ChangeLog changeLog1 = ChangeLog.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now());
+        changeLogDAO.insert(changeLog1);
+        ChangeLog changeLog2 = ChangeLog.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.CONSTRUCTION, Instant.now(), Instant.now());
+        changeLogDAO.insert(changeLog2);
+        testSite.setStatus(SiteStatus.CONSTRUCTION);
+        siteDAO.update(testSite);
+
+        // when
         Map<Integer, Integer> durations = changeLogDAO.getStatusDaysMap();
+
+        // then
         assertTrue(durations.size() > 0);
     }
 

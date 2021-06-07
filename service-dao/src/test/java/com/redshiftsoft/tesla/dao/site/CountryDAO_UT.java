@@ -1,6 +1,7 @@
 package com.redshiftsoft.tesla.dao.site;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
+import com.redshiftsoft.tesla.dao.TestSiteSaver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +21,9 @@ public class CountryDAO_UT {
 
     @Resource
     private CountryDAO countryDAO;
+
+    @Resource
+    private TestSiteSaver testSiteSaver;
 
     @Test
     public void testGetAll() {
@@ -52,19 +57,25 @@ public class CountryDAO_UT {
         assertTrue(country.isStateRequired());
     }
 
-
     @Test
     public void testGetReferenced() {
+        // given
+        Site site1 = testSiteSaver.persistRandomSite();
+        Site site2 = testSiteSaver.persistRandomSite();
+        Site site3 = testSiteSaver.persistRandomSite();
+
+        // when
         List<Country> referencedCountries = countryDAO.getReferenced();
+
+        // then
         List<Country> allCountries = countryDAO.getAll();
-        assertTrue(referencedCountries.size() >= 16);
+        assertTrue(referencedCountries.size() >= 1);
         assertTrue(referencedCountries.size() < allCountries.size());
 
-        Country country = referencedCountries.get(0);
-        assertTrue(country.getId() >= 100);
-        assertEquals("Australia", country.getName());
-        assertEquals("AU", country.getCode());
-        assertEquals("Asia Pacific", country.getRegionName());
+        List<Integer> refCountryIds = referencedCountries.stream().map(Country::getId).collect(Collectors.toList());
+        assertTrue(refCountryIds.contains(site1.getAddress().getCountryId()));
+        assertTrue(refCountryIds.contains(site2.getAddress().getCountryId()));
+        assertTrue(refCountryIds.contains(site3.getAddress().getCountryId()));
     }
 
 }

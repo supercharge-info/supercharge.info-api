@@ -50,10 +50,10 @@ public class ChangeLogDAO extends BaseDAO {
     public Map<Integer, Integer> getStatusDaysMap() {
         String sql = "" +
                 "select s.site_id," +
-                " s.status," +
-                " DATE_PART('day', now() - (select max(change_date) from changelog c where s.site_id = c.site_id)) as status_count" +
-                " from site s" +
-                " where s.status != 'OPEN'::SITE_STATUS_TYPE";
+                "       s.status," +
+                "       DATE_PART('day', now() - (select max(change_date) from changelog c where s.site_id = c.site_id)) as status_count " +
+                "from site s " +
+                "where s.status != 'OPEN'::SITE_STATUS_TYPE";
 
         List<Map<String, Object>> rowList = getJdbcTemplate().queryForList(sql);
         Map<Integer, Integer> resultMap = new HashMap<>();

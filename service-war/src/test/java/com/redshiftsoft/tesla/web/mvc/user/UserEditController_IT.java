@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+;
+
 public class UserEditController_IT extends Mvc_IT {
 
     @Test

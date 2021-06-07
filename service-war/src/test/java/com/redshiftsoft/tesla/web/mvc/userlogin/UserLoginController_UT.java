@@ -1,7 +1,7 @@
 package com.redshiftsoft.tesla.web.mvc.userlogin;
 
 import com.redshiftsoft.util.PasswordHashLogic;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UserLoginController_UT {
 

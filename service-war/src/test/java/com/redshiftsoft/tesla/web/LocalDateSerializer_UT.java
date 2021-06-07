@@ -2,7 +2,7 @@ package com.redshiftsoft.tesla.web;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.redshiftsoft.tesla.web.json.LocalDateSerializer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.LocalDate;

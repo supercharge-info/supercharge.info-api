@@ -10,6 +10,8 @@ import java.util.Collections;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+;
+
 public class ChangeLogController_IT extends Mvc_IT {
 
     @Test

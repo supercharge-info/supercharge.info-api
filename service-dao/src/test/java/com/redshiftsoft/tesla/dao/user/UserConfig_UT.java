@@ -1,8 +1,9 @@
 package com.redshiftsoft.tesla.dao.user;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UserConfig_UT {
 
@@ -13,14 +14,18 @@ public class UserConfig_UT {
         assertEquals(0.0, uc.getLongitude().orElse(null), 1e-9);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void constructor_invalidLatitude() {
-        new UserConfig(Unit.KM, null, null, null, null, null, null, 90.5, 0d, null, null, null, 0);
+        assertThrows(IllegalArgumentException.class, () -> {
+            new UserConfig(Unit.KM, null, null, null, null, null, null, 90.5, 0d, null, null, null, 0);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void constructor_invalidLongitude() {
-        new UserConfig(Unit.KM, null, null, null, null, null, null, 10.5, -180.5, null, null, null, 0);
+        assertThrows(IllegalArgumentException.class, () -> {
+            new UserConfig(Unit.KM, null, null, null, null, null, null, 10.5, -180.5, null, null, null, 0);
+        });
     }
 
 

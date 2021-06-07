@@ -3,20 +3,19 @@ package com.redshiftsoft.tesla.dao.user;
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUsers;
 import com.redshiftsoft.util.RandomUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DAOConfiguration.class)
 public class UserDAO_Get_UT {
 
@@ -64,9 +63,11 @@ public class UserDAO_Get_UT {
         assertTrue(System.currentTimeMillis() - userOut.getCreationDate().toEpochMilli() < 1000);
     }
 
-    @Test(expected = EmptyResultDataAccessException.class)
+    @Test
     public void getById_throwsForNonExistingId() {
-        userDAO.getById(-435346456);
+        assertThrows(EmptyResultDataAccessException.class, () -> {
+            userDAO.getById(-435346456);
+        });
     }
 
     private static void assertUserEquals(User userIn, User userOut) {

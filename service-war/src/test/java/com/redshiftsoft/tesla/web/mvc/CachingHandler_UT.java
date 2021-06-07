@@ -3,35 +3,28 @@ package com.redshiftsoft.tesla.web.mvc;
 import com.google.common.collect.Lists;
 import com.redshiftsoft.tesla.dao.dbinfo.DBInfoDAO;
 import com.redshiftsoft.util.ThreadUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
 public class CachingHandler_UT {
 
     private static final int THREAD_COUNT = 16;
 
-    @Mock
-    private DBInfoDAO dbInfoDAO;
-
-    @Mock
-    private Supplier<List<String>> supplier;
+    private DBInfoDAO dbInfoDAO = Mockito.mock(DBInfoDAO.class);
+    private Supplier<List<String>> supplier = Mockito.mock(Supplier.class);
 
     private CachingHandler<String> cachingHandler;
 
-    @Before
+    @BeforeEach
     public void setup() {
         cachingHandler = new CachingHandler<>(dbInfoDAO, "testCache", supplier);
         when(supplier.get()).thenReturn(new ArrayList<>());

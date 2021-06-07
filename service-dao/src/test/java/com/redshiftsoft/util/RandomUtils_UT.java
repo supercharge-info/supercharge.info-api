@@ -1,11 +1,11 @@
 package com.redshiftsoft.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.NumberFormat;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RandomUtils_UT {
 
@@ -237,9 +237,11 @@ public class RandomUtils_UT {
         assertTrue(neg && pos);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getInteger_IllegalArg() {
-        randomUtils.getInteger(50, 20);
+        assertThrows(IllegalArgumentException.class, () -> {
+            randomUtils.getInteger(50, 20);
+        });
     }
 
     @Test
@@ -334,7 +336,7 @@ public class RandomUtils_UT {
         for (Long l : randLongs) {
             assertTrue(l >= 10 && l <= 20);
         }
-        assertEquals("expected empty list", 0, randomUtils.getLongList(10, 20, 0).size());
+        assertEquals(0, randomUtils.getLongList(10, 20, 0).size());
     }
 
 
@@ -345,7 +347,7 @@ public class RandomUtils_UT {
         for (Integer l : randInts) {
             assertTrue(l >= -20 && l <= 10);
         }
-        assertEquals("expected empty list", 0, randomUtils.getIntegerList(10, 20, 0).size());
+        assertEquals(0, randomUtils.getIntegerList(10, 20, 0).size());
     }
 
 
@@ -382,10 +384,12 @@ public class RandomUtils_UT {
         assertEquals("monkey", element);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getElement_List_WithZeroElements() {
-        List<String> list = new ArrayList<>();
-        randomUtils.getElement(list);
+        assertThrows(IllegalArgumentException.class, () -> {
+            List<String> list = new ArrayList<>();
+            randomUtils.getElement(list);
+        });
     }
 
     // ---------------------------------------------------------------------------------------------------
@@ -421,10 +425,12 @@ public class RandomUtils_UT {
         assertEquals("monkey", element);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getElement_Collection_WithZeroElements() {
-        Collection<String> list = new ArrayList<>();
-        randomUtils.getElement(list);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Collection<String> list = new ArrayList<>();
+            randomUtils.getElement(list);
+        });
     }
 
     // ---------------------------------------------------------------------------------------------------
@@ -463,9 +469,11 @@ public class RandomUtils_UT {
         assertTrue(result.contains("b"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getElements_howManyTooLarge() {
-        randomUtils.getElements(Arrays.asList("a", "b"), 3);
+        assertThrows(IllegalArgumentException.class, () -> {
+            randomUtils.getElements(Arrays.asList("a", "b"), 3);
+        });
     }
 
     @Test
@@ -514,10 +522,12 @@ public class RandomUtils_UT {
         assertEquals("monkey", element);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getElement_Array_WithZeroElements() {
-        String[] array = new String[0];
-        randomUtils.getElement(array);
+        assertThrows(IllegalArgumentException.class, () -> {
+            String[] array = new String[0];
+            randomUtils.getElement(array);
+        });
     }
 
     /**

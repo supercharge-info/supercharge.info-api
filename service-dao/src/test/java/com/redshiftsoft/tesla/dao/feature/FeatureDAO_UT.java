@@ -2,11 +2,11 @@ package com.redshiftsoft.tesla.dao.feature;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.util.RandomUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -16,10 +16,10 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DAOConfiguration.class)
 public class FeatureDAO_UT {
 
@@ -46,7 +46,7 @@ public class FeatureDAO_UT {
         long modifiedDate = featureOut.getModifiedDate().toInstant(ZoneOffset.UTC).toEpochMilli();
         long currentDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
         long timeDiffMs = Math.abs(modifiedDate - currentDate);
-        assertTrue("timeDiffMs=" + timeDiffMs, timeDiffMs < 30_000);
+        assertTrue(timeDiffMs < 30_000);
 
     }
 

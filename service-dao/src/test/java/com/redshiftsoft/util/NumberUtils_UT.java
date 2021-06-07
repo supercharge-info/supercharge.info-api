@@ -1,20 +1,20 @@
 package com.redshiftsoft.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class NumberUtils_UT {
 
     @Test
-    public void isBetweenExclusive_int() throws Exception {
+    public void isBetweenExclusive_int() {
         assertTrue(NumberUtils.isBetweenExclusive(5, 4, 6));
         assertFalse(NumberUtils.isBetweenExclusive(4, 4, 6));
         assertFalse(NumberUtils.isBetweenExclusive(6, 4, 6));
     }
 
     @Test
-    public void isBetweenInclusive_int() throws Exception {
+    public void isBetweenInclusive_int() {
         assertFalse(NumberUtils.isBetweenInclusive(3, 4, 6));
         assertTrue(NumberUtils.isBetweenInclusive(4, 4, 6));
         assertTrue(NumberUtils.isBetweenInclusive(5, 4, 6));
@@ -23,14 +23,14 @@ public class NumberUtils_UT {
     }
 
     @Test
-    public void isBetweenExclusive_long() throws Exception {
+    public void isBetweenExclusive_long() {
         assertTrue(NumberUtils.isBetweenExclusive(5L, 4L, 6L));
         assertFalse(NumberUtils.isBetweenExclusive(4L, 4L, 6L));
         assertFalse(NumberUtils.isBetweenExclusive(6L, 4L, 6L));
     }
 
     @Test
-    public void isBetweenInclusive_long() throws Exception {
+    public void isBetweenInclusive_long() {
         assertFalse(NumberUtils.isBetweenInclusive(3L, 4L, 6L));
         assertTrue(NumberUtils.isBetweenInclusive(4L, 4L, 6L));
         assertTrue(NumberUtils.isBetweenInclusive(5L, 4L, 6L));
@@ -39,14 +39,14 @@ public class NumberUtils_UT {
     }
 
     @Test
-    public void isBetweenExclusive_double() throws Exception {
+    public void isBetweenExclusive_double() {
         assertTrue(NumberUtils.isBetweenExclusive(5d, 4d, 6d));
         assertFalse(NumberUtils.isBetweenExclusive(4d, 4d, 6d));
         assertFalse(NumberUtils.isBetweenExclusive(6d, 4d, 6d));
     }
 
     @Test
-    public void isBetweenInclusive_double() throws Exception {
+    public void isBetweenInclusive_double() {
         assertFalse(NumberUtils.isBetweenInclusive(3D, 4D, 6D));
         assertTrue(NumberUtils.isBetweenInclusive(4D, 4D, 6D));
         assertTrue(NumberUtils.isBetweenInclusive(5D, 4D, 6D));
@@ -116,14 +116,18 @@ public class NumberUtils_UT {
         assertEquals(234, NumberUtils.max(25, 67, 234, 100));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void max2() {
-        NumberUtils.max((long[]) null);
+        assertThrows(IllegalArgumentException.class, () -> {
+            NumberUtils.max((long[]) null);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void max3() {
-        NumberUtils.max((long[]) new long[]{});
+        assertThrows(IllegalArgumentException.class, () -> {
+            NumberUtils.max((long[]) new long[]{});
+        });
     }
 
     @Test
@@ -131,14 +135,18 @@ public class NumberUtils_UT {
         assertEquals(-10, NumberUtils.min(25, 67, 234, 100, -10, -5));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void min2() {
-        NumberUtils.min((long[]) null);
+        assertThrows(IllegalArgumentException.class, () -> {
+            NumberUtils.min((long[]) null);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void min3() {
-        NumberUtils.min((long[]) new long[]{});
+        assertThrows(IllegalArgumentException.class, () -> {
+            NumberUtils.min((long[]) new long[]{});
+        });
     }
 
     @Test

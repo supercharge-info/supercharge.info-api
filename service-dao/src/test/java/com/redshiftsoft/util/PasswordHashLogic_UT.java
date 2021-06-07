@@ -1,19 +1,20 @@
 package com.redshiftsoft.util;
 
 import com.google.common.io.BaseEncoding;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PasswordHashLogic_UT {
 
-    private PasswordHashLogic hashLogic = new PasswordHashLogic(PasswordHashLogic.PBKDF2_WITH_HMAC_SHA1, 32, 2500);
+    private final PasswordHashLogic hashLogic =
+            new PasswordHashLogic(PasswordHashLogic.PBKDF2_WITH_HMAC_SHA1, 32, 2500);
 
     @Test
     public void generateNewSalt() {
         String saltString = hashLogic.generateNewSalt();
-        assertEquals("32 bytes, 256 bit salt", 32, BaseEncoding.base16().decode(saltString.toUpperCase()).length);
-        assertEquals("64 characters hex encoded", 32 * 2, saltString.length());
+        assertEquals(32, BaseEncoding.base16().decode(saltString.toUpperCase()).length);
+        assertEquals(32 * 2, saltString.length());
     }
 
     @Test
@@ -45,7 +46,7 @@ public class PasswordHashLogic_UT {
             count++;
         }
         int speed = count * (1000 / MAX_TIME_MS);
-        assertTrue(String.format("count = %,d count/sec = %,d", count, speed), speed > 5);
+        assertTrue(speed > 5);
     }
 
 

@@ -6,16 +6,16 @@ import com.redshiftsoft.tesla.dao.user.UserRouteDAO;
 import com.redshiftsoft.tesla.dao.user.UserRouteWaypoint;
 import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class UserRouteController_UT {
@@ -27,7 +27,7 @@ public class UserRouteController_UT {
 
     private final User threadUser = new User();
 
-    @Before
+    @BeforeEach
     public void beforeTest() {
         mockUserRouteDao = Mockito.mock(UserRouteDAO.class);
         classUnderTest = new UserRouteController(mockUserRouteDao);
@@ -37,7 +37,7 @@ public class UserRouteController_UT {
         Security.setAuth(threadUser);
     }
 
-    @After
+    @AfterEach
     public void afterTest() {
         Security.clearAuth();
     }

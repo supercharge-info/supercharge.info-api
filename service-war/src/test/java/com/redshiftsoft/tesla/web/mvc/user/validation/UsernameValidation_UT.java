@@ -2,11 +2,11 @@ package com.redshiftsoft.tesla.web.mvc.user.validation;
 
 import com.google.common.collect.Lists;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 public class UsernameValidation_UT {

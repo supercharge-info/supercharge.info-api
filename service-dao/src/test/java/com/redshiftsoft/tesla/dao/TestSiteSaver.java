@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Component
 public class TestSiteSaver {

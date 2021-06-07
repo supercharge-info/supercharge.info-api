@@ -1,11 +1,11 @@
 package com.redshiftsoft.tesla.web.mvc.site;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Comparator;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SiteDTOComparatorFactory_UT {
 

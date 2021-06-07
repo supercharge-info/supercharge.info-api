@@ -3,20 +3,19 @@ package com.redshiftsoft.tesla.dao.user;
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUsers;
 import com.redshiftsoft.util.RandomUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 @Transactional
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DAOConfiguration.class)
 public class UserDAO_Update_UT {
 
@@ -34,7 +33,7 @@ public class UserDAO_Update_UT {
         userDAO.updatePasswordHash(userIn.getId(), newPasswordHash);
 
         // then
-        Assert.assertEquals(newPasswordHash, userDAO.getById(userIn.getId()).getPasswordHash());
+        assertEquals(newPasswordHash, userDAO.getById(userIn.getId()).getPasswordHash());
     }
 
     @Test
@@ -48,7 +47,7 @@ public class UserDAO_Update_UT {
         userDAO.updateUsername(userIn.getId(), newUsername);
 
         // then
-        Assert.assertEquals(newUsername, userDAO.getById(userIn.getId()).getUsername());
+        assertEquals(newUsername, userDAO.getById(userIn.getId()).getUsername());
     }
 
     @Test
@@ -62,7 +61,7 @@ public class UserDAO_Update_UT {
         userDAO.updateEmail(userIn.getId(), newEmail);
 
         // then
-        Assert.assertEquals(newEmail, userDAO.getById(userIn.getId()).getEmail());
+        assertEquals(newEmail, userDAO.getById(userIn.getId()).getEmail());
     }
 
     @Test
@@ -76,7 +75,7 @@ public class UserDAO_Update_UT {
         userDAO.updateDescription(userIn.getId(), newDescription);
 
         // then
-        Assert.assertEquals(newDescription, userDAO.getById(userIn.getId()).getDescription());
+        assertEquals(newDescription, userDAO.getById(userIn.getId()).getDescription());
     }
 
 

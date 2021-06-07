@@ -167,13 +167,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>5.1.0</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- https://github.com/mockito/mockito-->
         <dependency>
             <groupId>org.mockito</groupId>

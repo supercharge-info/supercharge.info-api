@@ -8,25 +8,24 @@ import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.util.RandomUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @Rollback(value = true)
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DAOConfiguration.class)
 public class SiteChangeDAO_UT {
 
@@ -42,7 +41,7 @@ public class SiteChangeDAO_UT {
     private Site siteIn;
     private User user;
 
-    @Before
+    @BeforeEach
     public void before() {
         siteIn = testSiteSaver.persistRandomSite();
         user = TestUsers.createUser();
@@ -75,18 +74,19 @@ public class SiteChangeDAO_UT {
         });
     }
 
-    @Test(expected = DuplicateKeyException.class)
+    @Test
     public void insert_unique() {
+        assertThrows(DuplicateKeyException.class, () -> {
+            Instant changeDate = Instant.now();
+            SiteChange siteChange1 = new SiteChange(siteIn.getId(), user.getId(), 1, "fieldNameSAME", "oldValue1", "newValue1", changeDate);
+            SiteChange siteChange2 = new SiteChange(siteIn.getId(), user.getId(), 1, "fieldNameSAME", "oldValue2", "newValue2", changeDate);
 
-        Instant changeDate = Instant.now();
-        SiteChange siteChange1 = new SiteChange(siteIn.getId(), user.getId(), 1, "fieldNameSAME", "oldValue1", "newValue1", changeDate);
-        SiteChange siteChange2 = new SiteChange(siteIn.getId(), user.getId(), 1, "fieldNameSAME", "oldValue2", "newValue2", changeDate);
 
+            List<SiteChange> list = Lists.newArrayList(siteChange1, siteChange2);
 
-        List<SiteChange> list = Lists.newArrayList(siteChange1, siteChange2);
-
-        // when
-        siteChangesDAO.insert(list);
+            // when
+            siteChangesDAO.insert(list);
+        });
     }
 
 }

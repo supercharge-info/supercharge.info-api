@@ -1,32 +1,24 @@
 package com.redshiftsoft.tesla.web.mvc.site;
 
 
-import com.redshiftsoft.tesla.dao.site.Country;
-import com.redshiftsoft.tesla.dao.site.CountryDAO;
-import com.redshiftsoft.tesla.dao.site.SiteGPS;
-import com.redshiftsoft.tesla.dao.site.SiteStatus;
+import com.redshiftsoft.tesla.dao.site.*;
 import com.redshiftsoft.tesla.web.mvc.siteadmin.SiteEditDTO;
 import com.redshiftsoft.tesla.web.mvc.siteadmin.SiteEditValidation;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class SiteEditValidation_UT {
 
-    @Mock
-    CountryDAO countryDAO;
+    private CountryDAO countryDAO = Mockito.mock(CountryDAO.class);
+    private SiteDAO siteDAO = Mockito.mock(SiteDAO.class);
 
-    @InjectMocks
-    private final SiteEditValidation siteEditValidation = new SiteEditValidation();
+    private final SiteEditValidation siteEditValidation = new SiteEditValidation(siteDAO, countryDAO);
 
     @Test
     public void validateCommon_stateRequired_USA() {

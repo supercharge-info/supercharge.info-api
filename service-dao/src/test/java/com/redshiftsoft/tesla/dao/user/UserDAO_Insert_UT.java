@@ -2,19 +2,19 @@ package com.redshiftsoft.tesla.dao.user;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestUsers;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DAOConfiguration.class)
 public class UserDAO_Insert_UT {
 
@@ -42,6 +42,10 @@ public class UserDAO_Insert_UT {
         assertFalse(userOut1.isEmailVerified());
     }
 
+    private static void assertUserEquals(User userIn, User userOut) {
+        assertEquals(userIn, userOut);
+    }
+
     @Test
     public void insert_duplicateUsername_shouldFail() {
         // given
@@ -53,7 +57,7 @@ public class UserDAO_Insert_UT {
         // then -- same case -- should fail
         try {
             userDAO.insert(userIn2);
-            fail();
+            fail("fail");
         } catch (DuplicateKeyException e) {
         }
     }
@@ -70,7 +74,7 @@ public class UserDAO_Insert_UT {
         // then -- different case -- should fail
         try {
             userDAO.insert(userIn2);
-            fail();
+            fail("fail");
         } catch (DuplicateKeyException e) {
         }
     }
@@ -86,7 +90,7 @@ public class UserDAO_Insert_UT {
         // then -- same case -- should fail
         try {
             userDAO.insert(userIn2);
-            fail();
+            fail("fail");
         } catch (DuplicateKeyException e) {
         }
     }
@@ -103,13 +107,9 @@ public class UserDAO_Insert_UT {
         // then -- different case -- should fail
         try {
             userDAO.insert(userIn2);
-            fail();
+            fail("fail");
         } catch (DuplicateKeyException e) {
         }
-    }
-
-    private static void assertUserEquals(User userIn, User userOut) {
-        assertTrue(userIn.equals(userOut));
     }
 
 

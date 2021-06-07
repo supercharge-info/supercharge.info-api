@@ -19,6 +19,14 @@ public class SiteEditValidation {
     @Resource
     private CountryDAO countryDAO;
 
+    public SiteEditValidation() {
+    }
+
+    public SiteEditValidation(SiteDAO siteDAO, CountryDAO countryDAO) {
+        this.siteDAO = siteDAO;
+        this.countryDAO = countryDAO;
+    }
+
     public List<String> validate(SiteEditDTO site) {
         List<String> errorMessages = Lists.newArrayList();
 

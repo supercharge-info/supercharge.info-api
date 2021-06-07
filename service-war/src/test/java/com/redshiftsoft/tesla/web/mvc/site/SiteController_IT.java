@@ -10,6 +10,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+;
+
 public class SiteController_IT extends Mvc_IT {
 
     @Test

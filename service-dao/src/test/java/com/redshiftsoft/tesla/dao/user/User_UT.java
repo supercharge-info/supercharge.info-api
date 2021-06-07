@@ -1,11 +1,11 @@
 package com.redshiftsoft.tesla.dao.user;
 
 import com.redshiftsoft.tesla.dao.TestUsers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class User_UT {
 

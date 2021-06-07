@@ -2,7 +2,7 @@ package com.redshiftsoft.tesla.web.mvc.userlogin;
 
 import com.google.common.io.BaseEncoding;
 import com.redshiftsoft.util.RandomUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class LoginCookie_UT {
 

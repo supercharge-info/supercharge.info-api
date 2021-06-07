@@ -4,14 +4,12 @@ import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
 import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -19,15 +17,13 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DAOConfiguration.class)
 public class ChangeLogDAO_UT {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
     @Resource
     private JdbcTemplate jdbcTemplate;
     @Resource
@@ -63,16 +59,16 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void insert_invalidChangeType() {
-        expectedException.expect(DataIntegrityViolationException.class);
-        expectedException.expectMessage("invalid input value for enum change_type: \"invalid\"");
-        jdbcTemplate.update("insert into changelog values(NULL, 100, NOW(), 'invalid', 'OPEN', NULL)");
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            jdbcTemplate.update("insert into changelog values(NULL, 100, NOW(), 'invalid', 'OPEN', NULL)");
+        }, "invalid input value for enum change_type: \"invalid\"");
     }
 
     @Test
     public void insert_emptyChangeType() {
-        expectedException.expect(DataIntegrityViolationException.class);
-        expectedException.expectMessage("invalid input value for enum change_type: \"\"");
-        jdbcTemplate.update("insert into changelog values(NULL, 100, NOW(), '', 'OPEN', NULL)");
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            jdbcTemplate.update("insert into changelog values(NULL, 100, NOW(), '', 'OPEN', NULL)");
+        }, "invalid input value for enum change_type: \"\"");
     }
 
     @Test
@@ -93,18 +89,18 @@ public class ChangeLogDAO_UT {
     public void update_invalidChangeType() {
         ChangeLog changeLogIn = RandomChangeLog.randomChangeLog();
         changeLogDAO.insert(changeLogIn);
-        expectedException.expect(DataIntegrityViolationException.class);
-        expectedException.expectMessage("invalid input value for enum change_type: \"invalid\"");
-        jdbcTemplate.update("update changelog set change_type='invalid' where id=?", changeLogIn.getId());
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            jdbcTemplate.update("update changelog set change_type='invalid' where id=?", changeLogIn.getId());
+        }, "invalid input value for enum change_type: \"invalid\"");
     }
 
     @Test
     public void update_emptyChangeType() {
         ChangeLog changeLogIn = RandomChangeLog.randomChangeLog();
         changeLogDAO.insert(changeLogIn);
-        expectedException.expect(DataIntegrityViolationException.class);
-        expectedException.expectMessage("invalid input value for enum change_type: \"\"");
-        jdbcTemplate.update("update changelog set change_type=''::CHANGE_TYPE where id=?", changeLogIn.getId());
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            jdbcTemplate.update("update changelog set change_type=''::CHANGE_TYPE where id=?", changeLogIn.getId());
+        }, "invalid input value for enum change_type: \"\"");
     }
 
     @Test

@@ -4,23 +4,23 @@ import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestSiteCreator;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
 import com.redshiftsoft.util.RandomUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.ZoneOffset;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @Rollback(value = true)
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DAOConfiguration.class)
 public class SiteDAO_UT {
 
@@ -45,9 +45,11 @@ public class SiteDAO_UT {
         assertEquals(1, siteOut.getAddress().getVersion());
     }
 
-    @Test(expected = EmptyResultDataAccessException.class)
+    @Test
     public void getById_throwsForNonExistingSiteId() {
-        siteDAO.getById(-103_343_434);
+        assertThrows(EmptyResultDataAccessException.class, () -> {
+            siteDAO.getById(-103_343_434);
+        });
     }
 
     @Test
@@ -193,7 +195,7 @@ public class SiteDAO_UT {
         long inMillis = siteIn.getDateModified().toInstant(ZoneOffset.UTC).toEpochMilli();
         long outMillis = siteOut.getDateModified().toInstant(ZoneOffset.UTC).toEpochMilli();
         long diffMillis = Math.abs(inMillis - outMillis);
-        assertTrue("diffMillis= " + diffMillis, diffMillis < 30_000);
+        assertTrue(diffMillis < 30_000);
 
         assertEquals(siteIn.getHours(), siteOut.getHours());
         assertEquals(siteIn.isEnabled(), siteOut.isEnabled());

@@ -2,14 +2,14 @@ package com.redshiftsoft.element;
 
 public class Html extends Element {
 
-	public static final String ATTR_XMLNS = "xmlns";
+    public static final String ATTR_XMLNS = "xmlns";
 
-	public Html() {
-		super(HTML);
-	}
+    public Html() {
+        super(HTML);
+    }
 
-	public Html(final Element... children) {
-		super(HTML);
-		add(children);
-	}
+    public Html(final Element... children) {
+        super(HTML);
+        add(children);
+    }
 }

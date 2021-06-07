@@ -82,7 +82,7 @@ public class LoginCookie extends Cookie {
         assert isNotEmpty(user.getPasswordHash());
         assert user.getId() != null;
 
-		/* Hash Input */
+        /* Hash Input */
         StringBuilder hashInput = new StringBuilder();
         hashInput.append(user.getId());
         hashInput.append("|");

@@ -114,10 +114,10 @@ public class LoginDAO_UT {
     @Test
     public void getInvalidLoginCount() {
 
-		/* First delete all existing login attempts */
+        /* First delete all existing login attempts */
         loginDAO.delete(user.getId());
 
-		/* Next insert some invalid attempts */
+        /* Next insert some invalid attempts */
         LoginResult[] a = {LoginResult.SUCCESS, LoginResult.DISABLED, LoginResult.INVALID_CREDENTIALS,
                 LoginResult.INVALID_CREDENTIALS, LoginResult.LOCKED, LoginResult.INVALID_CREDENTIALS};
 
@@ -126,7 +126,7 @@ public class LoginDAO_UT {
             loginDAO.insertAttempt(attempt);
         }
 
-		/* Verify count is as expected */
+        /* Verify count is as expected */
         int count = loginDAO.getInvalidLoginCount(user.getId(), 1);
         assertEquals(5, count);
 

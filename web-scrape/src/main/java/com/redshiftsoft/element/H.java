@@ -5,18 +5,18 @@ package com.redshiftsoft.element;
  */
 public class H extends Element {
 
-	public H(int level) {
-		super(H + level);
-	}
+    public H(int level) {
+        super(H + level);
+    }
 
-	public H(int level, final Element... children) {
-		super(H + level);
-		add(children);
-	}
+    public H(int level, final Element... children) {
+        super(H + level);
+        add(children);
+    }
 
-	public H(int level, final String cdata) {
-		super(H + level);
-		add(new CData(cdata));
-	}
+    public H(int level, final String cdata) {
+        super(H + level);
+        add(new CData(cdata));
+    }
 
 }

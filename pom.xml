@@ -1,5 +1,4 @@
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <name>supercharge.info API</name>
@@ -7,7 +6,7 @@
 
     <groupId>info.supercharge.api</groupId>
     <artifactId>supercharge.info-api</artifactId>
-    <version>4.8.3-SNAPSHOT</version>
+    <version>4.8.3</version>
 
 
     <properties>
@@ -32,7 +31,7 @@
 
     <scm>
         <developerConnection>scm:git:git@github.com:supercharge-info/supercharge.info-api.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>supercharge.info-api-4.8.3</tag>
     </scm>
 
     <modules>

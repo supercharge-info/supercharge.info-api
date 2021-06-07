@@ -2,8 +2,10 @@ package com.redshiftsoft.tesla.dao.changelog;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
+import com.redshiftsoft.tesla.dao.site.Address;
 import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,12 +33,18 @@ public class ChangeLogDAO_UT {
     @Resource
     private TestSiteSaver testSiteSaver;
 
+    private Site testSite;
+
+    @BeforeEach
+    public void insertTestSite() {
+        testSite = testSiteSaver.persistRandomSite();
+    }
 
     @Test
     public void insert_getById() {
 
         // given
-        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog();
+        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
         changeLogDAO.insert(changeLogIn);
 
         // when
@@ -50,11 +58,12 @@ public class ChangeLogDAO_UT {
         assertEquals(changeLogIn.getSiteStatus(), changeLogOut.getSiteStatus());
         assertTrue(Math.abs(System.currentTimeMillis() - changeLogOut.getModifiedInstant().toEpochMilli()) < 5000);
         // then -- joined fields
-        assertEquals("Buellton, CA", changeLogOut.getSiteName());
-        assertEquals(100, changeLogOut.getRegionId());
-        assertEquals("North America", changeLogOut.getRegionName());
-        assertEquals(100, changeLogOut.getCountryId());
-        assertEquals("USA", changeLogOut.getCountryName());
+        assertEquals(testSite.getName(), changeLogOut.getSiteName());
+        Address addressIn = testSite.getAddress();
+        assertEquals(addressIn.getRegionId(), changeLogOut.getRegionId());
+        assertEquals(addressIn.getRegion(), changeLogOut.getRegionName());
+        assertEquals(addressIn.getCountryId(), changeLogOut.getCountryId());
+        assertEquals(addressIn.getCountry(), changeLogOut.getCountryName());
     }
 
     @Test
@@ -73,7 +82,7 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void insert_delete() {
-        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog();
+        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
         changeLogDAO.insert(changeLogIn);
         int changeLogId = changeLogIn.getId();
         assertTrue(changeLogDAO.exists(changeLogId));
@@ -87,7 +96,7 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void update_invalidChangeType() {
-        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog();
+        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
         changeLogDAO.insert(changeLogIn);
         assertThrows(DataIntegrityViolationException.class, () -> {
             jdbcTemplate.update("update changelog set change_type='invalid' where id=?", changeLogIn.getId());
@@ -96,7 +105,7 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void update_emptyChangeType() {
-        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog();
+        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
         changeLogDAO.insert(changeLogIn);
         assertThrows(DataIntegrityViolationException.class, () -> {
             jdbcTemplate.update("update changelog set change_type=''::CHANGE_TYPE where id=?", changeLogIn.getId());
@@ -117,8 +126,7 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void getStatusDurations() {
-        Site siteIn = testSiteSaver.persistRandomSite();
-        changeLogDAO.insert(ChangeLog.toPersist(siteIn.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now()));
+        changeLogDAO.insert(ChangeLog.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now()));
         Map<Integer, Integer> durations = changeLogDAO.getStatusDaysMap();
         assertTrue(durations.size() > 0);
     }

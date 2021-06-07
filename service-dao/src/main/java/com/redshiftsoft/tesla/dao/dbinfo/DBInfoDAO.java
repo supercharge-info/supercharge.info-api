@@ -73,7 +73,11 @@ public class DBInfoDAO extends BaseDAO {
         Timestamp d3 = getJdbcTemplate().queryForObject("select max(modified_date) from changelog", Timestamp.class);
         Timestamp d4 = getJdbcTemplate().queryForObject("select max(modified_date) from country", Timestamp.class);
         Timestamp d5 = getJdbcTemplate().queryForObject("select max(modified_date) from region", Timestamp.class);
-        return NumberUtils.max(d1.getTime(), d2.getTime(), d3 != null ? d3.getTime() : 0, d4.getTime(), d5.getTime());
+        return NumberUtils.max(t(d1), t(d2), t(d3), t(d4), t(d5));
+    }
+
+    private static long t(Timestamp d) {
+        return (d == null ? 0 : d.getTime());
     }
 
 }

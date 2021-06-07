@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -157,28 +159,40 @@ public class SiteDAO_UT {
 
     @Test
     public void getEnabledSites() {
-        List<Site> sites = siteDAO.getEnabledSites();
-        for (Site site : sites) {
-            assertTrue(site.isEnabled());
-        }
+        // given
+        List<Integer> enabledSiteIds = IntStream.range(0, 10).mapToObj((x) -> {
+            Site siteIn = testSiteCreator.randomSite();
+            siteIn.setEnabled(true);
+            siteDAO.insert(siteIn);
+            return siteIn.getId();
+        }).collect(Collectors.toList());
 
-        assertTrue(sites.size() > 100);
+
+        // when
+        List<Site> enabledSitesOut = siteDAO.getEnabledSites();
+
+        // then
+        assertTrue(enabledSitesOut.size() >= 10);
+        enabledSitesOut.stream().map(Site::getId).collect(Collectors.toList()).containsAll(enabledSiteIds);
     }
 
     @Test
     public void getAllSites() {
-        Site siteIn = testSiteCreator.randomSite();
-        siteIn.setEnabled(false);
-        siteDAO.insert(siteIn);
+        // given
+        List<Integer> siteIds = IntStream.range(0, 10).mapToObj((x) -> {
+            Site siteIn = testSiteCreator.randomSite();
+            siteIn.setEnabled(RandomUtils.fast().getBoolean());
+            siteDAO.insert(siteIn);
+            return siteIn.getId();
+        }).collect(Collectors.toList());
 
-        List<Site> allSites = siteDAO.getAllSites();
-        List<Site> enabledSites = siteDAO.getEnabledSites();
 
-        assertFalse(enabledSites.contains(siteIn));
-        assertTrue(allSites.contains(siteIn));
+        // when
+        List<Site> sitesOut = siteDAO.getAllSites();
 
-        assertTrue(allSites.size() > 100);
-        assertTrue(enabledSites.size() > 100);
+        // then
+        assertTrue(sitesOut.size() >= 10);
+        sitesOut.stream().map(Site::getId).collect(Collectors.toList()).containsAll(siteIds);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

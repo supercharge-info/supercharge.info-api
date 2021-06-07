@@ -1,6 +1,11 @@
 package com.redshiftsoft.tesla.dao.sitestallcount;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
+import com.redshiftsoft.tesla.dao.TestSiteCreator;
+import com.redshiftsoft.tesla.dao.site.Site;
+import com.redshiftsoft.tesla.dao.site.SiteDAO;
+import com.redshiftsoft.tesla.dao.site.SiteStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.Rollback;
@@ -21,6 +26,21 @@ public class SiteStallCountDAO_UT {
 
     @Resource
     private SiteStallCountDAO siteStallCountDAO;
+
+    @Resource
+    private TestSiteCreator testSiteCreator;
+    @Resource
+    private SiteDAO siteDAO;
+
+    @BeforeEach
+    private void insertOpenSites() {
+        for (int i = 0; i < 10; i++) {
+            Site s = testSiteCreator.randomSite();
+            s.setEnabled(true);
+            s.setStatus(SiteStatus.OPEN);
+            siteDAO.insert(s);
+        }
+    }
 
     @Test
     public void recordCurrentStallCount() {

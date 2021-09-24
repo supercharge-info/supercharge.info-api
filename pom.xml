@@ -6,7 +6,7 @@
 
     <groupId>info.supercharge.api</groupId>
     <artifactId>supercharge.info-api</artifactId>
-    <version>4.8.4-SNAPSHOT</version>
+    <version>4.8.4</version>
 
 
     <properties>
@@ -31,7 +31,7 @@
 
     <scm>
         <developerConnection>scm:git:git@github.com:supercharge-info/supercharge.info-api.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>supercharge.info-api-4.8.4</tag>
     </scm>
 
     <modules>

@@ -2,10 +2,13 @@ package com.redshiftsoft.tesla.dao.changelog;
 
 
 import com.redshiftsoft.tesla.dao.BaseDAO;
+import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +30,19 @@ public class ChangeLogDAO extends BaseDAO {
     public List<ChangeLog> getList(int limit) {
         String sql = ChangeLogRowMapper.SELECT + " order by cl.change_date desc, cl.id desc limit ?";
         return getJdbcTemplate().query(sql, CHANGE_LOG_ROW_MAPPER, limit);
+    }
+
+    public Map<Instant, SiteStatus> getSiteList(int siteId) {
+        String sql = "select change_date, site_status from changelog where site_id = ? order by change_date";
+        List<Map<String, Object>> rowList = getJdbcTemplate().queryForList(sql, siteId);
+
+        Map<Instant, SiteStatus> resultMap = new HashMap<>();
+        for (Map<String, Object> row : rowList) {
+            Instant changeDate = Instant.ofEpochMilli(((Timestamp) row.get("change_date")).getTime());
+            SiteStatus siteStatus = SiteStatus.valueOf((String) row.get("site_status"));
+            resultMap.put(changeDate, siteStatus);
+        }
+        return resultMap;
     }
 
     public void insert(ChangeLog changeLog) {
@@ -59,7 +75,7 @@ public class ChangeLogDAO extends BaseDAO {
         Map<Integer, Integer> resultMap = new HashMap<>();
         for (Map<String, Object> row : rowList) {
             Integer siteId = (Integer) row.get("site_id");
-            Double statusDays = ((Double) row.get("status_count"));
+            Double statusDays = (Double) row.get("status_count");
             resultMap.put(siteId, statusDays == null ? 0 : (statusDays.intValue()));
         }
         return resultMap;

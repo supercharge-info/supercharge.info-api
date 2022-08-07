@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -131,6 +132,16 @@ public class SiteController {
     public List<StallCountDTO> stallCounts() {
         return siteStallCountDAO.getCounts()
                 .stream().map(x -> new StallCountDTO(x.getDate(), x.getStallCount()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @RequestMapping(method = RequestMethod.GET, value = "/siteHistory")
+    @ResponseBody
+    public List<SiteHistoryDTO> siteHistory(@RequestParam("siteId") Integer siteId) {
+        return changeLogDAO.getSiteList(siteId).entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .map(e -> new SiteHistoryDTO(e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
     }
 

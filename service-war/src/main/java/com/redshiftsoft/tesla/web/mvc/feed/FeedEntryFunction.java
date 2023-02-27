@@ -40,7 +40,7 @@ class FeedEntryFunction implements Function<ChangeLog, SyndEntryImpl> {
     }
 
     private String buildLink(Site site) {
-        return "https://supercharge.info?center=" +
+        return "https://supercharge.info/map?center=" +
                 site.getGps().getLatitude() + "," + site.getGps().getLongitude() + "&zoom=11";
     }
 

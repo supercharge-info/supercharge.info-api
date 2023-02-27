@@ -58,3 +58,4 @@ INSERT INTO country (country_id,"name",code,region_id,state_required,modified_da
 INSERT INTO country (country_id,"name",code,region_id,state_required,modified_date) VALUES (156,'Singapore','SG',102,false,now());
 INSERT INTO country (country_id,"name",code,region_id,state_required,modified_date) VALUES (157,'Israel','IL',102,false,now());
 INSERT INTO country (country_id,"name",code,region_id,state_required,modified_date) VALUES (158,'Morocco','MA',101,false,now());
+INSERT INTO country (country_id,"name",code,region_id,state_required,modified_date) VALUES (159,'Thailand','TH',102,false,now());

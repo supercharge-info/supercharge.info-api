@@ -32,6 +32,8 @@ public class CookieHelper {
         /* Important security measure: see design decisions on cookie security. */
         if (request.isSecure()) {
             cookie.setSecure(true);
+        } else if ("development".equals(System.getProperty("spring.profiles.active"))) {
+            cookie.setSecure(false);
         }
         response.addCookie(cookie);
     }

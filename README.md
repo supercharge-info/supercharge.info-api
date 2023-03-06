@@ -8,7 +8,7 @@ API for https://supercharge.info
 
 1. Java 14
 2. Maven
-3. Docker (currently used to create/run local test database)
+3. Docker
 
 ## Build
 
@@ -18,13 +18,13 @@ API for https://supercharge.info
 
 `./database/rebuild-database.sh` (once, run as user that can execute docker commands)
 
-`mvn test`
+`./start.sh` (each time, run as a user that can execute docker commands)
 
 ## Deploy
 
 1. Verify tests pass.
-2. `release.sh` (enter to accept suggested release version)
-3. `deploy.sh <test|prod> <version>`
+2. `./release.sh` (enter to accept suggested release version)
+3. `./deploy.sh <test|prod> <version>`
 
 ## Configuration
 

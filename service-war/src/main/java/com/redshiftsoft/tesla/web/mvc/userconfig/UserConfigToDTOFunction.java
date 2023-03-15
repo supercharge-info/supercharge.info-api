@@ -12,14 +12,26 @@ public class UserConfigToDTOFunction implements Function<UserConfig, UserConfigD
         UserConfigDTO dto = new UserConfigDTO();
         dto.unit = userConfig.getUnit().map(Enum::name).orElse(null);
 
-        dto.changesPageRegionId = userConfig.getChangesPageRegion().map(Region::getId).orElse(null);
-        dto.changesPageCountryId = userConfig.getChangesPageCountry().map(Country::getId).orElse(null);
+        dto.filter = new UserConfigFilterDTO();
 
-        dto.dataPageRegionId = userConfig.getDataPageRegion().map(Region::getId).orElse(null);
-        dto.dataPageCountryId = userConfig.getDataPageCountry().map(Country::getId).orElse(null);
+        dto.filter.regionId = userConfig.getRegionId().orElse(null);
+        dto.filter.countryId = userConfig.getCountryId().orElse(null);
+        dto.filter.state = userConfig.getStates();
 
-        dto.chartsPageRegionId = userConfig.getChartsPageRegion().map(Region::getId).orElse(null);
-        dto.chartsPageCountryId = userConfig.getChartsPageCountry().map(Country::getId).orElse(null);
+        dto.filter.changesPageRegionId = userConfig.getChangesPageRegionId().orElse(null);
+        dto.filter.changesPageCountryId = userConfig.getChangesPageCountryId().orElse(null);
+
+        dto.filter.dataPageRegionId = userConfig.getDataPageRegionId().orElse(null);
+        dto.filter.dataPageCountryId = userConfig.getDataPageCountryId().orElse(null);
+
+        dto.filter.chartsPageRegionId = userConfig.getChartsPageRegionId().orElse(null);
+        dto.filter.chartsPageCountryId = userConfig.getChartsPageCountryId().orElse(null);
+
+        dto.filter.status = userConfig.getSiteStatus();
+        dto.filter.changeType = userConfig.getChangeType().orElse(null);
+
+        dto.filter.stalls = userConfig.getStallCount().orElse(null);
+        dto.filter.power = userConfig.getPowerKilowatt().orElse(null);
 
         dto.latitude = userConfig.getLatitude().orElse(null);
         dto.longitude = userConfig.getLongitude().orElse(null);

@@ -1,6 +1,7 @@
 package com.redshiftsoft.tesla.dao.feature;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
+import com.redshiftsoft.tesla.dao.LocalDateUtil;
 import com.redshiftsoft.util.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +45,7 @@ public class FeatureDAO_UT {
         assertEquals(featureIn.getDescription(), featureOut.getDescription());
         assertEquals(featureIn.getAddedDate(), featureOut.getAddedDate());
         long modifiedDate = featureOut.getModifiedDate().toInstant(ZoneOffset.UTC).toEpochMilli();
-        long currentDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
+        long currentDate = LocalDateTime.now(LocalDateUtil.ZONE_ID).toInstant(ZoneOffset.UTC).toEpochMilli();
         long timeDiffMs = Math.abs(modifiedDate - currentDate);
         assertTrue(timeDiffMs < 30_000);
 

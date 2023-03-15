@@ -15,7 +15,10 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
             "       c.country_id, " +
             "       c.name as country_name, " +
             "       r.region_id, " +
-            "       r.name as region_name " +
+            "       r.name as region_name, " +
+            "       a.state as state, " +
+            "       s.stall_count as stall_count, " +
+            "       s.power_kwatt as power_kwatt " +
             "from changelog cl  " +
             "join site      s on cl.site_id   = s.site_id " +
             "join address   a on s.address_id = a.address_id " +
@@ -42,6 +45,11 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
 
         log.setCountryId(rs.getInt("country_id"));
         log.setCountryName(rs.getString("country_name"));
+
+        log.setState(rs.getString("state"));
+
+        log.setStallCount(rs.getInt("stall_count"));
+        log.setPowerKilowatt(rs.getInt("power_kwatt"));
 
         return log;
     }

@@ -236,5 +236,43 @@ select * from changelog where site_id=1882;
 
 update changelog set change_type='ADD' where id=3350;
 
-   
-   
+-- -----------------------------------------------------------
+-- USER_CONFIG
+--  ----------------------------------------------------------
+CREATE TYPE DISTANCE_UNIT_TYPE AS ENUM ('KM', 'MI');
+CREATE TYPE MARKER_TYPE AS ENUM ('Z', 'F', 'C');
+
+CREATE TABLE user_config
+(
+    user_id       INTEGER PRIMARY KEY NOT NULL,
+    unit          DISTANCE_UNIT_TYPE,
+    map_latitude  DOUBLE PRECISION,
+    map_longitude DOUBLE PRECISION,
+    map_zoom      INTEGER,
+    modified_date TIMESTAMPTZ         NOT NULL,
+    version       INTEGER             NOT NULL,
+    change_type   change_type,
+    marker_type   marker_type,
+    marker_size   INTEGER,
+    cluster_size  INTEGER,
+    CONSTRAINT user_config_users_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- -----------------------------------------------------------
+-- USER_CONFIG_FILTERS
+--  ----------------------------------------------------------
+CREATE TYPE PAGE_TYPE AS ENUM ('DEFAULT', 'MAP', 'CHANGES', 'DATA', 'CHARTS');
+
+CREATE TABLE user_config_filter
+(
+    user_id     INTEGER PRIMARY KEY NOT NULL,
+    page        PAGE_TYPE PRIMARY KEY NOT NULL,
+    region_id   INTEGER,
+    country_id  INTEGER,
+    states      varchar(50) ARRAY,
+    site_status site_status_type ARRAY,
+    stall_count INTEGER,
+    power_kwatt INTEGER,
+    CONSTRAINT user_config_region_id_fk FOREIGN KEY (region_id) REFERENCES region (region_id),
+    CONSTRAINT user_config_country_id_fk FOREIGN KEY (country_id) REFERENCES country (country_id)
+);

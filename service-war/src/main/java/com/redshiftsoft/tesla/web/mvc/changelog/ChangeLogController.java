@@ -2,6 +2,8 @@ package com.redshiftsoft.tesla.web.mvc.changelog;
 
 import com.redshiftsoft.tesla.dao.changelog.ChangeLog;
 import com.redshiftsoft.tesla.dao.changelog.ChangeLogDAO;
+import com.redshiftsoft.tesla.dao.changelog.ChangeType;
+import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import com.redshiftsoft.tesla.dao.dbinfo.DBInfoDAO;
 import com.redshiftsoft.tesla.web.mvc.CachingHandler;
 import com.redshiftsoft.tesla.web.mvc.PageDTO;
@@ -17,6 +19,8 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import static com.redshiftsoft.util.StringTools.isEmpty;
 
 @Controller
 public class ChangeLogController {
@@ -64,13 +68,28 @@ public class ChangeLogController {
                                       @RequestParam(required = false)
                                               Integer regionId,
                                       @RequestParam(required = false)
-                                              Integer countryId) {
+                                              Integer countryId,
+                                      @RequestParam(required = false)
+                                              List<String> state,
+                                      @RequestParam(required = false)
+                                              List<SiteStatus> status,
+                                      @RequestParam(required = false)
+                                              Integer stalls,
+                                      @RequestParam(required = false)
+                                              Integer power,
+                                      @RequestParam(required = false)
+                                              ChangeType changeType) {
         List<ChangeLogDTO> allList = cachingHandler.getValues();
 
         List<ChangeLogDTO> filteredList = allList
                 .stream()
                 .filter(cl -> regionId == null || Objects.equals(cl.getRegionId(), regionId))
                 .filter(cl -> countryId == null || Objects.equals(cl.getCountryId(), countryId))
+                .filter(cl -> state == null || state.isEmpty() || state.contains(cl.getState()))
+                .filter(cl -> status == null || status.isEmpty() || status.contains(cl.getSiteStatus()))
+                .filter(cl -> stalls == null || cl.getStallCount() >= stalls)
+                .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
+                .filter(cl -> changeType == null || Objects.equals(cl.getChangeType(), changeType))
                 .collect(Collectors.toList());
 
         List<ChangeLogDTO> pageList = filteredList.stream()

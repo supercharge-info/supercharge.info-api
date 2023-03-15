@@ -1,25 +1,21 @@
 package com.redshiftsoft.tesla.dao.user;
 
 import com.redshiftsoft.tesla.dao.BaseDAO;
-import com.redshiftsoft.tesla.dao.site.Country;
-import com.redshiftsoft.tesla.dao.site.CountryDAO;
-import com.redshiftsoft.tesla.dao.site.Region;
-import com.redshiftsoft.tesla.dao.site.RegionDAO;
+import com.redshiftsoft.tesla.dao.changelog.ChangeType;
+import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.Resource;
+
+import static com.redshiftsoft.util.StringTools.isEmpty;
 
 @Component
 public class UserConfigDAO extends BaseDAO {
-
-    @Resource
-    private CountryDAO countryDAO;
-
-    @Resource
-    private RegionDAO regionDAO;
 
     @Resource
     private UserConfigMarkerDAO userConfigMarkerDAO;
@@ -28,20 +24,7 @@ public class UserConfigDAO extends BaseDAO {
      * Insert.
      */
     public void insert(Integer userId, UserConfig config) {
-        String INSERT = "INSERT INTO user_config VALUES(?,?::distance_unit_type,?,?,?,?,?,?,?,NOW(),1,?,?)";
-        getJdbcTemplate().update(INSERT,
-                userId,
-                config.getUnit().map(Enum::toString).orElse(null),
-                config.getChangesPageRegion().map(Region::getId).orElse(null),
-                config.getChangesPageCountry().map(Country::getId).orElse(null),
-                config.getDataPageRegion().map(Region::getId).orElse(null),
-                config.getDataPageCountry().map(Country::getId).orElse(null),
-                config.getLatitude().orElse(null),
-                config.getLongitude().orElse(null),
-                config.getZoom().orElse(null),
-                config.getChartsPageRegion().map(Region::getId).orElse(null),
-                config.getChartsPageCountry().map(Country::getId).orElse(null)
-        );
+        getJdbcTemplate().update(new InsertUserConfigPreparedStatementCreator(userId, config));
         userConfigMarkerDAO.insert(userId, config.getCustomMarkers());
     }
 
@@ -49,26 +32,7 @@ public class UserConfigDAO extends BaseDAO {
      * Update.
      */
     public void update(Integer userId, UserConfig config) {
-        String UPDATE = "UPDATE user_config " +
-                "SET unit=?::distance_unit_type," +
-                "change_region_id=?,change_country_id=?," +
-                "data_region_id=?,data_country_id=?," +
-                "chart_region_id=?,chart_country_id=?," +
-                "map_latitude=?,map_longitude=?,map_zoom=?,modified_date=now(),version=version+1 " +
-                "WHERE user_id=?";
-        getJdbcTemplate().update(UPDATE,
-                config.getUnit().map(Enum::toString).orElse(null),
-                config.getChangesPageRegion().map(Region::getId).orElse(null),
-                config.getChangesPageCountry().map(Country::getId).orElse(null),
-                config.getDataPageRegion().map(Region::getId).orElse(null),
-                config.getDataPageCountry().map(Country::getId).orElse(null),
-                config.getChartsPageRegion().map(Region::getId).orElse(null),
-                config.getChartsPageCountry().map(Country::getId).orElse(null),
-                config.getLatitude().orElse(null),
-                config.getLongitude().orElse(null),
-                config.getZoom().orElse(null)
-                , userId
-        );
+        getJdbcTemplate().update(new UpdateUserConfigPreparedStatementCreator(userId, config));
         userConfigMarkerDAO.delete(userId);
         userConfigMarkerDAO.insert(userId, config.getCustomMarkers());
     }
@@ -82,53 +46,67 @@ public class UserConfigDAO extends BaseDAO {
     }
 
     private final RowMapper<UserConfig> USER_CONFIG_ROW_MAPPER = (rs, rowNum) -> {
-        int userId = rs.getInt(1);
+        int userId = rs.getInt("user_id");
 
-        String unitString = rs.getString(2);
+        String unitString = rs.getString("unit");
         Unit unit = (unitString == null) ? null : Unit.valueOf(unitString);
+
+        //
+        // default region/country
+        //
+        Integer regionId = (Integer) rs.getObject("region_id");
+        Integer countryId = (Integer) rs.getObject("country_id");
+        List<String> states = Arrays.asList((String[]) rs.getArray("states").getArray());
 
         //
         // changes region/country
         //
-        Integer changesRegionId = (Integer) rs.getObject(3);
-        Integer changesCountryId = (Integer) rs.getObject(4);
-        Region changesRegion = changesRegionId == null ? null : regionDAO.getById(changesRegionId);
-        Country changesCountry = changesCountryId == null ? null : countryDAO.getById(changesCountryId);
+        Integer changesRegionId = (Integer) rs.getObject("change_region_id");
+        Integer changesCountryId = (Integer) rs.getObject("change_country_id");
 
         //
         // data region/country
         //
-        Integer dataRegionId = (Integer) rs.getObject(5);
-        Integer dataCountryId = (Integer) rs.getObject(6);
-        Region dataRegion = dataRegionId == null ? null : regionDAO.getById(dataRegionId);
-        Country dataCountry = dataCountryId == null ? null : countryDAO.getById(dataCountryId);
-
-        Double latitude = (Double) rs.getObject(7);
-        Double longitude = (Double) rs.getObject(8);
-        Integer zoom = (Integer) rs.getObject(9);
-
-        Instant lastModified = Instant.ofEpochMilli(rs.getTimestamp(10).getTime());
-        int version = rs.getInt(11);
+        Integer dataRegionId = (Integer) rs.getObject("data_region_id");
+        Integer dataCountryId = (Integer) rs.getObject("data_country_id");
 
         //
         // charts region/country
         //
         Integer chartsRegionId = (Integer) rs.getObject("chart_region_id");
         Integer chartsCountryId = (Integer) rs.getObject("chart_country_id");
-        Region chartsRegion = chartsRegionId == null ? null : regionDAO.getById(chartsRegionId);
-        Country chartsCountry = chartsCountryId == null ? null : countryDAO.getById(chartsCountryId);
+
+        List<SiteStatus> siteStatus = Arrays.stream((String[]) rs.getArray("site_status").getArray()).map(SiteStatus::valueOf).collect(Collectors.toList());
+        String changeString = rs.getString("change_type");
+        ChangeType changeType = isEmpty(changeString) ? null : ChangeType.valueOf(changeString);
+        Integer stallCount = (Integer) rs.getObject("stall_count");
+        Integer powerKilowatt = (Integer) rs.getObject("power_kwatt");
+
+        Double latitude = (Double) rs.getObject("map_latitude");
+        Double longitude = (Double) rs.getObject("map_longitude");
+        Integer zoom = (Integer) rs.getObject("map_zoom");
+
+        String markerString = rs.getString("marker_type");
+        MarkerType markerType = isEmpty(markerString) ? null : MarkerType.valueOf(markerString);
+        Integer markerSize = (Integer) rs.getObject("marker_size");
+        Integer clusterSize = (Integer) rs.getObject("cluster_size");
+
+        Instant lastModified = Instant.ofEpochMilli(rs.getTimestamp("modified_date").getTime());
+        int version = rs.getInt("version");
 
         List<UserConfigMarker> customMarkers = userConfigMarkerDAO.getById(userId);
 
         return new UserConfig(
                 unit,
-                changesRegion,
-                changesCountry,
-                dataRegion,
-                dataCountry,
-                chartsRegion,
-                chartsCountry,
-                latitude,
-                longitude, zoom, customMarkers, lastModified, version);
+                regionId, countryId, states,
+                changesRegionId, changesCountryId,
+                dataRegionId, dataCountryId,
+                chartsRegionId, chartsCountryId,
+                siteStatus, changeType,
+                stallCount, powerKilowatt,
+                latitude, longitude, zoom,
+                markerType, markerSize, clusterSize,
+                customMarkers, lastModified, version);
     };
+
 }

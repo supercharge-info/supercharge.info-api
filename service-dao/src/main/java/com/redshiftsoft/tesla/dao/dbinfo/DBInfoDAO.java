@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
@@ -19,7 +18,6 @@ import static java.lang.System.currentTimeMillis;
 @Component
 public class DBInfoDAO extends BaseDAO {
 
-    private static final Logger LOG = Logger.getLogger(DBInfoDAO.class.getName());
     private static final long CACHE_TIME_MILLIS = TimeUnit.SECONDS.toMillis(5);
 
     private final AtomicLong lastModified = new AtomicLong(0L);

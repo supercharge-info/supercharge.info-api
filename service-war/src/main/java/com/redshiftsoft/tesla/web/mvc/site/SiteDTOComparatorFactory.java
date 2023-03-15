@@ -17,6 +17,7 @@ public class SiteDTOComparatorFactory {
     private static final Comparator<SiteDTO> ADDRESS_CODE = (s1, s2) -> StringTools.compare(s1.getAddress().getZip(), s2.getAddress().getZip());
     private static final Comparator<SiteDTO> ADDRESS_COUNTRY = (s1, s2) -> StringTools.compare(s1.getAddress().getCountry(), s2.getAddress().getCountry());
     private static final Comparator<SiteDTO> STALL_COUNT = Comparator.comparingInt(SiteDTO::getStallCount);
+    private static final Comparator<SiteDTO> POWER_KILOWATT = Comparator.comparingInt(SiteDTO::getPowerKilowatt);
     private static final Comparator<SiteDTO> LATITUDE = Comparator.comparingDouble(s -> s.getGps().getLatitude());
     private static final Comparator<SiteDTO> ELEVATION = Comparator.comparingInt(SiteDTO::getElevationMeters);
 
@@ -39,12 +40,14 @@ public class SiteDTOComparatorFactory {
         } else if (column == 6) {
             c = STALL_COUNT;
         } else if (column == 7) {
-            c = LATITUDE;
+            c = POWER_KILOWATT;
         } else if (column == 8) {
-            c = ELEVATION;
+            c = LATITUDE;
         } else if (column == 9) {
-            c = STATUS;
+            c = ELEVATION;
         } else if (column == 10) {
+            c = STATUS;
+        } else if (column == 11) {
             c = OPEN_DATE;
         } else {
             c = SITE_NAME;

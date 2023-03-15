@@ -27,7 +27,10 @@ public class ChangeLogDTO_UT {
         dto.setRegion("testRegion");
         dto.setCountryId(8888);
         dto.setCountry("testCountry");
+        dto.setState("testState");
         dto.setSiteStatus(SiteStatus.CONSTRUCTION);
+        dto.setStallCount(19);
+        dto.setPowerKilowatt(125);
 
         // when
         String s = mapper.writeValueAsString(dto);
@@ -39,11 +42,14 @@ public class ChangeLogDTO_UT {
                 "date\":\"2017-11-20\",\"" +
                 "changeType\":\"UPDATE\",\"" +
                 "siteStatus\":\"CONSTRUCTION\",\"" +
+                "stallCount\":19,\"" +
+                "powerKilowatt\":125,\"" +
                 "siteName\":\"testSiteName\",\"" +
                 "regionId\":9999,\"" +
                 "region\":\"testRegion\",\"" +
                 "countryId\":8888,\"" +
                 "country\":\"testCountry\",\"" +
+                "state\":\"testState\",\"" +
                 "dateFormatted\":\"Mon, Nov 20 2017\"" +
                 "}", s);
     }

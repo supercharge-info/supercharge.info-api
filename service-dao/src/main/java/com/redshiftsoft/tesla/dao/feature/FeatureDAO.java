@@ -34,8 +34,17 @@ public class FeatureDAO extends BaseDAO {
      * Update feature.
      */
     public void update(Feature feature) {
-        String SQL = "update feature set title=?,description=?,added_date=?,modified_date=now() where feature_id=?";
-        getJdbcTemplate().update(SQL, feature.getTitle(), feature.getDescription(), feature.getAddedDate(), feature.getId());
+        try {
+            String SQL = "update feature set title=?,description=?,added_date=?,modified_date=now() where feature_id=?";
+            PreparedStatement stat = getPreparedStatementWithKeys(SQL);
+            stat.setString(1, feature.getTitle());
+            stat.setString(2, feature.getDescription());
+            stat.setTimestamp(3, LocalDateUtil.toSQLDate(feature.getAddedDate()));
+            stat.setInt(4, feature.getId());
+            stat.execute();
+        } catch (SQLException e) {
+            logAndThrowUnchecked(e);
+        }
     }
 
     /**
@@ -70,7 +79,7 @@ public class FeatureDAO extends BaseDAO {
         Feature feature = new Feature();
         feature.setId(rs.getInt(1));
         feature.setTitle(rs.getString(2));
-        feature.setAddedDate(LocalDateUtil.toLocalDate(rs.getDate(3)));
+        feature.setAddedDate(LocalDateUtil.toLocalDate(rs.getTimestamp(3)));
         feature.setModifiedDate(LocalDateUtil.toLocalDateTime(rs.getTimestamp(4)));
         feature.setDescription(rs.getString(5));
         return feature;

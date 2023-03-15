@@ -1,11 +1,13 @@
 package com.redshiftsoft.tesla.dao.user;
 
+import com.google.common.collect.Lists;
 import com.redshiftsoft.tesla.dao.BaseDAO;
 import com.redshiftsoft.tesla.dao.changelog.ChangeType;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.sql.Array;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +58,8 @@ public class UserConfigDAO extends BaseDAO {
         //
         Integer regionId = (Integer) rs.getObject("region_id");
         Integer countryId = (Integer) rs.getObject("country_id");
-        List<String> states = Arrays.asList((String[]) rs.getArray("states").getArray());
+        Array stateArr = rs.getArray("states");
+        List<String> states = stateArr == null ? Lists.newArrayList() : Arrays.asList((String[]) stateArr.getArray());
 
         //
         // changes region/country
@@ -76,7 +79,8 @@ public class UserConfigDAO extends BaseDAO {
         Integer chartsRegionId = (Integer) rs.getObject("chart_region_id");
         Integer chartsCountryId = (Integer) rs.getObject("chart_country_id");
 
-        List<SiteStatus> siteStatus = Arrays.stream((String[]) rs.getArray("site_status").getArray()).map(SiteStatus::valueOf).collect(Collectors.toList());
+        Array statusArr = rs.getArray("site_status");
+        List<SiteStatus> siteStatus = stateArr == null ? Lists.newArrayList() : Arrays.stream((String[]) statusArr.getArray()).map(SiteStatus::valueOf).collect(Collectors.toList());
         String changeString = rs.getString("change_type");
         ChangeType changeType = isEmpty(changeString) ? null : ChangeType.valueOf(changeString);
         Integer stallCount = (Integer) rs.getObject("stall_count");

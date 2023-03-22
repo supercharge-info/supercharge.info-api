@@ -36,6 +36,10 @@ public class UserConfigToDTOFunction implements Function<UserConfig, UserConfigD
         dto.latitude = userConfig.getLatitude().orElse(null);
         dto.longitude = userConfig.getLongitude().orElse(null);
         dto.zoom = userConfig.getZoom().orElse(null);
+
+        dto.markerType = userConfig.getMarkerType().orElse(null);
+        dto.markerSize = userConfig.getMarkerSize().orElse(null);
+        dto.clusterSize = userConfig.getClusterSize().orElse(null);
         dto.customMarkers = userConfig.getCustomMarkers();
         return dto;
     }

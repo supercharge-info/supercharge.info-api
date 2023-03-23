@@ -8,4 +8,4 @@
 
 
 
-mvn -Darguments=-DskipTests -DautoVersionSubmodules clean release:prepare release:perform
+mvn -Darguments=-DskipTests -DautoVersionSubmodules -DpushChanges=false clean release:prepare release:clean

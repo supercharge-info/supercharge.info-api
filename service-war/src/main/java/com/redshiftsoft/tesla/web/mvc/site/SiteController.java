@@ -3,6 +3,7 @@ package com.redshiftsoft.tesla.web.mvc.site;
 import com.redshiftsoft.tesla.dao.changelog.ChangeLogDAO;
 import com.redshiftsoft.tesla.dao.dbinfo.DBInfoDAO;
 import com.redshiftsoft.tesla.dao.site.Site;
+import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import com.redshiftsoft.tesla.dao.site.SiteDAO;
 import com.redshiftsoft.tesla.dao.sitestallcount.SiteStallCountDAO;
 import com.redshiftsoft.tesla.web.mvc.CachingHandler;
@@ -23,6 +24,8 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import static com.redshiftsoft.util.StringTools.isEmpty;
 
 @Controller
 public class SiteController {
@@ -73,6 +76,14 @@ public class SiteController {
                                                    Integer regionId,
                                            @RequestParam(required = false)
                                                    Integer countryId,
+                                           @RequestParam(required = false)
+                                                   List<String> state,
+                                           @RequestParam(required = false)
+                                                   List<SiteStatus> status,
+                                           @RequestParam(required = false)
+                                                   Integer stalls,
+                                           @RequestParam(required = false)
+                                                   Integer power,
                                            @RequestParam(required = false, value = "order[0][column]", defaultValue = "0")
                                                    Integer orderCol,
                                            @RequestParam(required = false, value = "order[0][dir]")
@@ -85,6 +96,10 @@ public class SiteController {
                 .sorted(SiteDTOComparatorFactory.build(orderCol, orderDir))
                 .filter(cl -> regionId == null || Objects.equals(cl.getAddress().getRegionId(), regionId))
                 .filter(cl -> countryId == null || Objects.equals(cl.getAddress().getCountryId(), countryId))
+                .filter(cl -> state == null || state.isEmpty() || state.contains(cl.getAddress().getState()))
+                .filter(cl -> status == null || status.isEmpty() || status.contains(cl.getStatus()))
+                .filter(cl -> stalls == null || cl.getStallCount() >= stalls)
+                .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
                 .collect(Collectors.toList());
 
         List<SiteDTO> pageList = filteredList.stream()

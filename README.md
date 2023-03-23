@@ -24,7 +24,8 @@ API for https://supercharge.info
 
 1. Verify tests pass.
 2. `./release.sh` (enter to accept suggested release version)
-3. `./deploy.sh <test|prod> <version>`
+3. `git push --tags origin master` (to push release to origin)
+4. `./deploy.sh <test|prod> <version>`
 
 ## Configuration
 

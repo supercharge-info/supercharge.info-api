@@ -101,14 +101,17 @@ public class UserConfigDAO_UT {
     private static void assertUserConfigsEqual(UserConfig expectedUserConfig, UserConfig actualUserConfig) {
         assertEquals(expectedUserConfig.getUnit(), actualUserConfig.getUnit());
 
-        assertEquals(expectedUserConfig.getChangesPageCountry(), actualUserConfig.getChangesPageCountry());
-        assertEquals(expectedUserConfig.getChangesPageRegion(), actualUserConfig.getChangesPageRegion());
+        assertEquals(expectedUserConfig.getCountryId(), actualUserConfig.getCountryId());
+        assertEquals(expectedUserConfig.getRegionId(), actualUserConfig.getRegionId());
 
-        assertEquals(expectedUserConfig.getDataPageCountry(), actualUserConfig.getDataPageCountry());
-        assertEquals(expectedUserConfig.getDataPageRegion(), actualUserConfig.getDataPageRegion());
+        assertEquals(expectedUserConfig.getChangesPageCountryId(), actualUserConfig.getChangesPageCountryId());
+        assertEquals(expectedUserConfig.getChangesPageRegionId(), actualUserConfig.getChangesPageRegionId());
 
-        assertEquals(expectedUserConfig.getChartsPageCountry(), actualUserConfig.getChartsPageCountry());
-        assertEquals(expectedUserConfig.getChartsPageRegion(), actualUserConfig.getChartsPageRegion());
+        assertEquals(expectedUserConfig.getDataPageCountryId(), actualUserConfig.getDataPageCountryId());
+        assertEquals(expectedUserConfig.getDataPageRegionId(), actualUserConfig.getDataPageRegionId());
+
+        assertEquals(expectedUserConfig.getChartsPageCountryId(), actualUserConfig.getChartsPageCountryId());
+        assertEquals(expectedUserConfig.getChartsPageRegionId(), actualUserConfig.getChartsPageRegionId());
 
         assertEquals(expectedUserConfig.getLatitude(), actualUserConfig.getLatitude());
         assertEquals(expectedUserConfig.getLongitude(), actualUserConfig.getLongitude());

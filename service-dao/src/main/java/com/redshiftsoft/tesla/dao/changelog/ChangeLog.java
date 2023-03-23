@@ -27,6 +27,8 @@ public class ChangeLog implements Comparable<ChangeLog> {
     private int countryId;
     private String countryName;
 
+    private String state;
+
     private Instant date;
     private Instant modifiedInstant;
 
@@ -35,6 +37,9 @@ public class ChangeLog implements Comparable<ChangeLog> {
 
     // PERMIT, CONSTRUCTION, OPEN
     private SiteStatus siteStatus;
+
+    private int stallCount;
+    private int powerKilowatt;
 
     /**
      * Factory method with all fields required to persist.
@@ -86,6 +91,22 @@ public class ChangeLog implements Comparable<ChangeLog> {
 
     public void setSiteStatus(SiteStatus siteStatus) {
         this.siteStatus = siteStatus;
+    }
+
+    public int getStallCount() {
+        return stallCount;
+    }
+
+    public void setStallCount(int stallCount) {
+        this.stallCount = stallCount;
+    }
+
+    public int getPowerKilowatt() {
+        return powerKilowatt;
+    }
+
+    public void setPowerKilowatt(int powerKilowatt) {
+        this.powerKilowatt = powerKilowatt;
     }
 
     public int getSiteId() {
@@ -142,6 +163,14 @@ public class ChangeLog implements Comparable<ChangeLog> {
 
     public void setCountryName(String countryName) {
         this.countryName = countryName;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

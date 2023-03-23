@@ -50,3 +50,4 @@ INSERT INTO users VALUES (1000006, 'admin_editor',
 );
 insert into user_role values ((select user_id from users where username='admin_editor'),(select role_id from roles where role_name='admin'));
 insert into user_role values ((select user_id from users where username='admin_editor'),(select role_id from roles where role_name='editor'));
+insert into user_config (user_id, unit, modified_date, version) select user_id, case user_id % 2 when 0 then 'MI'::distance_unit_type else 'KM'::distance_unit_type end, now(), 1 from users;

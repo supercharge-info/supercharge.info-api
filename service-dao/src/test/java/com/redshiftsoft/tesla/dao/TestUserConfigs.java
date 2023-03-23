@@ -1,19 +1,28 @@
 package com.redshiftsoft.tesla.dao;
 
 import com.google.common.collect.Lists;
+import com.redshiftsoft.tesla.dao.changelog.ChangeType;
+import com.redshiftsoft.tesla.dao.site.Site;
+import com.redshiftsoft.tesla.dao.site.SiteDAO;
 import com.redshiftsoft.tesla.dao.site.Country;
 import com.redshiftsoft.tesla.dao.site.CountryDAO;
 import com.redshiftsoft.tesla.dao.site.Region;
 import com.redshiftsoft.tesla.dao.site.RegionDAO;
+import com.redshiftsoft.tesla.dao.site.SiteStatus;
+import com.redshiftsoft.tesla.dao.user.MarkerType;
 import com.redshiftsoft.tesla.dao.user.Unit;
 import com.redshiftsoft.tesla.dao.user.UserConfig;
 import com.redshiftsoft.tesla.dao.user.UserConfigMarker;
+import com.redshiftsoft.util.NumberUtils;
 import com.redshiftsoft.util.RandomUtils;
+import com.redshiftsoft.util.StringTools;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -28,33 +37,51 @@ public class TestUserConfigs {
     @Resource
     private CountryDAO countryDAO;
 
+    @Resource
+    private SiteDAO siteDAO;
+
     public UserConfig create() {
 
         List<Country> allCountries = countryDAO.getAll();
         List<Region> allRegions = regionDAO.getAll();
+        List<Site> allSites = siteDAO.getAllSites();
 
-        Region changesRegion = random.getElement(allRegions);
-        Country changesCountry = random.getElement(allCountries);
+        Integer regionId = random.getElement(allRegions).getId();
+        Integer countryId = random.getElement(allCountries.stream().filter(e->e.getRegionId() == regionId).collect(Collectors.toList())).getId();
+        List<String> countryStates = allSites.stream().map(e->e.getAddress().getState()).filter(StringTools::isEmpty).collect(Collectors.toList());
+        List<String> states = random.getElements(countryStates, random.getInteger((int) NumberUtils.min(countryStates.size(), 1), (int) NumberUtils.min(countryStates.size(), 5)));
 
-        Region dataRegion = random.getElement(allRegions);
-        Country dataCountry = random.getElement(allCountries);
+        Integer changesRegionId = random.getElement(allRegions).getId();
+        Integer changesCountryId = random.getElement(allCountries.stream().filter(e->e.getRegionId() == regionId).collect(Collectors.toList())).getId();
 
-        Region chartsRegion = random.getElement(allRegions);
-        Country chartsCountry = random.getElement(allCountries);
+        Integer dataRegionId = random.getElement(allRegions).getId();
+        Integer dataCountryId = random.getElement(allCountries.stream().filter(e->e.getRegionId() == regionId).collect(Collectors.toList())).getId();
+
+        Integer chartsRegionId = random.getElement(allRegions).getId();
+        Integer chartsCountryId = random.getElement(allCountries.stream().filter(e->e.getRegionId() == regionId).collect(Collectors.toList())).getId();
 
         Unit unit = random.getElement(Unit.values());
+
+        List<SiteStatus> statuses = random.getElements(Arrays.asList(SiteStatus.values()), random.getInteger(1, SiteStatus.values().length));
+        ChangeType changeType = random.getElement(ChangeType.values());
+        Integer stalls = random.getInteger(2, 20);
+        Integer power = random.getInteger(50, 250);
 
         Double latitude = random.getBoolean() ? null : random.getDouble(-90d, 90d);
         Double longitude = random.getBoolean() ? null : random.getDouble(-180d, 180d);
         Integer zoom = random.getInteger(1, 20);
+
+        MarkerType markerType = random.getElement(MarkerType.values());
+        Integer markerSize = random.getInteger(4, 10);
+        Integer clusterSize = random.getInteger(1, 9);
 
         Instant lastModified = Instant.ofEpochMilli(currentTimeMillis() - random.getLong(0, 1000L * 60L * 60L * 24L * 365L));
         int version = random.getInteger(1, 1000);
 
         List<UserConfigMarker> customMarkers = createCustomMarkers(0, 10);
 
-        return new UserConfig(unit, changesRegion, changesCountry, dataRegion, dataCountry, chartsRegion, chartsCountry,
-                latitude, longitude, zoom, customMarkers, lastModified, version);
+        return new UserConfig(unit, regionId, countryId, states, changesRegionId, changesCountryId, dataRegionId, dataCountryId, chartsRegionId, chartsCountryId,
+                statuses, changeType, stalls, power, latitude, longitude, zoom, markerType, markerSize, clusterSize, customMarkers, lastModified, version);
     }
 
     public List<UserConfigMarker> createCustomMarkers(int min, int max) {

@@ -5,12 +5,10 @@ import com.redshiftsoft.util.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.logging.Logger;
 
 @Component
 public class UserDAO extends BaseDAO {
 
-    private static final Logger LOG = Logger.getLogger(UserDAO.class.getName());
     private static final UserRowMapper USER_ROW_MAPPER = new UserRowMapper();
 
     @Resource

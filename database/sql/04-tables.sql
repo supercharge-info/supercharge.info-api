@@ -33,7 +33,7 @@ create table region
     name          varchar(100) not null unique,
     modified_date timestamptz  not null default current_timestamp
 );
-alter sequence region_region_id_seq restart with 100;
+alter sequence region_region_id_seq restart with 150;
 
 -- -----------------------------------------------------------
 -- country
@@ -50,7 +50,7 @@ create table country
         on update cascade
         on delete cascade
 );
-alter sequence country_country_id_seq restart with 100;
+alter sequence country_country_id_seq restart with 1000;
 
 -- -----------------------------------------------------------
 -- ADDRESS - The relationship between site and address is currently 1-1.
@@ -108,7 +108,7 @@ create table site
 );
 alter table site
     add constraint site_address_id_fkey foreign key (address_id) references address(address_id) on delete cascade on update cascade;
-alter sequence site_site_id_seq restart with 10000;
+alter sequence site_site_id_seq restart with 100000;
 
 -- -----------------------------------------------------------
 -- SITE_STALL_COUNT
@@ -137,7 +137,7 @@ alter table changelog
     add constraint fk_changelog_1 foreign key (site_id) references site (site_id)
         on update cascade
         on delete cascade;
-alter sequence changelog_id_seq restart with 100;
+alter sequence changelog_id_seq restart with 100000;
 
 -- -----------------------------------------------------------
 -- role
@@ -242,6 +242,7 @@ alter table login
 -- USER_CONFIG
 --  ----------------------------------------------------------
 CREATE TYPE DISTANCE_UNIT_TYPE AS ENUM ('KM', 'MI');
+CREATE TYPE MARKER_TYPE AS ENUM ('Z', 'F', 'C');
 
 CREATE TABLE user_config
 (
@@ -258,13 +259,25 @@ CREATE TABLE user_config
     version           INTEGER             NOT NULL,
     chart_region_id   INTEGER,
     chart_country_id  INTEGER,
+    region_id         INTEGER,
+    country_id        INTEGER,
+    states            varchar(50) ARRAY,
+    site_status       site_status_type ARRAY,
+    change_type       change_type,
+    stall_count       INTEGER,
+    power_kwatt       INTEGER,
+    marker_type       marker_type,
+    marker_size       INTEGER,
+    cluster_size      INTEGER,
     CONSTRAINT user_config_users_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT user_config_change_region_id_fk FOREIGN KEY (change_region_id) REFERENCES region (region_id),
     CONSTRAINT user_config_change_country_id_fk FOREIGN KEY (change_country_id) REFERENCES country (country_id),
     CONSTRAINT user_config_data_region_id_fk FOREIGN KEY (data_region_id) REFERENCES region (region_id),
     CONSTRAINT user_config_data_country_id_fk FOREIGN KEY (data_country_id) REFERENCES country (country_id),
     CONSTRAINT user_config_chart_region_id_fk FOREIGN KEY (chart_region_id) REFERENCES region (region_id),
-    CONSTRAINT user_config_chart_country_id_fk FOREIGN KEY (chart_country_id) REFERENCES country (country_id)
+    CONSTRAINT user_config_chart_country_id_fk FOREIGN KEY (chart_country_id) REFERENCES country (country_id),
+    CONSTRAINT user_config_region_id_fk FOREIGN KEY (region_id) REFERENCES region (region_id),
+    CONSTRAINT user_config_country_id_fk FOREIGN KEY (country_id) REFERENCES country (country_id)
 );
 
 -- -----------------------------------------------------------

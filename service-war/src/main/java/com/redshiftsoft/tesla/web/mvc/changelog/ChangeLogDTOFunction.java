@@ -14,12 +14,15 @@ public class ChangeLogDTOFunction implements Function<ChangeLog, ChangeLogDTO> {
         changeLogDTO.setChangeType(changeLog.getChangeType());
         changeLogDTO.setDate(changeLog.getDate());
         changeLogDTO.setSiteStatus(changeLog.getSiteStatus());
+        changeLogDTO.setStallCount(changeLog.getStallCount());
+        changeLogDTO.setPowerKilowatt(changeLog.getPowerKilowatt());
 
         changeLogDTO.setSiteName(changeLog.getSiteName());
         changeLogDTO.setCountryId(changeLog.getCountryId());
         changeLogDTO.setCountry(changeLog.getCountryName());
         changeLogDTO.setRegionId(changeLog.getRegionId());
         changeLogDTO.setRegion(changeLog.getRegionName());
+        changeLogDTO.setState(changeLog.getState());
 
         return changeLogDTO;
     }

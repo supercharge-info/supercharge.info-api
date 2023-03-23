@@ -26,12 +26,15 @@ public class ChangeLogDTO {
     private Instant date;
     private ChangeType changeType;
     private SiteStatus siteStatus;
+    private int stallCount;
+    private int powerKilowatt;
 
     private String siteName;
     private int regionId;
     private String region;
     private int countryId;
     private String country;
+    private String state;
 
     public int getId() {
         return id;
@@ -79,6 +82,22 @@ public class ChangeLogDTO {
         this.siteStatus = siteStatus;
     }
 
+    public int getStallCount() {
+        return stallCount;
+    }
+
+    public void setStallCount(int stallCount) {
+        this.stallCount = stallCount;
+    }
+
+    public int getPowerKilowatt() {
+        return powerKilowatt;
+    }
+
+    public void setPowerKilowatt(int powerKilowatt) {
+        this.powerKilowatt = powerKilowatt;
+    }
+
     public String getRegion() {
         return region;
     }
@@ -117,6 +136,14 @@ public class ChangeLogDTO {
 
     public void setCountryId(int countryId) {
         this.countryId = countryId;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }
 

@@ -1,17 +1,12 @@
 package com.redshiftsoft.tesla.web.mvc.userconfig;
 
 import com.google.common.collect.ImmutableList;
-import com.redshiftsoft.tesla.dao.site.Country;
-import com.redshiftsoft.tesla.dao.site.CountryDAO;
-import com.redshiftsoft.tesla.dao.site.Region;
-import com.redshiftsoft.tesla.dao.site.RegionDAO;
+import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import com.redshiftsoft.tesla.dao.user.Unit;
 import com.redshiftsoft.tesla.dao.user.UserConfig;
 import com.redshiftsoft.tesla.dao.user.UserConfigMarker;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -23,21 +18,8 @@ public class UserConfigFromDTOFunction implements Function<UserConfigDTO, UserCo
 
     private static final Logger LOG = Logger.getLogger(UserConfigFromDTOFunction.class.getName());
 
+    private static final List<SiteStatus> emptyStatus = ImmutableList.of();
     private static final List<UserConfigMarker> emptyList = ImmutableList.of();
-
-    @Resource
-    private CountryDAO countryDAO;
-    @Resource
-    private RegionDAO regionDAO;
-
-    private Map<Integer, Country> countryMap;
-    private Map<Integer, Region> regionMap;
-
-    @PostConstruct
-    public void go() {
-        countryMap = countryDAO.getAll().stream().collect(Collectors.toMap(Country::getId, Function.identity()));
-        regionMap = regionDAO.getAll().stream().collect(Collectors.toMap(Region::getId, Function.identity()));
-    }
 
     @Override
     public UserConfig apply(UserConfigDTO dto) {
@@ -46,15 +28,25 @@ public class UserConfigFromDTOFunction implements Function<UserConfigDTO, UserCo
 
         return new UserConfig(
                 Unit.fromString(dto.unit),
-                regionMap.get(dto.changesPageRegionId),
-                countryMap.get(dto.changesPageCountryId),
-                regionMap.get(dto.dataPageRegionId),
-                countryMap.get(dto.dataPageCountryId),
-                regionMap.get(dto.chartsPageRegionId),
-                countryMap.get(dto.chartsPageCountryId),
+                dto.filter.regionId,
+                dto.filter.countryId,
+                dto.filter.state,
+                dto.filter.changesPageRegionId,
+                dto.filter.changesPageCountryId,
+                dto.filter.dataPageRegionId,
+                dto.filter.dataPageCountryId,
+                dto.filter.chartsPageRegionId,
+                dto.filter.chartsPageCountryId,
+                dto.filter.status == null ? emptyStatus : dto.filter.status,
+                dto.filter.changeType,
+                dto.filter.stalls,
+                dto.filter.power,
                 dto.latitude,
                 dto.longitude,
                 dto.zoom,
+                dto.markerType,
+                dto.markerSize,
+                dto.clusterSize,
                 dto.customMarkers == null ? emptyList : dto.customMarkers,
                 null,
                 -1);

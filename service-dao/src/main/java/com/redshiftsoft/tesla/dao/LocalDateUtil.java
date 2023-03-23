@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class LocalDateUtil {
 
-    private static final ZoneId ZONE_ID = ZoneId.of("America/Chicago");
+    public static final ZoneId ZONE_ID = ZoneId.of("America/Chicago");
 
     /**
      * To a date appropriate for storing with JDBC.

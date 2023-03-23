@@ -1,6 +1,7 @@
 package com.redshiftsoft.tesla.dao.site;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
+import com.redshiftsoft.tesla.dao.LocalDateUtil;
 import com.redshiftsoft.tesla.dao.TestSiteCreator;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
 import com.redshiftsoft.util.RandomUtils;
@@ -13,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -110,12 +112,12 @@ public class SiteDAO_UT {
         newSite.setId(oldSite.getId());
         newSite.setDeveloperNotes(RandomUtils.fast().getString(999, 'a', 'z'));
         newAddress.setId(oldAddress.getId());
+        newSite.setDateModified(LocalDateTime.now(LocalDateUtil.ZONE_ID));
         siteDAO.update(newSite);
 
         // then
         Site siteOut = siteDAO.getById(oldSite.getId());
         assertSitesEqual(newSite, siteOut);
-        assertTrue(newSite.getDateModified().isAfter(oldSite.getDateModified()));
         // then -- version column
         assertEquals(siteOut.getVersion(), oldSite.getVersion() + 1);
         assertEquals(siteOut.getAddress().getVersion(), oldSite.getAddress().getVersion() + 1);

@@ -85,6 +85,8 @@ public class SiteController {
                                                    Integer stalls,
                                            @RequestParam(required = false)
                                                    Integer power,
+                                           @RequestParam(required = false)
+                                                   String magicDock,
                                            @RequestParam(required = false, value = "order[0][column]", defaultValue = "0")
                                                    Integer orderCol,
                                            @RequestParam(required = false, value = "order[0][dir]")
@@ -101,6 +103,7 @@ public class SiteController {
                 .filter(cl -> status == null || status.isEmpty() || status.contains(cl.getStatus()))
                 .filter(cl -> stalls == null || cl.getStallCount() >= stalls)
                 .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
+                .filter(cl -> magicDock == null || cl.isMagicDock() == Boolean.parseBoolean(magicDock))
                 .collect(Collectors.toList());
 
         List<SiteDTO> pageList = filteredList.stream()

@@ -41,6 +41,7 @@ public class TestSiteCreator {
         siteIn.setSolarCanopy(random.getBoolean(.5));
         siteIn.setBattery(random.getBoolean(.5));
         siteIn.setDeveloperNotes(random.getBoolean(.5) ? random.getParagraph(1, 1000, 80, 10, 'a', 'z') : null);
+        siteIn.setMagicDock(random.getBoolean(.5));
         return siteIn;
     }
 

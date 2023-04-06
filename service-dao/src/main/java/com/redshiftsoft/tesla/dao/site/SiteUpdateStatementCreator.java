@@ -13,8 +13,8 @@ public class SiteUpdateStatementCreator implements PreparedStatementCreator {
 
     private static final String SQL = "update site " +
             "set location_id=?,name=?,status=?::SITE_STATUS_TYPE,opened_date=?,hours=?,enabled=?,counted=?," +
-            "gps_latitude=?,gps_longitude=?,elevation_meters=?,url_discuss=?,stall_count=?," +
-            "power_kwatt=?,has_solar_canopy=?,has_battery=?,developer_notes=?,modified_date=now(),version=version+1" +
+            "gps_latitude=?,gps_longitude=?,elevation_meters=?,url_discuss=?,stall_count=?,power_kwatt=?," +
+            "has_solar_canopy=?,has_battery=?,developer_notes=?,modified_date=now(),version=version+1,magic_dock=?" +
             " where site_id=?";
 
     private final Site site;
@@ -52,6 +52,7 @@ public class SiteUpdateStatementCreator implements PreparedStatementCreator {
         stat.setBoolean(c++, site.isSolarCanopy());
         stat.setBoolean(c++, site.isBattery());
         stat.setString(c++, string(site.getDeveloperNotes()));
+        stat.setBoolean(c++, site.isMagicDock());
 
         stat.setInt(c, site.getId());
 

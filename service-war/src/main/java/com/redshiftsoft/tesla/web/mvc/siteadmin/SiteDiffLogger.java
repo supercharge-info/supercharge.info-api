@@ -48,6 +48,7 @@ public class SiteDiffLogger {
         diff(builder, "powerKiloWatt", oldSite.getPowerKilowatt(), newSite.getPowerKilowatt());
         diff(builder, "isSolarCanopy", oldSite.isSolarCanopy(), newSite.isSolarCanopy());
         diff(builder, "isBattery", oldSite.isBattery(), newSite.isBattery());
+        diff(builder, "magicDock", oldSite.isMagicDock(), newSite.isMagicDock());
         diff(builder, "developerNotes", oldSite.getDeveloperNotes(), newSite.getDeveloperNotes());
 
         diff(builder, "address.street", oldSite.getAddress().getStreet(), newSite.getAddress().getStreet());

@@ -102,6 +102,7 @@ create table site
     developer_notes  varchar(1000)                  null     default null::character varying,
     modified_date    timestamptz                    not null default now(),
     "version"        int4                           not null default 1,
+    magic_dock       bool                           not null default false,
     constraint address_id_unique unique (address_id),
     constraint name_unique unique (name),
     constraint site_id_unique primary key (site_id)

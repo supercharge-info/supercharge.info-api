@@ -11,7 +11,7 @@ import static com.redshiftsoft.tesla.dao.DAOTools.string;
 
 public class SiteInsertStatementCreator implements PreparedStatementCreator {
 
-    private static final String SQL = "insert into site values (DEFAULT,?,?,?::SITE_STATUS_TYPE,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?)";
+    private static final String SQL = "insert into site values (DEFAULT,?,?,?::SITE_STATUS_TYPE,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?)";
     private final Site site;
 
     public SiteInsertStatementCreator(Site site) {
@@ -49,7 +49,8 @@ public class SiteInsertStatementCreator implements PreparedStatementCreator {
         stat.setBoolean(c++, site.isSolarCanopy());
         stat.setBoolean(c++, site.isBattery());
         stat.setString(c++, string(site.getDeveloperNotes()));
-        stat.setInt(c, site.getVersion());
+        stat.setInt(c++, site.getVersion());
+        stat.setBoolean(c, site.isMagicDock());
 
         return stat;
     }

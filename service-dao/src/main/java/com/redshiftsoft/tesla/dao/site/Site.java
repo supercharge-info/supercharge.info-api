@@ -31,6 +31,7 @@ public class Site {
     private int powerKilowatt;
     private boolean solarCanopy;
     private boolean battery;
+    private boolean magicDock;
 
     // - - - - - - - - - - - - - - - - - - - - - - -
     // java.lang.Object
@@ -236,5 +237,13 @@ public class Site {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public boolean isMagicDock() {
+        return magicDock;
+    }
+
+    public void setMagicDock(boolean magicDock) {
+        this.magicDock = magicDock;
     }
 }

@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla.web.mvc.changelog;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.redshiftsoft.tesla.dao.changelog.ChangeType;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
@@ -28,6 +29,7 @@ public class ChangeLogDTO {
     private SiteStatus siteStatus;
     private int stallCount;
     private int powerKilowatt;
+    private boolean otherEVs;
 
     private String siteName;
     private int regionId;
@@ -96,6 +98,15 @@ public class ChangeLogDTO {
 
     public void setPowerKilowatt(int powerKilowatt) {
         this.powerKilowatt = powerKilowatt;
+    }
+
+    @JsonIgnore
+    public boolean isOtherEVs() {
+        return otherEVs;
+    }
+
+    public void setOtherEVs(boolean otherEVs) {
+        this.otherEVs = otherEVs;
     }
 
     public String getRegion() {

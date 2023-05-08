@@ -22,7 +22,7 @@ public class InsertUserConfigPreparedStatementCreator implements PreparedStateme
 
     @Override
     public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-        String SQL = "INSERT INTO user_config VALUES(?,?::distance_unit_type,?,?,?,?,?,?,?,NOW(),1,?,?,?,?,?,?::site_status_type[],?::change_type,?,?,?::marker_type,?,?)";
+        String SQL = "INSERT INTO user_config VALUES(?,?::distance_unit_type,?,?,?,?,?,?,?,NOW(),1,?,?,?,?,?,?::site_status_type[],?::change_type,?,?,?::marker_type,?,?,?)";
         PreparedStatement stat = con.prepareStatement(SQL);
 
         int c = 1;
@@ -47,6 +47,7 @@ public class InsertUserConfigPreparedStatementCreator implements PreparedStateme
         stat.setString(c++, userConfig.getMarkerType().map(Enum::toString).orElse(null));
         stat.setObject(c++, userConfig.getMarkerSize().orElse(null));
         stat.setObject(c++, userConfig.getClusterSize().orElse(null));
+        stat.setObject(c++, userConfig.isOtherEVs().orElse(null));
         return stat;
     }
 

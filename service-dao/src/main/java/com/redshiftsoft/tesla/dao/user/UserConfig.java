@@ -33,6 +33,7 @@ public class UserConfig {
 
     private final Integer stallCount;
     private final Integer powerKilowatt;
+    private final Boolean otherEVs;
 
     private final Unit unit;
 
@@ -55,7 +56,7 @@ public class UserConfig {
                       Integer dataPageRegionId, Integer dataPageCountryId,
                       Integer chartsPageRegionId, Integer chartsPageCountryId,
                       List<SiteStatus> siteStatus, ChangeType changeType,
-                      Integer stallCount, Integer powerKilowatt,
+                      Integer stallCount, Integer powerKilowatt, Boolean otherEVs,
                       Double latitude, Double longitude, Integer zoom,
                       MarkerType markerType, Integer markerSize, Integer clusterSize,
                       List<UserConfigMarker> customMarkers,
@@ -76,6 +77,7 @@ public class UserConfig {
         this.changeType = changeType;
         this.stallCount = stallCount;
         this.powerKilowatt = powerKilowatt;
+        this.otherEVs = otherEVs;
         this.unit = unit;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -89,7 +91,7 @@ public class UserConfig {
     }
 
     public static UserConfig create(Unit unit) {
-        return new UserConfig(unit, null, null, Lists.newArrayList(), null, null, null, null, null, null, Lists.newArrayList(), null, null, null, null, null, null, null, null, null, Lists.newArrayList(), Instant.now(), 1);
+        return new UserConfig(unit, null, null, Lists.newArrayList(), null, null, null, null, null, null, Lists.newArrayList(), null, null, null, null, null, null, null, null, null, null, Lists.newArrayList(), Instant.now(), 1);
     }
 
     // - - - - - - - - - - - - - - - - - - -
@@ -111,6 +113,7 @@ public class UserConfig {
                 ", changeType=" + changeType +
                 ", stallCount=" + stallCount +
                 ", powerKilowatt=" + powerKilowatt +
+                ", otherEVs=" + otherEVs +
                 ", unit=" + unit +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
@@ -187,6 +190,10 @@ public class UserConfig {
 
     public Optional<Integer> getPowerKilowatt() {
         return Optional.ofNullable(powerKilowatt);
+    }
+
+    public Optional<Boolean> isOtherEVs() {
+        return Optional.ofNullable(otherEVs);
     }
 
     public Optional<Unit> getUnit() {

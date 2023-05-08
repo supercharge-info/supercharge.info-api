@@ -50,7 +50,7 @@ public class SiteRowMapper implements RowMapper<Site> {
 
         site.setDateModified(LocalDateUtil.toLocalDateTime(rs.getTimestamp(c++)));
         site.setVersion(rs.getInt(c++));
-        site.setMagicDock(rs.getBoolean(c++));
+        site.setOtherEVs(rs.getBoolean(c++));
 
         site.setAddress(new AddressRowMapper(c).mapRow(rs, rowNum));
 

@@ -55,7 +55,7 @@ public final class SiteEditDTOFunctions {
             siteDTO.setPowerKiloWatt(site.getPowerKilowatt());
             siteDTO.setSolarCanopy(site.isSolarCanopy());
             siteDTO.setBattery(site.isBattery());
-            siteDTO.setMagicDock(site.isMagicDock());
+            siteDTO.setOtherEVs(site.isOtherEVs());
             siteDTO.setDeveloperNotes(site.getDeveloperNotes());
 
             return siteDTO;
@@ -88,7 +88,7 @@ public final class SiteEditDTOFunctions {
             site.setPowerKilowatt(siteDTO.getPowerKiloWatt());
             site.setSolarCanopy(siteDTO.isSolarCanopy());
             site.setBattery(siteDTO.isBattery());
-            site.setMagicDock(siteDTO.isMagicDock());
+            site.setOtherEVs(siteDTO.isOtherEVs());
             site.setDeveloperNotes(siteDTO.getDeveloperNotes());
 
             return site;

@@ -20,8 +20,6 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.redshiftsoft.util.StringTools.isEmpty;
-
 @Controller
 public class ChangeLogController {
     private static final Logger LOG = Logger.getLogger(ChangeLogController.class.getName());
@@ -78,7 +76,9 @@ public class ChangeLogController {
                                       @RequestParam(required = false)
                                               Integer power,
                                       @RequestParam(required = false)
-                                              ChangeType changeType) {
+                                              ChangeType changeType,
+                                      @RequestParam(required = false)
+                                              Boolean otherEVs) {
         List<ChangeLogDTO> allList = cachingHandler.getValues();
 
         List<ChangeLogDTO> filteredList = allList
@@ -90,6 +90,7 @@ public class ChangeLogController {
                 .filter(cl -> stalls == null || cl.getStallCount() >= stalls)
                 .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
                 .filter(cl -> changeType == null || Objects.equals(cl.getChangeType(), changeType))
+                .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
                 .collect(Collectors.toList());
 
         List<ChangeLogDTO> pageList = filteredList.stream()

@@ -27,6 +27,7 @@ public class UserConfigFilterDTO {
     public ChangeType changeType;
     public Integer stalls;
     public Integer power;
+    public Boolean otherEVs;
 
     @Override
     public String toString() {
@@ -39,6 +40,7 @@ public class UserConfigFilterDTO {
                 "; changeType=" + changeType +
                 "; stalls=" + stalls +
                 "; power=" + power +
+                "; otherEVs=" + otherEVs +
                 '}';
     }
 }

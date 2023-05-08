@@ -270,6 +270,7 @@ CREATE TABLE user_config
     marker_type       marker_type,
     marker_size       INTEGER,
     cluster_size      INTEGER,
+    magic_dock        BOOLEAN,
     CONSTRAINT user_config_users_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT user_config_change_region_id_fk FOREIGN KEY (change_region_id) REFERENCES region (region_id),
     CONSTRAINT user_config_change_country_id_fk FOREIGN KEY (change_country_id) REFERENCES country (country_id),
@@ -328,7 +329,7 @@ create table feature
 (
     feature_id    serial primary key,
     title         varchar(99) not null,
-    added_date    date        not null,
+    added_date    timestamptz not null,
     modified_date timestamptz not null,
     description   text        not null
 );

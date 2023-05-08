@@ -50,7 +50,8 @@ fi
 docker build --tag $IMAGE_TAG "$SCRIPT_DIR/"
 
 if [[ $LIST =~ $CONTAINER_NAME($'\n'|$) ]]; then
-    docker kill $CONTAINER_NAME
+    docker network disconnect supercharge-net supercharge-api 2> /dev/null
+    docker stop $CONTAINER_NAME
 fi
 
 #

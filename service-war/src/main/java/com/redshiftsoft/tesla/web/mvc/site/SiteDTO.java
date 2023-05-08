@@ -44,7 +44,7 @@ public class SiteDTO {
     private int powerKilowatt;
     private boolean solarCanopy;
     private boolean battery;
-    private boolean magicDock;
+    private boolean otherEVs;
 
     /* Number of days in the current status */
     private int statusDays;
@@ -214,11 +214,11 @@ public class SiteDTO {
         this.battery = battery;
     }
 
-    public boolean isMagicDock() {
-        return magicDock;
+    public boolean isOtherEVs() {
+        return otherEVs;
     }
 
-    public void setMagicDock(boolean magicDock) {
-        this.magicDock = magicDock;
+    public void setOtherEVs(boolean otherEVs) {
+        this.otherEVs = otherEVs;
     }
 }

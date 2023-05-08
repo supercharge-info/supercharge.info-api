@@ -85,6 +85,7 @@ public class UserConfigDAO extends BaseDAO {
         ChangeType changeType = isEmpty(changeString) ? null : ChangeType.valueOf(changeString);
         Integer stallCount = (Integer) rs.getObject("stall_count");
         Integer powerKilowatt = (Integer) rs.getObject("power_kwatt");
+        Boolean otherEVs = (Boolean) rs.getObject("other_evs");
 
         Double latitude = (Double) rs.getObject("map_latitude");
         Double longitude = (Double) rs.getObject("map_longitude");
@@ -107,7 +108,7 @@ public class UserConfigDAO extends BaseDAO {
                 dataRegionId, dataCountryId,
                 chartsRegionId, chartsCountryId,
                 siteStatus, changeType,
-                stallCount, powerKilowatt,
+                stallCount, powerKilowatt, otherEVs,
                 latitude, longitude, zoom,
                 markerType, markerSize, clusterSize,
                 customMarkers, lastModified, version);

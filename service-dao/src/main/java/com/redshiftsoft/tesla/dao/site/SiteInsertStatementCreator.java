@@ -50,7 +50,7 @@ public class SiteInsertStatementCreator implements PreparedStatementCreator {
         stat.setBoolean(c++, site.isBattery());
         stat.setString(c++, string(site.getDeveloperNotes()));
         stat.setInt(c++, site.getVersion());
-        stat.setBoolean(c, site.isMagicDock());
+        stat.setBoolean(c, site.isOtherEVs());
 
         return stat;
     }

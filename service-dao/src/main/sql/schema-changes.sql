@@ -3,5 +3,8 @@
 -- ============================================================================
 SET search_path TO supercharge;
 
+ALTER TABLE user_config
+  ADD COLUMN other_evs boolean;
+
 ALTER TABLE site
-  ADD COLUMN magic_dock bool not null default false;
+  ADD COLUMN other_evs bool not null default false;

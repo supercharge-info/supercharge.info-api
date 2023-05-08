@@ -28,8 +28,8 @@ public class UpdateUserConfigPreparedStatementCreator implements PreparedStateme
                 "change_region_id=?,change_country_id=?," +
                 "data_region_id=?,data_country_id=?," +
                 "chart_region_id=?,chart_country_id=?," +
-                "site_status=?::site_status_type[]," +
-                "change_type=?::change_type,stall_count=?,power_kwatt=?," +
+                "site_status=?::site_status_type[],change_type=?::change_type," +
+                "stall_count=?,power_kwatt=?,other_evs=?," +
                 "map_latitude=?,map_longitude=?,map_zoom=?," +
                 "marker_type=?::marker_type,marker_size=?,cluster_size=?," +
                 "modified_date=now(),version=version+1 " +
@@ -51,6 +51,7 @@ public class UpdateUserConfigPreparedStatementCreator implements PreparedStateme
         stat.setString(c++, userConfig.getChangeType().map(Enum::toString).orElse(null));
         stat.setObject(c++, userConfig.getStallCount().orElse(null));
         stat.setObject(c++, userConfig.getPowerKilowatt().orElse(null));
+        stat.setObject(c++, userConfig.isOtherEVs().orElse(null));
         stat.setObject(c++, userConfig.getLatitude().orElse(null));
         stat.setObject(c++, userConfig.getLongitude().orElse(null));
         stat.setObject(c++, userConfig.getZoom().orElse(null));

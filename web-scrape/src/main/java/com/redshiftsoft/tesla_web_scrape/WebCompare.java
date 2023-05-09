@@ -34,7 +34,10 @@ public class WebCompare {
     public String execute() throws IOException {
 
         WebScrapeResult webScrapeResult = webClient.getWebLocations();
-        List<Site> openLocalSites = siteDAO.getAllSites().stream().filter(s -> s.isOpen() || s.isTempClosed()).collect(Collectors.toList());
+        List<Site> openLocalSites = siteDAO.getAllSites().stream()
+                                        .filter(s -> s.isOpen() || s.isTempClosed())
+                                        .sorted((a, b) -> a.getName().compareTo(b.getName()))
+                                        .collect(Collectors.toList());
 
         List<Match> matches = makeMatches(openLocalSites, webScrapeResult.getTeslaSites());
 

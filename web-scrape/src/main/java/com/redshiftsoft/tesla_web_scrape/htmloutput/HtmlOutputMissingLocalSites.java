@@ -13,10 +13,17 @@ class HtmlOutputMissingLocalSites {
         table.addClass("view-table");
         table.add(teslaSiteHeaderRow());
         int count = 0;
+        int alphaInd = -1;
         for (Match match : nullLocalSiteList) {
             Tr tr = matchToTable(match.getTeslaSite());
             table.add(tr);
             count++;
+
+            int curInd = match.getTeslaSite().getTitle().charAt(0);
+            if (curInd > alphaInd && curInd > 64 && curInd < 91) {
+                alphaInd = curInd;
+                tr.setId("missing-local-" + ((char)alphaInd));
+            }
         }
         table.add(new Caption(String.format("%,d missing local sites (Tesla has it we do not)", count)));
         return table;
@@ -43,8 +50,8 @@ class HtmlOutputMissingLocalSites {
 
     private static Tr matchToTable(TeslaSite teslaSite) {
         Tr row = new Tr();
-        row.add(new Td(new A(teslaSite.getTitle(), "", "click to populate edit form")));
-        row.add(new Td(teslaSite.getLocationId()));
+        row.add(new Td(new A(teslaSite.getTitle(), "#edit", "click to populate edit form")));
+        row.add(new Td(teslaSite.getLocationId()).addClass("break-word"));
         row.add(new Td(String.valueOf(teslaSite.getStallCount())));
         row.add(new Td(String.valueOf(teslaSite.getLatitude())));
         row.add(new Td(String.valueOf(teslaSite.getLongitude())));

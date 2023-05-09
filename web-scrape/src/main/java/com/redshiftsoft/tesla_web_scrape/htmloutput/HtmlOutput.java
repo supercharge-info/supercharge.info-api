@@ -37,11 +37,7 @@ public class HtmlOutput {
         body.add(new Br(), new Br(), new Br(), new Br());
         body.add(table3);
 
-        Head head = new Head();
-        head.addText("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n");
-
         Html html = new Html();
-        html.add(head);
         html.add(body);
 
         return html.toString();

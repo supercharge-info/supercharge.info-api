@@ -2,6 +2,7 @@ package com.redshiftsoft.tesla_web_scrape.htmloutput;
 
 import com.google.common.base.Joiner;
 import com.redshiftsoft.element.*;
+import com.redshiftsoft.tesla_web_scrape.model.CountryMap;
 import com.redshiftsoft.tesla_web_scrape.model.Match;
 import com.redshiftsoft.tesla_web_scrape.model.TeslaSite;
 
@@ -58,7 +59,7 @@ class HtmlOutputMissingLocalSites {
         row.add(new Td(teslaSite.getAddress()));
         row.add(new Td(teslaSite.getCity()));
         row.add(new Td(teslaSite.getState()));
-        row.add(new Td(teslaSite.getCountry()));
+        row.add(new Td(CountryMap.transform(teslaSite.getCountry())));
         row.add(new Td(teslaSite.getRegion()));
         row.add(new Td(teslaSite.getHours()));
         row.add(new Td(teslaSite.getChargersText()));

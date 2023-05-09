@@ -2,6 +2,7 @@ package com.redshiftsoft.tesla_web_scrape.htmloutput;
 
 import com.redshiftsoft.element.*;
 import com.redshiftsoft.tesla.dao.site.Site;
+import com.redshiftsoft.tesla_web_scrape.model.CountryMap;
 import com.redshiftsoft.tesla_web_scrape.model.Distances;
 import com.redshiftsoft.tesla_web_scrape.model.LocationType;
 import com.redshiftsoft.tesla_web_scrape.model.Match;
@@ -69,7 +70,7 @@ class HtmlOutputFieldComparison {
         boolean allMatch = intCompare(localRow, localSite.getStallCount(), teslaRow, teslaSite.getStallCount());
         allMatch = allMatch & boolCompare(localRow, localSite.isOtherEVs(), teslaRow, teslaSite.getLocationTypes().contains(LocationType.PARTY));
         allMatch = allMatch & locationCompare(localRow, localSite.getLocationId(), teslaRow, teslaSite.getLocationId());
-        allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCountry(), teslaRow, transformCountry(teslaSite.getCountry()));
+        allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCountry(), teslaRow, CountryMap.transform(teslaSite.getCountry()));
         allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCity(), teslaRow, teslaSite.getCity());
         allMatch = allMatch & locationCompare(localRow, localSite, teslaRow, teslaSite);
 
@@ -158,21 +159,6 @@ class HtmlOutputFieldComparison {
     private static String normalized(String input) {
         return Normalizer.normalize(input.trim(), Normalizer.Form.NFD)
             .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-    }
-
-    private static String transformCountry(String teslaCountry) {
-        if ("United States".equalsIgnoreCase(teslaCountry)) {
-            return "USA";
-        } else if ("DK".equalsIgnoreCase(teslaCountry)) {
-            return "Denmark";
-        } else if ("Hong Kong".equalsIgnoreCase(teslaCountry)) {
-            return "China";
-        } else if ("Macau".equalsIgnoreCase(teslaCountry)) {
-            return "China";
-        } else if ("China Mainland".equalsIgnoreCase(teslaCountry)) {
-            return "China";
-        }
-        return teslaCountry;
     }
 
 }

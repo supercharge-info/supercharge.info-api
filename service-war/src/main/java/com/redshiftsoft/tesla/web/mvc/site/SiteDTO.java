@@ -44,6 +44,7 @@ public class SiteDTO {
     private int powerKilowatt;
     private boolean solarCanopy;
     private boolean battery;
+    private boolean otherEVs;
 
     /* Number of days in the current status */
     private int statusDays;
@@ -211,5 +212,13 @@ public class SiteDTO {
 
     public void setBattery(boolean battery) {
         this.battery = battery;
+    }
+
+    public boolean isOtherEVs() {
+        return otherEVs;
+    }
+
+    public void setOtherEVs(boolean otherEVs) {
+        this.otherEVs = otherEVs;
     }
 }

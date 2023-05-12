@@ -27,6 +27,7 @@ public class SiteDTOFunction implements Function<Site, SiteDTO> {
         siteDTO.setPowerKilowatt(site.getPowerKilowatt());
         siteDTO.setSolarCanopy(site.isSolarCanopy());
         siteDTO.setBattery(site.isBattery());
+        siteDTO.setOtherEVs(site.isOtherEVs());
 
         return siteDTO;
     }

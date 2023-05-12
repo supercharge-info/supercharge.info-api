@@ -18,7 +18,8 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
             "       r.name as region_name, " +
             "       a.state as state, " +
             "       s.stall_count as stall_count, " +
-            "       s.power_kwatt as power_kwatt " +
+            "       s.power_kwatt as power_kwatt, " +
+            "       s.other_evs as other_evs " +
             "from changelog cl  " +
             "join site      s on cl.site_id   = s.site_id " +
             "join address   a on s.address_id = a.address_id " +
@@ -50,6 +51,7 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
 
         log.setStallCount(rs.getInt("stall_count"));
         log.setPowerKilowatt(rs.getInt("power_kwatt"));
+        log.setOtherEVs(rs.getBoolean("other_evs"));
 
         return log;
     }

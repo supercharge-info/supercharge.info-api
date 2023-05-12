@@ -43,6 +43,7 @@ public class SiteEditDTO {
     private int powerKiloWatt;
     private boolean solarCanopy;
     private boolean battery;
+    private boolean otherEVs;
 
     // - - - - - - - - - - - - - - - - - - - - - - -
     // java.lang.Object
@@ -250,6 +251,14 @@ public class SiteEditDTO {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public boolean isOtherEVs() {
+        return otherEVs;
+    }
+
+    public void setOtherEVs(boolean otherEVs) {
+        this.otherEVs = otherEVs;
     }
 }
 

@@ -39,7 +39,7 @@ public class ValidationController {
 
 
     @PreAuthorize("hasAnyRole('editor')")
-    @RequestMapping(method = RequestMethod.GET, value = "/webscrape")
+    @RequestMapping(method = RequestMethod.GET, value = "/webscrape", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String getWebScapeValidationReport() throws IOException {
         return webCompare.execute();
@@ -49,7 +49,7 @@ public class ValidationController {
     @RequestMapping(method = RequestMethod.GET, value = "/tesla-source")
     @ResponseBody
     public RawJson viewTeslaJson() {
-        String allJson = webClient.getAllJson();
+        String allJson = webClient.getAllJson(WebClient.TESLA_JSON_URL);
         return new RawJson(allJson);
     }
 

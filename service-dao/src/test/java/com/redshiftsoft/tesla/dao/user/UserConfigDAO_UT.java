@@ -103,6 +103,7 @@ public class UserConfigDAO_UT {
 
         assertEquals(expectedUserConfig.getCountryId(), actualUserConfig.getCountryId());
         assertEquals(expectedUserConfig.getRegionId(), actualUserConfig.getRegionId());
+        assertEquals(expectedUserConfig.getStates(), actualUserConfig.getStates());
 
         assertEquals(expectedUserConfig.getChangesPageCountryId(), actualUserConfig.getChangesPageCountryId());
         assertEquals(expectedUserConfig.getChangesPageRegionId(), actualUserConfig.getChangesPageRegionId());
@@ -112,6 +113,15 @@ public class UserConfigDAO_UT {
 
         assertEquals(expectedUserConfig.getChartsPageCountryId(), actualUserConfig.getChartsPageCountryId());
         assertEquals(expectedUserConfig.getChartsPageRegionId(), actualUserConfig.getChartsPageRegionId());
+
+        assertEquals(expectedUserConfig.getSiteStatus(), actualUserConfig.getSiteStatus());
+        assertEquals(expectedUserConfig.getChangeType(), actualUserConfig.getChangeType());
+        assertEquals(expectedUserConfig.getPowerKilowatt(), actualUserConfig.getPowerKilowatt());
+        assertEquals(expectedUserConfig.isOtherEVs(), actualUserConfig.isOtherEVs());
+
+        assertEquals(expectedUserConfig.getMarkerType(), actualUserConfig.getMarkerType());
+        assertEquals(expectedUserConfig.getMarkerSize(), actualUserConfig.getMarkerSize());
+        assertEquals(expectedUserConfig.getClusterSize(), actualUserConfig.getClusterSize());
 
         assertEquals(expectedUserConfig.getLatitude(), actualUserConfig.getLatitude());
         assertEquals(expectedUserConfig.getLongitude(), actualUserConfig.getLongitude());

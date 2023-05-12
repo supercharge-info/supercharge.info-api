@@ -9,12 +9,20 @@ class HtmlOutputMissingTeslaSites {
     static Table buildTable(Iterable<Match> nullTeslaSiteList) {
         Table table = new Table();
         table.addClass("view-table");
+        table.setId("missing-tesla-sites-table");
         table.add(localSiteHeaderRow());
         int count = 0;
+        int alphaInd = -1;
         for (Match match : nullTeslaSiteList) {
             Tr tr = matchToTable(match.getLocalSite());
             table.add(tr);
             count++;
+
+            int curInd = match.getLocalSite().getName().charAt(0);
+            if (curInd > alphaInd && curInd > 64 && curInd < 91) {
+                alphaInd = curInd;
+                tr.setId("missing-tesla-" + ((char)alphaInd));
+            }
         }
         table.add(new Caption(String.format("%,d missing tesla sites (we have it Tesla does not)", count)));
         return table;
@@ -39,9 +47,9 @@ class HtmlOutputMissingTeslaSites {
 
     private static Tr matchToTable(Site localSite) {
         Tr row = new Tr();
-        row.add(new Td(String.valueOf(localSite.getId())));
+        row.add(new Td(new A(String.valueOf(localSite.getId()), "#edit", "click to populate edit form")));
         row.add(new Td(localSite.getName()));
-        row.add(new Td(localSite.getLocationId()));
+        row.add(new Td(localSite.getLocationId()).addClass("break-word"));
         row.add(new Td(localSite.getStatus().toString()));
         row.add(new Td(String.valueOf(localSite.getStallCount())));
         row.add(new Td(String.valueOf(localSite.getGps().getLatitude())));
@@ -50,7 +58,7 @@ class HtmlOutputMissingTeslaSites {
         row.add(new Td(String.valueOf(localSite.getElevationMeters())));
         row.add(new Td(localSite.getHours()));
         row.add(new Td(localSite.getAddress().toString()));
-        row.add(new Td(localSite.getUrlDiscuss()));
+        row.add(new Td(localSite.getUrlDiscuss()).addClass("break-word"));
 
         return row;
     }

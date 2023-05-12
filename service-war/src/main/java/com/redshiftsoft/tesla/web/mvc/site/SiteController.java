@@ -26,8 +26,6 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.redshiftsoft.util.StringTools.isEmpty;
-
 @Controller
 public class SiteController {
 
@@ -85,6 +83,8 @@ public class SiteController {
                                                    Integer stalls,
                                            @RequestParam(required = false)
                                                    Integer power,
+                                           @RequestParam(required = false)
+                                                   Boolean otherEVs,
                                            @RequestParam(required = false, value = "order[0][column]", defaultValue = "0")
                                                    Integer orderCol,
                                            @RequestParam(required = false, value = "order[0][dir]")
@@ -101,6 +101,7 @@ public class SiteController {
                 .filter(cl -> status == null || status.isEmpty() || status.contains(cl.getStatus()))
                 .filter(cl -> stalls == null || cl.getStallCount() >= stalls)
                 .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
+                .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
                 .collect(Collectors.toList());
 
         List<SiteDTO> pageList = filteredList.stream()

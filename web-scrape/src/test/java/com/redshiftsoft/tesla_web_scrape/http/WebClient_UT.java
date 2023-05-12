@@ -21,7 +21,10 @@ public class WebClient_UT {
 
     @Test
     public void getGetAllJson() {
-        String json = webClient.getAllJson();
+        String json = webClient.getAllJson(WebClient.TESLA_JSON_URL);
+        assertNotNull(json);
+
+        json = webClient.getAllJson(WebClient.CUA_TESLA_JSON_URL);
         assertNotNull(json);
     }
 

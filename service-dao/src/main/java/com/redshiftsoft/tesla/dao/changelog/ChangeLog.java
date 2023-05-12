@@ -40,6 +40,7 @@ public class ChangeLog implements Comparable<ChangeLog> {
 
     private int stallCount;
     private int powerKilowatt;
+    private boolean otherEVs;
 
     /**
      * Factory method with all fields required to persist.
@@ -107,6 +108,14 @@ public class ChangeLog implements Comparable<ChangeLog> {
 
     public void setPowerKilowatt(int powerKilowatt) {
         this.powerKilowatt = powerKilowatt;
+    }
+
+    public boolean isOtherEVs() {
+        return otherEVs;
+    }
+
+    public void setOtherEVs(boolean otherEVs) {
+        this.otherEVs = otherEVs;
     }
 
     public int getSiteId() {

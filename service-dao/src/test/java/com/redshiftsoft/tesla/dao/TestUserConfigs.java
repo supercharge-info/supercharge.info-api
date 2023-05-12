@@ -66,6 +66,7 @@ public class TestUserConfigs {
         ChangeType changeType = random.getElement(ChangeType.values());
         Integer stalls = random.getInteger(2, 20);
         Integer power = random.getInteger(50, 250);
+        Boolean otherEVs = random.getBoolean();
 
         Double latitude = random.getBoolean() ? null : random.getDouble(-90d, 90d);
         Double longitude = random.getBoolean() ? null : random.getDouble(-180d, 180d);
@@ -81,7 +82,7 @@ public class TestUserConfigs {
         List<UserConfigMarker> customMarkers = createCustomMarkers(0, 10);
 
         return new UserConfig(unit, regionId, countryId, states, changesRegionId, changesCountryId, dataRegionId, dataCountryId, chartsRegionId, chartsCountryId,
-                statuses, changeType, stalls, power, latitude, longitude, zoom, markerType, markerSize, clusterSize, customMarkers, lastModified, version);
+                statuses, changeType, stalls, power, otherEVs, latitude, longitude, zoom, markerType, markerSize, clusterSize, customMarkers, lastModified, version);
     }
 
     public List<UserConfigMarker> createCustomMarkers(int min, int max) {

@@ -11,7 +11,8 @@ public enum LocationType {
     STORE,
     DELIVERY,
     LOGISTICS,
-    PARTY;
+    PARTY,
+    UNKNOWN;
 
     @JsonCreator
     public static LocationType forValue(String value) {
@@ -32,7 +33,7 @@ public enum LocationType {
         } else if ("party".equalsIgnoreCase(value)) {
             return PARTY;
         }
-        throw new IllegalArgumentException("value=" + value);
+        return UNKNOWN;
     }
 
 }

@@ -32,6 +32,7 @@ public class UserConfigToDTOFunction implements Function<UserConfig, UserConfigD
 
         dto.filter.stalls = userConfig.getStallCount().orElse(null);
         dto.filter.power = userConfig.getPowerKilowatt().orElse(null);
+        dto.filter.otherEVs = userConfig.isOtherEVs().orElse(null);
 
         dto.latitude = userConfig.getLatitude().orElse(null);
         dto.longitude = userConfig.getLongitude().orElse(null);

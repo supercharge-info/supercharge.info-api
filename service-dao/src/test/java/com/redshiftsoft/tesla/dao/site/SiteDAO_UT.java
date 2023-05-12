@@ -224,6 +224,7 @@ public class SiteDAO_UT {
         assertEquals(siteIn.isSolarCanopy(), siteOut.isSolarCanopy());
         assertEquals(siteIn.isBattery(), siteOut.isBattery());
         assertEquals(siteIn.getDeveloperNotes(), siteOut.getDeveloperNotes());
+        assertEquals(siteIn.isOtherEVs(), siteOut.isOtherEVs());
 
         assertEquals(siteIn, siteOut);
     }

@@ -41,6 +41,7 @@ public class UserConfigFromDTOFunction implements Function<UserConfigDTO, UserCo
                 dto.filter.changeType,
                 dto.filter.stalls,
                 dto.filter.power,
+                dto.filter.otherEVs,
                 dto.latitude,
                 dto.longitude,
                 dto.zoom,

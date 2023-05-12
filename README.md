@@ -14,17 +14,17 @@ API for https://supercharge.info
 
 - `mvn -DskipTests install`
 
-## Test
+## Run
 
-`./database/rebuild-database.sh` (once, run as user that can execute docker commands)
-
-`./start.sh` (each time, run as a user that can execute docker commands)
+`./database/rebuild-database.sh` (once, run as a user that can execute docker commands)
+`./start.sh` (each time to start API and DB, run as a user that can execute docker commands)
+`./stop.sh` (to clean up resources when done)
 
 ## Deploy
 
-1. Verify tests pass.
+1. `mvn install` (verify tests pass)
 2. `./release.sh` (enter to accept suggested release version)
-3. `git push --tags origin master` (to push release to origin)
+3. `git push --tags origin <your-branch>` (to push release to origin)
 4. `./deploy.sh <test|prod> <version>`
 
 ## Configuration

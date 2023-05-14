@@ -88,6 +88,28 @@ public class A extends Element {
         }
     }
 
+    /**
+     * Construct a link with these four attributes:
+     *
+     * @param cdata Character data that will be the only child element of the link element.
+     * @param href    Value for the attribute with the same name.
+     * @param title   Value for the attribute with the same name.
+     * @param target  Value for the attribute with the same name.
+     */
+    public A(final String cdata, final String href, final String title, final String target) {
+        super(A);
+        add(new CData(cdata));
+        if (StringTools.isNotEmpty(title)) {
+            this.addAttribute(ATTR_TITLE, title);
+        }
+        if (StringTools.isNotEmpty(href)) {
+            this.addAttribute(ATTR_HREF, href);
+        }
+        if (StringTools.isNotEmpty(target)) {
+            this.addAttribute(ATTR_TARGET, target);
+        }
+    }
+
     public void setOnClick(final String value) {
         this.addAttribute(new Attribute(ATTR_ONCLICK, value));
     }

@@ -15,6 +15,8 @@ public class Element {
     public static final String A = "a";
     public static final String HTML = "html";
     public static final String TABLE = "table";
+    public static final String THEAD = "thead";
+    public static final String TBODY = "tbody";
     public static final String TR = "tr";
     public static final String TD = "td";
     public static final String TH = "th";

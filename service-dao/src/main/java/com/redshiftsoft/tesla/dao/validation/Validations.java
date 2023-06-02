@@ -24,7 +24,13 @@ public class Validations {
                 new Validation(SUPERCHARGER, "Tesla location id is not null for OPEN site", "" +
                         "SELECT * " +
                         "FROM site " +
-                        "WHERE status = 'OPEN' AND (location_id IS NULL) AND site_id NOT in (339,433)")
+                        "WHERE status = 'OPEN' AND location_id IS NULL")
+        );
+
+        validationMap.add(
+                new Validation(SUPERCHARGER, "no duplicate Tesla location ids", "" +
+                        "SELECT location_id, array_agg(site_id) site_ids, count(*) FROM site " +
+                        "WHERE location_id is not null GROUP BY location_id HAVING count(*) > 1")
         );
 
         validationMap.add(
@@ -48,13 +54,15 @@ public class Validations {
                         "" +
                                 "SELECT * " +
                                 "FROM address a " +
-                                "JOIN country c on a.country_id=c.country_id " +
+                                "JOIN country c USING (country_id) " +
                                 "WHERE c.state_required AND (state IS NULL OR state = '')")
         );
 
         validationMap.add(
                 new Validation(ADDRESS, "no duplicate street address",
-                        "SELECT street, array_agg(address_id), count(*) FROM address GROUP BY street HAVING count(*) > 1")
+                        "SELECT street, array_agg(site_id) site_ids, count(*) " +
+                        "FROM site JOIN address USING (address_id) " +
+                        "GROUP BY street HAVING count(*) > 1")
         );
 
         validationMap.add(

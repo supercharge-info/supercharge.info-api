@@ -40,7 +40,7 @@ class HtmlOutputMissingTeslaSites {
         Tr row = new Tr();
         row.add(new Td(new A(String.valueOf(localSite.getId()), "#edit", "click to populate edit form")));
         row.add(new Td(localSite.getName()));
-        row.add(new Td(new A(localSite.getLocationId(), "https://www.tesla.com/findus/location/supercharger/" + localSite.getLocationId(), null, "_blank")).addClass("break-word"));
+        row.add(new Td(new A(localSite.getLocationId(), "https://www.tesla." + (localSite.getAddress().getCountry() == "China" ? "cn" : "com") + "/findus/location/supercharger/" + localSite.getLocationId(), null, "_blank")).addClass("break-word"));
         row.add(new Td(String.valueOf(localSite.getStallCount())));
         row.add(new Td(String.valueOf(localSite.getGps().getLatitude())));
         row.add(new Td(String.valueOf(localSite.getGps().getLongitude())));

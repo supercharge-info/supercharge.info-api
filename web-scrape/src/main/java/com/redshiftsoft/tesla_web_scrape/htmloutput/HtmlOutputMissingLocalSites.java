@@ -45,7 +45,7 @@ class HtmlOutputMissingLocalSites {
     private static Tr matchToTable(TeslaSite teslaSite) {
         Tr row = new Tr();
         row.add(new Td(new A(teslaSite.getTitle(), "#edit", "click to populate edit form")));
-        row.add(new Td(new A(teslaSite.getLocationId(), "https://www.tesla.com/findus/location/supercharger/" + teslaSite.getLocationId(), null, "_blank")).addClass("break-word"));
+        row.add(new Td(new A(teslaSite.getLocationId(), "https://www.tesla." + (CountryMap.transform(teslaSite.getCountry()) == "China" ? "cn" : "com") + "/findus/location/supercharger/" + teslaSite.getLocationId(), null, "_blank")).addClass("break-word"));
         row.add(new Td(String.valueOf(teslaSite.getStallCount())));
         row.add(new Td(String.valueOf(teslaSite.getLatitude())));
         row.add(new Td(String.valueOf(teslaSite.getLongitude())));

@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TeslaSite {
 
+    private static final Pattern CN_STALL_COUNT_PATTERN = Pattern.compile("(\\d+)个超级充电桩");
     private static final Pattern STALL_COUNT_PATTERN = Pattern.compile("(\\d+)\\s+Supercharg[er|ing]", Pattern.CASE_INSENSITIVE);
     private static final Pattern DIGITS_PATTERN = Pattern.compile(" (\\d+)", Pattern.CASE_INSENSITIVE);
 
@@ -104,9 +105,14 @@ public class TeslaSite {
                 String group = matcher1.group(1);
                 return NumberUtils.parse(group, Integer.class);
             }
-            Matcher matcher2 = DIGITS_PATTERN.matcher(sourceText);
+            Matcher matcher2 = CN_STALL_COUNT_PATTERN.matcher(sourceText);
             if (matcher2.find()) {
                 String group = matcher2.group(1);
+                return NumberUtils.parse(group, Integer.class);
+            }
+            Matcher matcher3 = DIGITS_PATTERN.matcher(sourceText);
+            if (matcher3.find()) {
+                String group = matcher3.group(1);
                 return NumberUtils.parse(group, Integer.class);
             }
         }
@@ -215,6 +221,10 @@ public class TeslaSite {
 
     public String getCountry() {
         return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getRegion() {

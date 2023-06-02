@@ -61,7 +61,7 @@ class HtmlOutputFieldComparison {
 
         boolean allMatch = intCompare(localRow, localSite.getStallCount(), teslaRow, teslaSite.getStallCount());
         allMatch = allMatch & boolCompare(localRow, localSite.isOtherEVs(), teslaRow, teslaSite.getLocationTypes().contains(LocationType.PARTY));
-        allMatch = allMatch & locationIdCompare(localRow, localSite.getLocationId(), teslaRow, teslaSite.getLocationId());
+        allMatch = allMatch & locationIdCompare(localRow, localSite.getLocationId(), teslaRow, teslaSite.getLocationId(), CountryMap.transform(teslaSite.getCountry()) == "China");
         allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCountry(), teslaRow, CountryMap.transform(teslaSite.getCountry()));
         allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCity(), teslaRow, teslaSite.getCity());
         allMatch = allMatch & locationCompare(localRow, localSite, teslaRow, teslaSite);
@@ -99,13 +99,13 @@ class HtmlOutputFieldComparison {
         return true;
     }
 
-    private static boolean locationIdCompare(Tr localRow, String localValue, Tr teslaRow, String teslaValue) {
+    private static boolean locationIdCompare(Tr localRow, String localValue, Tr teslaRow, String teslaValue, boolean china) {
         localValue = StringTools.toString(localValue);
         teslaValue = StringTools.toString(teslaValue);
-        Td localCell = new Td(new A(localValue, "https://www.tesla.com/findus/location/supercharger/" + localValue, null, "_blank"));
+        Td localCell = new Td(new A(localValue, "https://www.tesla." + (china ? "cn" : "com") + "/findus/location/supercharger/" + localValue, null, "_blank"));
         localRow.add(localCell);
         localCell.addClass("break-word");
-        Td teslaCell = new Td(new A(teslaValue, "https://www.tesla.com/findus/location/supercharger/" + teslaValue, null, "_blank"));
+        Td teslaCell = new Td(new A(teslaValue, "https://www.tesla." + (china ? "cn" : "com") + "/findus/location/supercharger/" + teslaValue, null, "_blank"));
         teslaRow.add(teslaCell);
         teslaCell.addClass("break-word");
         if (!StringTools.equalsIgnoreCase(normalized(localValue), normalized(teslaValue)) && StringTools.isNotEmpty(teslaValue)) {
@@ -124,9 +124,11 @@ class HtmlOutputFieldComparison {
         Td teslaCell = new Td(teslaValue);
         teslaRow.add(teslaCell);
         if (!Objects.equals(normalized(localValue), normalized(teslaValue)) && StringTools.isNotEmpty(teslaValue)) {
-            localCell.addClass("error");
-            teslaCell.addClass("error");
-            return false;
+            if (teslaValue.length() > teslaValue.codePoints().filter(c -> c >= 0x100).count() * 2) {
+                localCell.addClass("error");
+                teslaCell.addClass("error");
+                return false;
+            }
         }
         return true;
     }

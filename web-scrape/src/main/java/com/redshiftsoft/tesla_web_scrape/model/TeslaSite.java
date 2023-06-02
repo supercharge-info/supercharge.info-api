@@ -94,7 +94,7 @@ public class TeslaSite {
         if (number == null) {
             number = getStallCount(getHours());
         }
-        return number == null ? 0 : number;
+        return number == null ? 0 : number > 2000 ? 0 : number;
     }
 
     private static Integer getStallCount(String sourceText) {
@@ -165,8 +165,16 @@ public class TeslaSite {
         return latitude;
     }
 
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
     public double getLongitude() {
         return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String getTitle() {
@@ -181,8 +189,16 @@ public class TeslaSite {
         return locationId;
     }
 
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
+    }
+
     public int isOpenSoon() {
         return openSoon;
+    }
+
+    public void setOpenSoon(int openSoon) {
+        this.openSoon = openSoon;
     }
 
     public String getAddress() {

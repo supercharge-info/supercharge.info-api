@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -57,27 +57,34 @@ public class WebClient {
         json = getAllJson(TESLA_JSON_URL);
         List<TeslaSite> allTeslaSites = objectMapper.readValue(json, new TypeReference<>() { });
 
-        Set<String> thirdPartyIds = newTeslaSites.stream()
-                .filter(new LocationTypePredicate(LocationType.PARTY))
-                .filter(s -> s.isOpenSoon() == 0)
-                .map(TeslaSite::getLocationId)
-                .map(String::toLowerCase)
-                .collect(Collectors.toSet());
+        Map<String, TeslaSite> mappedSites = newTeslaSites.stream()
+                .filter(new LocationTypePredicate(LocationType.SUPERCHARGER))
+                .collect(Collectors.toMap(s -> s.getLocationId().toLowerCase(), s -> s));
 
         List<TeslaSite> teslaSiteList = allTeslaSites.stream()
                 .filter(new LocationTypePredicate(LocationType.SUPERCHARGER))
-                .filter(s -> s.isOpenSoon() == 0)
-                .filter(new TeslaSiteDuplicatePredicate())
                 .map(s -> {
-                    if (thirdPartyIds.contains(s.getLocationId().toLowerCase()) || thirdPartyIds.contains(s.getTrtId())) {
-                        if (!s.getLocationTypes().contains(LocationType.PARTY)) {
-                            s.getLocationTypes().add(LocationType.PARTY);
-                        }
-                    } else {
-                        s.getLocationTypes().remove(LocationType.PARTY);
+                    TeslaSite upd = null;
+                    if (mappedSites.containsKey(s.getTrtId())) {
+                        upd = mappedSites.get(s.getTrtId());
+                    } else if (mappedSites.containsKey(s.getLocationId().toLowerCase())) {
+                        upd = mappedSites.get(s.getLocationId().toLowerCase());
                     }
+
+                    if (upd != null) {
+                        // Replace props with up-to-date ones
+                        s.getLocationTypes().clear();
+                        s.getLocationTypes().addAll(upd.getLocationTypes());
+
+                        s.setOpenSoon(upd.getOpenSoon());
+                        s.setLatitude(upd.getLatitude());
+                        s.setLongitude(upd.getLongitude());
+                    }
+
                     return s;
                 })
+                .filter(s -> s.isOpenSoon() == 0)
+                .filter(new TeslaSiteDuplicatePredicate())
                 .sorted((a, b) -> a.getTitle().compareTo(b.getTitle()))
                 .collect(Collectors.toList());
 

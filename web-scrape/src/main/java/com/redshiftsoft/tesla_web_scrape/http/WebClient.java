@@ -103,7 +103,7 @@ public class WebClient {
                     }
                     return s;
                 }).collect(Collectors.toList());
-        List<TeslaSite> teslaSiteList = Stream.concat(mergedSiteList.stream(), cnSites.values().stream())
+        List<TeslaSite> teslaSiteList = Stream.concat(cnSites.values().stream(), mergedSiteList.stream())
                 .filter(s -> s.isOpenSoon() == 0)
                 .filter(new TeslaSiteDuplicatePredicate())
                 .sorted((a, b) -> a.getTitle().compareTo(b.getTitle()))

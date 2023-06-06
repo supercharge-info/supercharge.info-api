@@ -14,13 +14,13 @@ import java.util.Objects;
 
 class HtmlOutputFieldComparison {
 
-    static Table buildTable(Iterable<Match> goodMatches) {
+    static Table buildTable(Iterable<Match> goodMatches, boolean china) {
         Table table = new Table("view-table");
-        table.setId("field-mismatches-table");
+        table.setId("field-mismatches-table" + (china ? "-china" : ""));
         Tbody tbody = new Tbody();
         int count = 0;
         for (Match match : goodMatches) {
-            boolean allMatch = validationRow(tbody, match.getLocalSite(), match.getTeslaSite());
+            boolean allMatch = validationRow(tbody, match.getLocalSite(), match.getTeslaSite(), china);
             if (!allMatch) {
                 count++;
             }
@@ -43,7 +43,7 @@ class HtmlOutputFieldComparison {
         );
     }
 
-    private static boolean validationRow(Tbody table, Site localSite, TeslaSite teslaSite) {
+    private static boolean validationRow(Tbody table, Site localSite, TeslaSite teslaSite, boolean china) {
         Tr localRow = new Tr();
         localRow.addClass("local");
         Tr teslaRow = new Tr();
@@ -61,7 +61,7 @@ class HtmlOutputFieldComparison {
 
         boolean allMatch = intCompare(localRow, localSite.getStallCount(), teslaRow, teslaSite.getStallCount());
         allMatch = allMatch & boolCompare(localRow, localSite.isOtherEVs(), teslaRow, teslaSite.getLocationTypes().contains(LocationType.PARTY));
-        allMatch = allMatch & locationIdCompare(localRow, localSite.getLocationId(), teslaRow, teslaSite.getLocationId(), localSite.getAddress().getCountry() == "China");
+        allMatch = allMatch & locationIdCompare(localRow, localSite.getLocationId(), teslaRow, teslaSite.getLocationId(), china);
         allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCountry(), teslaRow, CountryMap.transform(teslaSite.getCountry()));
         allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCity(), teslaRow, teslaSite.getCity());
         allMatch = allMatch & locationCompare(localRow, localSite, teslaRow, teslaSite);

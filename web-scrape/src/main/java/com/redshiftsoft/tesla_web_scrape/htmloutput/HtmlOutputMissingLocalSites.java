@@ -8,17 +8,17 @@ import com.redshiftsoft.tesla_web_scrape.model.TeslaSite;
 
 class HtmlOutputMissingLocalSites {
 
-    static Table buildTable(Iterable<Match> nullLocalSiteList) {
+    static Table buildTable(Iterable<Match> nullLocalSiteList, boolean china) {
         Tbody tbody = new Tbody();
         int count = 0;
         for (Match match : nullLocalSiteList) {
-            Tr tr = matchToTable(match.getTeslaSite());
+            Tr tr = matchToTable(match.getTeslaSite(), china);
             tbody.add(tr);
             count++;
         }
 
         Table table = new Table("view-table");
-        table.setId("missing-local-sites-table");
+        table.setId("missing-local-sites-table" + (china ? "-china" : ""));
         table.add(new Caption(String.format("%,d missing local sites (Tesla has it we do not)", count)), new Thead(teslaSiteHeaderRow()), tbody);
         return table;
     }
@@ -42,10 +42,10 @@ class HtmlOutputMissingLocalSites {
         return row;
     }
 
-    private static Tr matchToTable(TeslaSite teslaSite) {
+    private static Tr matchToTable(TeslaSite teslaSite, boolean china) {
         Tr row = new Tr();
         row.add(new Td(new A(teslaSite.getTitle(), "#edit", "click to populate edit form")));
-        row.add(new Td(new A(teslaSite.getLocationId(), "https://www.tesla." + (CountryMap.transform(teslaSite.getCountry()) == "China" ? "cn" : "com") + "/findus/location/supercharger/" + teslaSite.getLocationId(), null, "_blank")).addClass("break-word"));
+        row.add(new Td(new A(teslaSite.getLocationId(), "https://www.tesla." + (china ? "cn" : "com") + "/findus/location/supercharger/" + teslaSite.getLocationId(), null, "_blank")).addClass("break-word"));
         row.add(new Td(String.valueOf(teslaSite.getStallCount())));
         row.add(new Td(String.valueOf(teslaSite.getLatitude())));
         row.add(new Td(String.valueOf(teslaSite.getLongitude())));

@@ -7,7 +7,8 @@ public class HtmlOutput {
 
     public static String htmlResults(Iterable<Match> nullLocalSiteList,
                                      Iterable<Match> nullTeslaSiteList,
-                                     Iterable<Match> goodMatches) {
+                                     Iterable<Match> goodMatches,
+                                     boolean china) {
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Missing local sites.
@@ -30,6 +31,12 @@ public class HtmlOutput {
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // body
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        if (china) {
+            table1.setId(table1.getId() + "-china");
+            table2.setId(table2.getId() + "-china");
+            table3.setId(table3.getId() + "-china");
+        }
+
         Body body = new Body();
         body.add(table1);
         body.add(new Br(), new Br(), new Br(), new Br());

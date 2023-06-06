@@ -61,7 +61,7 @@ class HtmlOutputFieldComparison {
 
         boolean allMatch = intCompare(localRow, localSite.getStallCount(), teslaRow, teslaSite.getStallCount());
         allMatch = allMatch & boolCompare(localRow, localSite.isOtherEVs(), teslaRow, teslaSite.getLocationTypes().contains(LocationType.PARTY));
-        allMatch = allMatch & locationIdCompare(localRow, localSite.getLocationId(), teslaRow, teslaSite.getLocationId(), CountryMap.transform(teslaSite.getCountry()) == "China");
+        allMatch = allMatch & locationIdCompare(localRow, localSite.getLocationId(), teslaRow, teslaSite.getLocationId(), localSite.getAddress().getCountry() == "China");
         allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCountry(), teslaRow, CountryMap.transform(teslaSite.getCountry()));
         allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCity(), teslaRow, teslaSite.getCity());
         allMatch = allMatch & locationCompare(localRow, localSite, teslaRow, teslaSite);

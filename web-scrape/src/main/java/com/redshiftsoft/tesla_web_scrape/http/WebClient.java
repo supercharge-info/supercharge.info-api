@@ -1,22 +1,28 @@
 package com.redshiftsoft.tesla_web_scrape.http;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redshiftsoft.tesla_web_scrape.model.LocationType;
 import com.redshiftsoft.tesla_web_scrape.model.LocationTypePredicate;
 import com.redshiftsoft.tesla_web_scrape.model.TeslaSite;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+import java.time.Duration;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Semaphore;
+import java.util.function.Function;
+import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
@@ -31,85 +37,160 @@ public class WebClient {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final CloseableHttpClient httpClient = HttpClientBuilder
-            .create()
-            .setMaxConnPerRoute(4)
-            .setMaxConnTotal(4)
-            .build();
+    private final Semaphore requestLimiter = new Semaphore(10, true);
+    private final HttpClient httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(20)).build();
+        
 
     /**
      * Returns the RAW json, before we attempt to parse it.
      */
     public String getAllJson(String url) {
-        HttpGet httpGet = new HttpGet(url);
-        try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
-            HttpEntity responseEntity = response.getEntity();
-            return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
+        try {
+            requestLimiter.acquire();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+
+        HttpRequest httpGet = HttpRequest.newBuilder()
+            .timeout(Duration.ofSeconds(30))
+            .GET().uri(URI.create(url)).build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(httpGet, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            requestLimiter.release();
         }
     }
 
     /**
-     * Just gets list of data from Tesla site as TeslaSite objects.
+     * Returns a future that will contain the RAW json, before we attempt to parse it.
+     */
+    public CompletableFuture<String> getAllJsonAsync(String url) {
+        try {
+            requestLimiter.acquire();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        HttpRequest httpGet = HttpRequest.newBuilder()
+            .timeout(Duration.ofSeconds(30))
+            .GET().uri(URI.create(url)).build();
+
+        CompletableFuture<HttpResponse<String>> response = httpClient.sendAsync(httpGet, HttpResponse.BodyHandlers.ofString());
+        return response.thenApply(r -> {
+            requestLimiter.release();
+            return r.body();
+        });
+    }
+
+    /**
+     * Performs a number of downloads asynchronously that will either return an array of lists of TeslaSites or throw an exception
+     */
+    public List<TeslaSite>[] getEachSource(String... urls) {
+        CompletableFuture<List<TeslaSite>>[] futures = Arrays.stream(urls).map(u -> getAllJsonAsync(u).thenApply(json -> {
+            try {
+                return objectMapper.readValue(json, new TypeReference<List<TeslaSite>>() { });
+            } catch (JsonProcessingException e) {
+                throw new IllegalStateException(e);
+            }
+        })).toArray(CompletableFuture[]::new);
+
+        // Waits for all downloads to complete, or throws an exception if one fails
+        CompletableFuture.allOf(futures).join();
+        return Arrays.stream(futures).map(CompletableFuture::join).toArray(ArrayList[]::new);
+    }
+
+    /**
+     * Just gets list of non-China data from Tesla site as TeslaSite objects.
      */
     public WebScrapeResult getWebLocations() throws IOException {
-        String json = getAllJson(TESLA_JSON_URL);
-        List<TeslaSite> allTeslaSites = objectMapper.readValue(json, new TypeReference<>() { });
+        List<TeslaSite>[] downloads = getEachSource(TESLA_JSON_URL, CUA_TESLA_JSON_URL);
 
-        json = getAllJson(CUA_TESLA_JSON_URL);
-        List<TeslaSite> newTeslaSites = objectMapper.readValue(json, new TypeReference<>() { });
-
-        json = getAllJson(CN_TESLA_JSON_URL);
-        List<TeslaSite> cnTeslaSites = objectMapper.readValue(json, new TypeReference<>() { });
-
-        Map<String, TeslaSite> mappedSites = newTeslaSites.stream()
+        Map<String, TeslaSite> mappedSites = downloads[1].stream()
                 .filter(new LocationTypePredicate(LocationType.SUPERCHARGER))
-                .collect(Collectors.toMap(s -> s.getLocationId().toLowerCase(), s -> s));
+                .collect(Collectors.toMap(s -> s.getLocationId().toLowerCase(), Function.identity()));
 
-        Map<String, TeslaSite> cnSites = cnTeslaSites.stream()
+        List<TeslaSite> teslaSiteList = downloads[0].stream()
                 .filter(new LocationTypePredicate(LocationType.SUPERCHARGER))
-                .map(s -> {
-                    s.setCountry("China Mainland");
-                    return s;
-                })
-                .collect(Collectors.toMap(s -> s.getLocationId().toLowerCase(), s -> s));
-
-        List<TeslaSite> mergedSiteList = allTeslaSites.stream()
-                .filter(new LocationTypePredicate(LocationType.SUPERCHARGER))
-                .map(s -> {
+                .map(site -> {
                     TeslaSite upd = null;
-                    if (cnSites.containsKey(s.getLocationId().toLowerCase())) {
-                        upd = cnSites.remove(s.getLocationId().toLowerCase());
-                        if (s.getCountry() == "China Mainland") {
-                            return upd;
-                        }
-                    } else {
-                        if (mappedSites.containsKey(s.getTrtId())) {
-                            upd = mappedSites.get(s.getTrtId());
-                        } else if (mappedSites.containsKey(s.getLocationId().toLowerCase())) {
-                            upd = mappedSites.get(s.getLocationId().toLowerCase());
-                        }
-
-                        if (upd != null) {
-                            // Replace props with up-to-date ones
-                            s.getLocationTypes().clear();
-                            s.getLocationTypes().addAll(upd.getLocationTypes());
-
-                            s.setOpenSoon(upd.getOpenSoon());
-                            s.setLatitude(upd.getLatitude());
-                            s.setLongitude(upd.getLongitude());
-                        }
+                    if (mappedSites.containsKey(site.getTrtId())) {
+                        upd = mappedSites.get(site.getTrtId());
+                    } else if (mappedSites.containsKey(site.getLocationId().toLowerCase())) {
+                        upd = mappedSites.get(site.getLocationId().toLowerCase());
                     }
-                    return s;
-                }).collect(Collectors.toList());
-        List<TeslaSite> teslaSiteList = Stream.concat(cnSites.values().stream(), mergedSiteList.stream())
-                .filter(s -> s.isOpenSoon() == 0)
+
+                    if (upd != null) {
+                        // Replace props with up-to-date ones
+                        site.setLocationId(upd.getLocationId());
+                        site.setOpenSoon(upd.getOpenSoon());
+                        site.setLatitude(upd.getLatitude());
+                        site.setLongitude(upd.getLongitude());
+
+                        site.getLocationTypes().clear();
+                        site.getLocationTypes().addAll(upd.getLocationTypes());
+                    }
+                    return site;
+                })
+                .filter(s -> s.isOpenSoon() == 0 && !"China Mainland".equals(s.getCountry()))
                 .filter(new TeslaSiteDuplicatePredicate())
                 .sorted((a, b) -> a.getTitle().compareTo(b.getTitle()))
                 .collect(Collectors.toList());
 
-        return new WebScrapeResult(json, teslaSiteList);
+        return new WebScrapeResult(objectMapper.writeValueAsString(teslaSiteList), teslaSiteList);
+    }
+
+    /**
+     * Just gets list of China data from tesla.cn as TeslaSite objects.
+     * Useful because connections and transfer speeds to China are very slow.
+     */
+    public WebScrapeResult getChinaLocations() throws IOException {
+        List<TeslaSite>[] downloads = getEachSource(TESLA_JSON_URL, CUA_TESLA_JSON_URL, CN_TESLA_JSON_URL);
+
+        // Get non-China data to exclude already downloaded sites in HK, TW, etc
+        Map<String, TeslaSite> mappedSites = downloads[1].stream()
+                .filter(new LocationTypePredicate(LocationType.SUPERCHARGER))
+                .collect(Collectors.toMap(s -> s.getLocationId().toLowerCase(), Function.identity()));
+
+        TeslaSiteDuplicatePredicate worldDuplicates = new TeslaSiteDuplicatePredicate();
+        Set<String> processed = downloads[0].stream()
+                .filter(new LocationTypePredicate(LocationType.SUPERCHARGER))
+                .map(site -> {
+                    TeslaSite upd = null;
+                    if (mappedSites.containsKey(site.getTrtId())) {
+                        upd = mappedSites.get(site.getTrtId());
+                    } else if (mappedSites.containsKey(site.getLocationId().toLowerCase())) {
+                        upd = mappedSites.get(site.getLocationId().toLowerCase());
+                    }
+
+                    if (upd != null) {
+                        // Replace props with up-to-date ones
+                        site.setLocationId(upd.getLocationId());
+                        site.setOpenSoon(upd.getOpenSoon());
+                        site.setLatitude(upd.getLatitude());
+                        site.setLongitude(upd.getLongitude());
+
+                        site.getLocationTypes().clear();
+                        site.getLocationTypes().addAll(upd.getLocationTypes());
+                    }
+                    return site;
+                })
+                .filter(s -> s.isOpenSoon() == 0 && !"China Mainland".equals(s.getCountry()))
+                .filter(worldDuplicates)
+                .map(s -> s.getLocationId().toLowerCase())
+                .collect(Collectors.toSet());
+
+        List<TeslaSite> chinaSiteList = downloads[2].stream()
+                .filter(new LocationTypePredicate(LocationType.SUPERCHARGER))
+                .filter(s -> s.isOpenSoon() == 0 && !processed.contains(s.getLocationId().toLowerCase()))
+                .filter(worldDuplicates)
+                .sorted((a, b) -> a.getTitle().compareTo(b.getTitle()))
+                .collect(Collectors.toList());
+
+        return new WebScrapeResult(objectMapper.writeValueAsString(chinaSiteList), chinaSiteList);
     }
 
 }

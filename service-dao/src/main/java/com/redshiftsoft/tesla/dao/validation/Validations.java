@@ -62,7 +62,7 @@ public class Validations {
                 new Validation(ADDRESS, "no duplicate street address",
                         "SELECT street, array_agg(site_id) site_ids, count(*) " +
                         "FROM site JOIN address USING (address_id) " +
-                        "WHERE status != 'CLOSED_PERMANENTLY' " +
+                        "WHERE status != 'CLOSED_PERM' " +
                         "GROUP BY street HAVING count(*) > 1")
         );
 

@@ -8,25 +8,18 @@ import com.redshiftsoft.tesla_web_scrape.model.TeslaSite;
 
 class HtmlOutputMissingLocalSites {
 
-    static Table buildTable(Iterable<Match> nullLocalSiteList) {
-        Table table = new Table();
-        table.setId("missing-local-sites-table");
-        table.addClass("view-table");
-        table.add(teslaSiteHeaderRow());
+    static Table buildTable(Iterable<Match> nullLocalSiteList, boolean china) {
+        Tbody tbody = new Tbody();
         int count = 0;
-        int alphaInd = -1;
         for (Match match : nullLocalSiteList) {
-            Tr tr = matchToTable(match.getTeslaSite());
-            table.add(tr);
+            Tr tr = matchToTable(match.getTeslaSite(), china);
+            tbody.add(tr);
             count++;
-
-            int curInd = match.getTeslaSite().getTitle().charAt(0);
-            if (curInd > alphaInd && curInd > 64 && curInd < 91) {
-                alphaInd = curInd;
-                tr.setId("missing-local-" + ((char)alphaInd));
-            }
         }
-        table.add(new Caption(String.format("%,d missing local sites (Tesla has it we do not)", count)));
+
+        Table table = new Table("view-table");
+        table.setId("missing-local-sites-table" + (china ? "-china" : ""));
+        table.add(new Caption(String.format("%,d missing local sites (Tesla has it we do not)", count)), new Thead(teslaSiteHeaderRow()), tbody);
         return table;
     }
 
@@ -49,10 +42,10 @@ class HtmlOutputMissingLocalSites {
         return row;
     }
 
-    private static Tr matchToTable(TeslaSite teslaSite) {
+    private static Tr matchToTable(TeslaSite teslaSite, boolean china) {
         Tr row = new Tr();
         row.add(new Td(new A(teslaSite.getTitle(), "#edit", "click to populate edit form")));
-        row.add(new Td(teslaSite.getLocationId()).addClass("break-word"));
+        row.add(new Td(new A(teslaSite.getLocationId(), "https://www.tesla." + (china ? "cn" : "com") + "/findus/location/supercharger/" + teslaSite.getLocationId(), null, "_blank")).addClass("break-word"));
         row.add(new Td(String.valueOf(teslaSite.getStallCount())));
         row.add(new Td(String.valueOf(teslaSite.getLatitude())));
         row.add(new Td(String.valueOf(teslaSite.getLongitude())));

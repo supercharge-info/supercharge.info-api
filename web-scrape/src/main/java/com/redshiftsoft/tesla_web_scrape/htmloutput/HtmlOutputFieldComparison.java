@@ -14,26 +14,18 @@ import java.util.Objects;
 
 class HtmlOutputFieldComparison {
 
-    static Table buildTable(Iterable<Match> goodMatches) {
-        Table table = new Table();
-        table.addClass("view-table");
-        table.setId("field-mismatches-table");
-        table.add(validationHeaderRow());
+    static Table buildTable(Iterable<Match> goodMatches, boolean china) {
+        Table table = new Table("view-table");
+        table.setId("field-mismatches-table" + (china ? "-china" : ""));
+        Tbody tbody = new Tbody();
         int count = 0;
-        int alphaInd = -1;
         for (Match match : goodMatches) {
-            boolean allMatch = validationRow(table, match.getLocalSite(), match.getTeslaSite());
+            boolean allMatch = validationRow(tbody, match.getLocalSite(), match.getTeslaSite(), china);
             if (!allMatch) {
                 count++;
-
-                int curInd = match.getLocalSite().getName().charAt(0);
-                if (curInd > alphaInd && curInd > 64 && curInd < 91) {
-                    alphaInd = curInd;
-                    table.getChildren().get(table.getChildren().size() - 2).setId("field-mismatch-" + ((char)alphaInd));
-                }
             }
         }
-        table.add(new Caption(String.format("%,d common sites with field mismatches", count)));
+        table.add(new Caption(String.format("%,d common sites with field mismatches", count)), new Thead(validationHeaderRow()), tbody);
         return table;
     }
 
@@ -51,7 +43,7 @@ class HtmlOutputFieldComparison {
         );
     }
 
-    private static boolean validationRow(Table table, Site localSite, TeslaSite teslaSite) {
+    private static boolean validationRow(Tbody table, Site localSite, TeslaSite teslaSite, boolean china) {
         Tr localRow = new Tr();
         localRow.addClass("local");
         Tr teslaRow = new Tr();
@@ -69,7 +61,7 @@ class HtmlOutputFieldComparison {
 
         boolean allMatch = intCompare(localRow, localSite.getStallCount(), teslaRow, teslaSite.getStallCount());
         allMatch = allMatch & boolCompare(localRow, localSite.isOtherEVs(), teslaRow, teslaSite.getLocationTypes().contains(LocationType.PARTY));
-        allMatch = allMatch & locationCompare(localRow, localSite.getLocationId(), teslaRow, teslaSite.getLocationId());
+        allMatch = allMatch & locationIdCompare(localRow, localSite.getLocationId(), teslaRow, teslaSite.getLocationId(), china);
         allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCountry(), teslaRow, CountryMap.transform(teslaSite.getCountry()));
         allMatch = allMatch & normalizedCompare(localRow, localSite.getAddress().getCity(), teslaRow, teslaSite.getCity());
         allMatch = allMatch & locationCompare(localRow, localSite, teslaRow, teslaSite);
@@ -107,13 +99,13 @@ class HtmlOutputFieldComparison {
         return true;
     }
 
-    private static boolean locationCompare(Tr localRow, String localValue, Tr teslaRow, String teslaValue) {
+    private static boolean locationIdCompare(Tr localRow, String localValue, Tr teslaRow, String teslaValue, boolean china) {
         localValue = StringTools.toString(localValue);
         teslaValue = StringTools.toString(teslaValue);
-        Td localCell = new Td(localValue);
+        Td localCell = new Td(new A(localValue, "https://www.tesla." + (china ? "cn" : "com") + "/findus/location/supercharger/" + localValue, null, "_blank"));
         localRow.add(localCell);
         localCell.addClass("break-word");
-        Td teslaCell = new Td(teslaValue);
+        Td teslaCell = new Td(new A(teslaValue, "https://www.tesla." + (china ? "cn" : "com") + "/findus/location/supercharger/" + teslaValue, null, "_blank"));
         teslaRow.add(teslaCell);
         teslaCell.addClass("break-word");
         if (!StringTools.equalsIgnoreCase(normalized(localValue), normalized(teslaValue)) && StringTools.isNotEmpty(teslaValue)) {
@@ -132,9 +124,11 @@ class HtmlOutputFieldComparison {
         Td teslaCell = new Td(teslaValue);
         teslaRow.add(teslaCell);
         if (!Objects.equals(normalized(localValue), normalized(teslaValue)) && StringTools.isNotEmpty(teslaValue)) {
-            localCell.addClass("error");
-            teslaCell.addClass("error");
-            return false;
+            if (teslaValue.length() > teslaValue.codePoints().filter(c -> c >= 0x100).count() * 2) {
+                localCell.addClass("error");
+                teslaCell.addClass("error");
+                return false;
+            }
         }
         return true;
     }

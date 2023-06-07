@@ -32,10 +32,17 @@ public class WebCompare {
      * Main entry point to web-scape functionality.
      */
     public String execute() throws IOException {
+        return execute(false);
+    }
 
-        WebScrapeResult webScrapeResult = webClient.getWebLocations();
+    public String execute(boolean china) throws IOException {
+
+        WebScrapeResult webScrapeResult = china ? webClient.getChinaLocations() : webClient.getWebLocations();
         List<Site> openLocalSites = siteDAO.getAllSites().stream()
                                         .filter(s -> s.isOpen() || s.isTempClosed())
+                                        .filter(s -> (!"China".equals(s.getAddress().getCountry())
+                                            || "Hong Kong".equals(s.getAddress().getState())
+                                            || "Macau".equals(s.getAddress().getState())) != china)
                                         .sorted((a, b) -> a.getName().compareTo(b.getName()))
                                         .collect(Collectors.toList());
 
@@ -51,7 +58,8 @@ public class WebCompare {
         return HtmlOutput.htmlResults(
                 nullLocalSiteList,
                 nullTeslaSiteList,
-                goodMatches);
+                goodMatches,
+                china);
     }
 
 

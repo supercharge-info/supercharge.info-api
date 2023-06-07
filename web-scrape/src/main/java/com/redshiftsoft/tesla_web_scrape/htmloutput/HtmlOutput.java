@@ -7,24 +7,25 @@ public class HtmlOutput {
 
     public static String htmlResults(Iterable<Match> nullLocalSiteList,
                                      Iterable<Match> nullTeslaSiteList,
-                                     Iterable<Match> goodMatches) {
+                                     Iterable<Match> goodMatches,
+                                     boolean china) {
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Missing local sites.
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        Table table1 = HtmlOutputMissingLocalSites.buildTable(nullLocalSiteList);
+        Table table1 = HtmlOutputMissingLocalSites.buildTable(nullLocalSiteList, china);
 
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Missing Tesla sites
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        Table table2 = HtmlOutputMissingTeslaSites.buildTable(nullTeslaSiteList);
+        Table table2 = HtmlOutputMissingTeslaSites.buildTable(nullTeslaSiteList, china);
 
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Field comparison for matching sites.
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        Table table3 = HtmlOutputFieldComparison.buildTable(goodMatches);
+        Table table3 = HtmlOutputFieldComparison.buildTable(goodMatches, china);
 
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

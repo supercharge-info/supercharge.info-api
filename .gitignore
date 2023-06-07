@@ -5,6 +5,8 @@
 # Build Files
 target/
 
-
 # Open office lock files
 *.ods#
+
+# Scripts .env configuration
+.env

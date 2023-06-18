@@ -2,6 +2,7 @@ package com.redshiftsoft.tesla.web.mvc.userlogin;
 
 import com.redshiftsoft.tesla.dao.login.LoginAttempt;
 import com.redshiftsoft.tesla.dao.login.LoginDAO;
+import com.redshiftsoft.tesla.dao.stats.StatsDAO;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.tesla.web.filter.CookieHelper;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -41,6 +43,8 @@ public class UserLoginController {
     private PasswordHashLogic hashLogic;
     @Resource
     private UserDAO userDAO;
+    @Resource
+    private StatsDAO statsDAO;
     @Resource
     private LoginDAO loginDAO;
     @Resource
@@ -112,9 +116,17 @@ public class UserLoginController {
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(method = RequestMethod.GET, value = "/results")
     @ResponseBody
-    public List<LoginAttemptDTO> getLoginResults() {
+    public LoginResultsResponse getLoginResults() {
         User user = Security.user();
-        List<LoginAttempt> attempts = loginDAO.getAttempts(user.getId(), 10);
-        return attempts.stream().map(new LoginAttemptDTOFunction()).collect(Collectors.toList());
+        LoginResultsResponse response = new LoginResultsResponse();
+
+        List<LoginAttempt> attemptsList = loginDAO.getAttempts(user.getId(), 10);
+        response.setAttempts(attemptsList.stream()
+            .map(new LoginAttemptDTOFunction()).collect(Collectors.toList()));
+
+        if (user.hasRole("editor")) {
+            response.setEdits(statsDAO.getYtdEdits(user.getId()));
+        }
+        return response;
     }
 }

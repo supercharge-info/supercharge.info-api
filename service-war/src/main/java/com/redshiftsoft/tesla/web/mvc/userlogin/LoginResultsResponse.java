@@ -10,13 +10,13 @@ import java.util.Map;
 public class LoginResultsResponse {
 
     private List<LoginAttemptDTO> attempts;
-    private Map<LocalDate, Integer> edits;
+    private Map<Integer, List<Long[]>> edits;
 
     public void setAttempts(List<LoginAttemptDTO> attempts) {
         this.attempts = attempts;
     }
 
-    public void setEdits(Map<LocalDate, Integer> edits) {
+    public void setEdits(Map<Integer, List<Long[]>> edits) {
         this.edits = edits;
     }
 
@@ -24,7 +24,7 @@ public class LoginResultsResponse {
         return attempts;
     }
 
-    public Map<LocalDate, Integer> getEdits() {
+    public Map<Integer, List<Long[]>> getEdits() {
         return edits;
     }
 }

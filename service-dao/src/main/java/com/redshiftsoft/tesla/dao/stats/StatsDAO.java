@@ -39,6 +39,16 @@ public class StatsDAO extends BaseDAO {
             filter = " WHERE " + filter;
         }
 
+        if (fields == "") {
+        return  "WITH " + table + "s AS (\n" +
+                    "SELECT date_trunc('day', " + dateField + ") as day, count(*) as cnt,\n" +
+                    "date_trunc('" + since + "', " + dateField + ") as " + since + "\n" +
+                    "FROM " + table + filter + "\n" +
+                    "GROUP BY day, " + since + ")\n" +
+                "SELECT a.day, sum(b.cnt) count_since\n" +
+                "FROM " + table + "s a join " + table + "s b on a." + since + " = b." + since + " and a.day >= b.day\n" +
+                "GROUP BY a." + since + ", a.day ORDER BY a.day;";
+        }
         return  "WITH " + table + "s AS (\n" +
                     "SELECT day, " + since + ", count(*) cnt\n" +
                     "FROM (SELECT " + fields + "\n" +
@@ -126,6 +136,32 @@ public class StatsDAO extends BaseDAO {
         LocalDate new_editor = longToLocalDate((getJdbcTemplate().queryForObject(sql, Timestamp.class, userId)).getTime());
 
         return extendStats(stats, new_editor);
+    }
+
+    public Map<Integer, List<Long[]>> getYtdAdditions(int userId) {
+        String sql = buildToDateSql("year", "site_change", "change_date", "version = 1 and user_id = " + userId, null);
+        TreeMap<Integer, List<Long[]>> stats = mapStats(getJdbcTemplate().queryForList(sql));
+
+        sql = "select created_date " +
+                "from user_role " +
+                "join roles using (role_id) " +
+                "where user_id=? " +
+                "and role_name = 'editor'";
+        LocalDate new_editor = longToLocalDate((getJdbcTemplate().queryForObject(sql, Timestamp.class, userId)).getTime());
+
+        return extendStats(stats, new_editor);
+    }
+
+    public Map<Integer, List<Long[]>> getYtdLogins(int userId) {
+        String sql = buildToDateSql("year", "login", "login_time", "result = 'SUCCESS' and user_id = " + userId, null);
+        TreeMap<Integer, List<Long[]>> stats = mapStats(getJdbcTemplate().queryForList(sql));
+
+        sql = "select created_date " +
+                "from users " +
+                "where user_id=?";
+        LocalDate new_user = longToLocalDate((getJdbcTemplate().queryForObject(sql, Timestamp.class, userId)).getTime());
+
+        return extendStats(stats, new_user);
     }
 
 }

@@ -124,8 +124,10 @@ public class UserLoginController {
         response.setAttempts(attemptsList.stream()
             .map(new LoginAttemptDTOFunction()).collect(Collectors.toList()));
 
+        response.setLogins(statsDAO.getYtdLogins(user.getId()));
         if (user.hasRole("editor")) {
             response.setEdits(statsDAO.getYtdEdits(user.getId()));
+            response.setAdditions(statsDAO.getYtdAdditions(user.getId()));
         }
         return response;
     }

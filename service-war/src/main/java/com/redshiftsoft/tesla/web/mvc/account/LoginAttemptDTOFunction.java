@@ -1,4 +1,4 @@
-package com.redshiftsoft.tesla.web.mvc.userlogin;
+package com.redshiftsoft.tesla.web.mvc.account;
 
 import com.redshiftsoft.tesla.dao.login.LoginAttempt;
 

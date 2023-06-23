@@ -1,4 +1,4 @@
-package com.redshiftsoft.tesla.web.mvc.userlogin;
+package com.redshiftsoft.tesla.web.mvc.account;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class LoginResultsResponse {
+public class StatisticsResultsResponse {
 
     private List<LoginAttemptDTO> attempts;
     private Map<Integer, List<Long[]>> logins;

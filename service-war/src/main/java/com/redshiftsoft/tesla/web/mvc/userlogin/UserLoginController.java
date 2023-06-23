@@ -2,14 +2,12 @@ package com.redshiftsoft.tesla.web.mvc.userlogin;
 
 import com.redshiftsoft.tesla.dao.login.LoginAttempt;
 import com.redshiftsoft.tesla.dao.login.LoginDAO;
-import com.redshiftsoft.tesla.dao.stats.StatsDAO;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.tesla.web.filter.CookieHelper;
 import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.forum.ForumClient;
 import com.redshiftsoft.util.PasswordHashLogic;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static com.redshiftsoft.tesla.web.mvc.userlogin.LoginAttemptFactory.*;
 import static com.redshiftsoft.util.StringTools.isEmpty;
@@ -43,8 +38,6 @@ public class UserLoginController {
     private PasswordHashLogic hashLogic;
     @Resource
     private UserDAO userDAO;
-    @Resource
-    private StatsDAO statsDAO;
     @Resource
     private LoginDAO loginDAO;
     @Resource
@@ -111,24 +104,5 @@ public class UserLoginController {
         if (userOption.isPresent() && userOption.get().isEmailVerified()) {
             forumClient.logout(userOption.get().getId());
         }
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @RequestMapping(method = RequestMethod.GET, value = "/results")
-    @ResponseBody
-    public LoginResultsResponse getLoginResults() {
-        User user = Security.user();
-        LoginResultsResponse response = new LoginResultsResponse();
-
-        List<LoginAttempt> attemptsList = loginDAO.getAttempts(user.getId(), 10);
-        response.setAttempts(attemptsList.stream()
-            .map(new LoginAttemptDTOFunction()).collect(Collectors.toList()));
-
-        response.setLogins(statsDAO.getYtdLogins(user.getId()));
-        if (user.hasRole("editor")) {
-            response.setEdits(statsDAO.getYtdEdits(user.getId()));
-            response.setAdditions(statsDAO.getYtdAdditions(user.getId()));
-        }
-        return response;
     }
 }

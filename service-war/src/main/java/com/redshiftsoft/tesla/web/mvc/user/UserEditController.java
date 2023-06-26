@@ -39,7 +39,7 @@ public class UserEditController {
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    @RequestMapping(value = "/edit", method = {RequestMethod.POST})
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse edit(@RequestBody UserEditDTO userEditDTO, HttpServletResponse response) {
 

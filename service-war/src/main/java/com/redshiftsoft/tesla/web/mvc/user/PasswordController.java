@@ -52,7 +52,7 @@ public class PasswordController {
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    @RequestMapping(value = "/change", method = {RequestMethod.POST})
+    @RequestMapping(value = "/change", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse change(@RequestParam(value = "password", required = false) String password,
                                HttpServletResponse response) {

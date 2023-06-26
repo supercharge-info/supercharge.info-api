@@ -39,7 +39,7 @@ public class FeatureController {
     @Transactional
     @ResponseBody
     @PreAuthorize("hasAnyRole('feature')")
-    @RequestMapping(value = "/edit", method = {RequestMethod.POST})
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public JsonResponse edit(@RequestBody FeatureDTO featureDTO) {
         try {
             Feature feature = FeatureFunctions.FROM_DTO.apply(featureDTO);

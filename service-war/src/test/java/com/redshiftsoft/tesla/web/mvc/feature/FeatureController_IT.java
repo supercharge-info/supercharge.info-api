@@ -125,7 +125,7 @@ public class FeatureController_IT extends Mvc_IT {
 
     @Test
     public void feature_edit_no_role() throws Exception {
-        // given -- no login, no roles
+        // given -- login, no roles
         User user1 = testUser();
         Security.setAuth(user1);
 
@@ -138,7 +138,7 @@ public class FeatureController_IT extends Mvc_IT {
 
     @Test
     public void feature_edit_wrong_role() throws Exception {
-        // given -- no login, no roles
+        // given -- login, wrong roles
         User user1 = testUserWithRoles(Collections.singletonList("editor"));
         Security.setAuth(user1);
         FeatureDTO featureDTO = new FeatureDTO();
@@ -161,12 +161,19 @@ public class FeatureController_IT extends Mvc_IT {
         feature.setDescription("desc");
         feature.setAddedDate(LocalDate.now());
         featureDAO.insert(feature);
+
         // DTO
         FeatureDTO featureDTO = new FeatureDTO();
         featureDTO.setId(feature.getId());
         featureDTO.setTitle(feature.getTitle());
         featureDTO.setDescription(feature.getDescription());
         featureDTO.setAddedDate(feature.getAddedDate());
+
+        // when get request
+        mockMvc.perform(get("/feature/edit")
+                .content(objectMapper.writeValueAsString(featureDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isMethodNotAllowed());
 
         // when
         mockMvc.perform(post("/feature/edit")

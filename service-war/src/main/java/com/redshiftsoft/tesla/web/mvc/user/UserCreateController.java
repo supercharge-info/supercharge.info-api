@@ -70,7 +70,7 @@ public class UserCreateController {
     private UserCreateEmailSender emailSender;
 
     @Transactional
-    @RequestMapping(value = "/create", method = {RequestMethod.POST})
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse create(HttpServletRequest request,
                                HttpServletResponse response,

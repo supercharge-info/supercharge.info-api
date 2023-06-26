@@ -8,9 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-;
 
 public class UserEditController_IT extends Mvc_IT {
 
@@ -35,7 +34,7 @@ public class UserEditController_IT extends Mvc_IT {
 
         // when
         mockMvc.perform(post("/user/edit").content(objectMapper.writeValueAsString(userEditDTO)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andExpect(jsonPath("$.result").value("SUCCESS"));
 
         // then
         User userOut = userDAO.getById(user.getId());

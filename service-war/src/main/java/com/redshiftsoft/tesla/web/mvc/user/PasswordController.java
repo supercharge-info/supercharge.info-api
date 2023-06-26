@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -51,7 +52,7 @@ public class PasswordController {
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    @RequestMapping("/change")
+    @RequestMapping(value = "/change", method = {RequestMethod.POST})
     @ResponseBody
     public JsonResponse change(@RequestParam(value = "password", required = false) String password,
                                HttpServletResponse response) {

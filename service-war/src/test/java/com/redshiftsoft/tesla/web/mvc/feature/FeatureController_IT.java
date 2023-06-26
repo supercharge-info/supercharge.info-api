@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import javax.annotation.Resource;
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.Collections;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-;
 
 public class FeatureController_IT extends Mvc_IT {
 
@@ -103,7 +103,10 @@ public class FeatureController_IT extends Mvc_IT {
         featureDAO.insert(feature);
 
         // when
-        mockMvc.perform(get("/feature/load/" + feature.getId())).andExpect(status().isOk());
+        mockMvc.perform(get("/feature/load/" + feature.getId())).andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").isNumber()).andExpect(jsonPath("$.title").isNotEmpty())
+            .andExpect(jsonPath("$.addedDate").value(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)))
+            .andExpect(jsonPath("$.description").isNotEmpty());
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -161,12 +164,16 @@ public class FeatureController_IT extends Mvc_IT {
         // DTO
         FeatureDTO featureDTO = new FeatureDTO();
         featureDTO.setId(feature.getId());
+        featureDTO.setTitle(feature.getTitle());
+        featureDTO.setDescription(feature.getDescription());
+        featureDTO.setAddedDate(feature.getAddedDate());
 
         // when
         mockMvc.perform(post("/feature/edit")
                 .content(objectMapper.writeValueAsString(featureDTO))
                 .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk());
+        ).andExpect(status().isOk()).andExpect(jsonPath("$.result").value("SUCCESS"))
+        .andExpect(jsonPath("$.featureId").isNumber());
     }
 
 

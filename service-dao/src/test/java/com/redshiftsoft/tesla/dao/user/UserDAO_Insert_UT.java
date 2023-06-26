@@ -70,7 +70,9 @@ public class UserDAO_Insert_UT {
         // when
         User userIn2 = TestUsers.createUser();
         userIn2.setUsername(userIn1.getUsername().toLowerCase());
-        assertNotEquals(userIn1.getUsername(), userIn2.getUsername());
+        if (userIn1.getUsername().equals(userIn2.getUsername())) {
+            userIn2.setUsername(userIn1.getUsername().toUpperCase());
+        }
         // then -- different case -- should fail
         try {
             userDAO.insert(userIn2);

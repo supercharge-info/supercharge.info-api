@@ -41,7 +41,7 @@ public class EmailVerificationController {
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    @RequestMapping(value = "/verify", method = {RequestMethod.GET})
+    @RequestMapping(value = "/verify", method = RequestMethod.GET)
     public String verifyEmail(HttpServletRequest request,
                               @RequestParam(value = "key") String key) {
         User user = Security.user();
@@ -56,7 +56,7 @@ public class EmailVerificationController {
     }
 
     @Transactional
-    @RequestMapping(value = "/send", method = {RequestMethod.GET})
+    @RequestMapping(value = "/send", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse verifyEmailSend() {
         userEditEmailSender.send(Security.user());

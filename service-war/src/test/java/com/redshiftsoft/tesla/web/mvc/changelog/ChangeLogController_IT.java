@@ -10,8 +10,6 @@ import java.util.Collections;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-;
-
 public class ChangeLogController_IT extends Mvc_IT {
 
     @Test
@@ -32,7 +30,7 @@ public class ChangeLogController_IT extends Mvc_IT {
 
     @Test
     public void change_delete_wrong_roles() throws Exception {
-        // given -- no roles
+        // given -- wrong roles
         User user1 = testUserWithRoles(Collections.singletonList("feature"));
         Security.setAuth(user1);
 
@@ -42,7 +40,7 @@ public class ChangeLogController_IT extends Mvc_IT {
 
     @Test
     public void change_delete() throws Exception {
-        // given -- no roles
+        // given
         User user1 = testUserWithRoles(Collections.singletonList("editor"));
         Security.setAuth(user1);
 

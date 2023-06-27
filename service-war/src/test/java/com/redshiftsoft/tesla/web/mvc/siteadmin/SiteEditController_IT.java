@@ -17,8 +17,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-;
-
 
 public class SiteEditController_IT extends Mvc_IT {
 
@@ -30,16 +28,14 @@ public class SiteEditController_IT extends Mvc_IT {
 
         // when no login
         mockMvc.perform(get("/siteadmin/delete?siteId=100"))
-                .andExpect(status().isForbidden())
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(status().isForbidden());
 
 
         // when login
         User user1 = testUser();
         Security.setAuth(user1);
         mockMvc.perform(get("/siteadmin/delete?siteId=100"))
-                .andExpect(status().isForbidden())
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(status().isForbidden());
 
 
         // when admin
@@ -48,8 +44,7 @@ public class SiteEditController_IT extends Mvc_IT {
         Site site = testSite();
 
         mockMvc.perform(get("/siteadmin/delete?siteId=" + site.getId()))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(status().isOk());
 
 
         Assertions.assertFalse(siteDAO.exists(site.getId()));
@@ -62,9 +57,7 @@ public class SiteEditController_IT extends Mvc_IT {
         mockMvc.perform(post("/siteadmin/edit")
                 .content("{}")
                 .contentType(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().isForbidden())
-                .andReturn().getResponse().getContentAsString();
+        ).andExpect(status().isForbidden());
 
 
         // when login no roles
@@ -73,9 +66,7 @@ public class SiteEditController_IT extends Mvc_IT {
         mockMvc.perform(post("/siteadmin/edit")
                 .content("{}")
                 .contentType(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().isForbidden())
-                .andReturn().getResponse().getContentAsString();
+        ).andExpect(status().isForbidden());
 
 
         // when login, wrong roles
@@ -84,15 +75,14 @@ public class SiteEditController_IT extends Mvc_IT {
         mockMvc.perform(post("/siteadmin/edit")
                 .content("{}")
                 .contentType(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().isForbidden())
-                .andReturn().getResponse().getContentAsString();
+        ).andExpect(status().isForbidden());
 
 
         // when admin
         User user3 = testUserWithRoles(Collections.singletonList("editor"));
         Security.setAuth(user3);
         Site site = testSite();
+
         // DTO
         SiteEditDTO request = new SiteEditDTO();
         request.setId(site.getId());
@@ -101,15 +91,22 @@ public class SiteEditController_IT extends Mvc_IT {
         request.setDateModified(null);
         request.setStallCount(42);
 
+        // wrong method
+        mockMvc.perform(get("/siteadmin/edit")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isMethodNotAllowed());
+
+        // when
         String response =
                 mockMvc.perform(post("/siteadmin/edit")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
-                )
-                        .andExpect(status().isOk())
-                        .andReturn().getResponse().getContentAsString();
+                ).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
 
 
+        // then
         Assertions.assertEquals("{\"result\":\"FAIL\",\"messages\":[\"gps is required\",\"elevation is required\",\"street is required\",\"city is required\",\"country is required\"]}", response);
     }
 

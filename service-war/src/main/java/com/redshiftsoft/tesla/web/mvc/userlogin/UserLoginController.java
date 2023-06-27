@@ -8,7 +8,6 @@ import com.redshiftsoft.tesla.web.filter.CookieHelper;
 import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.forum.ForumClient;
 import com.redshiftsoft.util.PasswordHashLogic;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static com.redshiftsoft.tesla.web.mvc.userlogin.LoginAttemptFactory.*;
 import static com.redshiftsoft.util.StringTools.isEmpty;
@@ -107,14 +104,5 @@ public class UserLoginController {
         if (userOption.isPresent() && userOption.get().isEmailVerified()) {
             forumClient.logout(userOption.get().getId());
         }
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @RequestMapping(method = RequestMethod.GET, value = "/results")
-    @ResponseBody
-    public List<LoginAttemptDTO> getLoginResults() {
-        User user = Security.user();
-        List<LoginAttempt> attempts = loginDAO.getAttempts(user.getId(), 10);
-        return attempts.stream().map(new LoginAttemptDTOFunction()).collect(Collectors.toList());
     }
 }

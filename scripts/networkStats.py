@@ -52,7 +52,7 @@ for x in sys.argv:
         else:
             period = 'Custom'
     elif 'quarter' in x.lower():
-        endBy = date.today().replace(day=1, month=int((date.today().month - 1) / 3) * 3)
+        endBy = date.today().replace(day=1, month=(date.today().month - 1) // 3 * 3 + 1)
         beginOn = (endBy - timedelta(89)).replace(day=1)
         period = 'Quarterly'
     elif 'month' in x.lower():
@@ -111,7 +111,7 @@ for c in changes:
         report['regions'][c['region']]['permit'] += 1
 
 body = {
-    'datespan': str(beginOn.year) + ' Q' + str(beginOn.month//3+1) if period == 'Quarterly'
+    'datespan': str(beginOn.year) + ' Q' + str((beginOn.month - 1)//3+1) if period == 'Quarterly'
         else beginOn.strftime('%B %Y') if period == 'Monthly'
         else str(beginOn.year) if period == 'Annual'
         else beginOn.isoformat() + ' to ' + (endBy - timedelta(1)).isoformat(),

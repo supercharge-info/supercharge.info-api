@@ -4,7 +4,8 @@ import com.google.common.io.BaseEncoding;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.util.PasswordHashLogic;
 
-import javax.servlet.http.Cookie;
+import org.springframework.http.ResponseCookie;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +28,7 @@ import static com.redshiftsoft.util.StringTools.isNotEmpty;
  * <p/>
  * SECURITY NOTES: Like a session cookie, if this cookie is stolen the user account is compromised.
  */
-public class LoginCookie extends Cookie {
+public class LoginCookie {
 
     private static final Logger LOG = Logger.getLogger(LoginCookie.class.getName());
 
@@ -48,16 +49,13 @@ public class LoginCookie extends Cookie {
 
     private static final PasswordHashLogic cookieHashLogic = new PasswordHashLogic(PasswordHashLogic.PBKDF2_WITH_HMAC_SHA256, 32, 10);
 
-    public LoginCookie(final User user) {
-        super(NAME, user.getId() + DELIMITER + generateCode(user));
-        setPath("/");
-        setMaxAge(Integer.MAX_VALUE);
-        setHttpOnly(true);
-        setSecure(true);
-    }
-
-    public static LoginCookie fromUser(User user) {
-        return new LoginCookie(user);
+    public static ResponseCookie.ResponseCookieBuilder from(final User user) {
+        return ResponseCookie
+            .from(NAME, user.getId() + DELIMITER + generateCode(user))
+            .path("/")
+            .maxAge(Integer.MAX_VALUE)
+            .httpOnly(true)
+            .secure(true);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

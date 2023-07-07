@@ -64,9 +64,9 @@ public class UserRouteController {
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    @RequestMapping(method = RequestMethod.GET, value = "/delete/{routeId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/delete")
     @ResponseBody
-    public JsonResponse delete(@PathVariable Integer routeId) {
+    public JsonResponse delete(@RequestParam("id") Integer routeId) {
         User threadUser = Security.user();
         Integer userId = threadUser.getId();
         LOG.info("userId=" + userId + "; routeId=" + routeId);

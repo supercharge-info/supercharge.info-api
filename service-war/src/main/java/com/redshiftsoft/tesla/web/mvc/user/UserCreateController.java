@@ -103,7 +103,7 @@ public class UserCreateController {
              *  Reload the user from DB before creating cookie and hash from it so we use exact values we will use in future.
              */
             user = userDAO.getById(user.getId());
-            CookieHelper.addCookie(request, response, LoginCookie.fromUser(user));
+            CookieHelper.addCookie(request, response, LoginCookie.from(user));
             loginDAO.insertAttempt(LoginAttemptFactory.successAccountCreated(request, user));
 
             emailSender.send(user);

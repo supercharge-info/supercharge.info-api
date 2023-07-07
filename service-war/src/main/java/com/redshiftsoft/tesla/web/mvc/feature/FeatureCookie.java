@@ -1,19 +1,19 @@
 package com.redshiftsoft.tesla.web.mvc.feature;
 
-import javax.servlet.http.Cookie;
+import org.springframework.http.ResponseCookie;
 
 /**
  * This cookie stores the featureId of the last feature the user was notified of.
  */
-public class FeatureCookie extends Cookie {
+public class FeatureCookie {
 
     public static final String COOKIE_NAME = "feature";
 
-    public FeatureCookie(int featureId) {
-        super(COOKIE_NAME, String.valueOf(featureId));
-        // This cookie should live forever.
-        setMaxAge(Integer.MAX_VALUE);
-        //
-        setPath("/");
+    public static ResponseCookie.ResponseCookieBuilder from(int featureId) {
+        return ResponseCookie
+            .from(COOKIE_NAME, String.valueOf(featureId))
+            // This cookie should live forever.
+            .maxAge(Integer.MAX_VALUE)
+            .path("/");
     }
 }

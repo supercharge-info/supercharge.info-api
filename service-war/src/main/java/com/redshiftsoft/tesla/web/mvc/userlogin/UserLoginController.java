@@ -50,8 +50,8 @@ public class UserLoginController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
     public UserLoginResponse login(HttpServletRequest request, HttpServletResponse response,
-                                   @RequestParam(value = "username", required = false) String username,
-                                   @RequestParam(value = "password", required = false) String password) {
+                                   @RequestParam(required = false) String username,
+                                   @RequestParam(required = false) String password) {
 
         LOG.info("login username=" + username);
 
@@ -77,7 +77,7 @@ public class UserLoginController {
         }
         LOG.info("login SUCCESS username=" + username);
         loginDAO.insertAttempt(successForm(request, user));
-        CookieHelper.addCookie(request, response, LoginCookie.fromUser(user));
+        CookieHelper.addCookie(request, response, LoginCookie.from(user));
         return UserLoginResponse.success(user);
     }
 

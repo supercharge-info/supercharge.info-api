@@ -38,7 +38,7 @@ public class ChangeLogController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/allChanges")
     @ResponseBody
-    public List<ChangeLogDTO> allChanges(@RequestParam(value = "count", required = false) Integer count) {
+    public List<ChangeLogDTO> allChanges(@RequestParam(required = false) Integer count) {
         List<ChangeLogDTO> changes = cachingHandler.getValues();
         if (count != null) {
             int toIndex = Math.min(count, changes.size());
@@ -103,9 +103,9 @@ public class ChangeLogController {
 
     @PreAuthorize("hasAnyRole('editor')")
     @Transactional
-    @RequestMapping(method = RequestMethod.GET, value = "/changes/delete/{changeId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/changes/delete")
     @ResponseBody
-    public void deleteChange(@PathVariable Integer changeId) {
+    public void deleteChange(@RequestParam Integer changeId) {
         LOG.info("Deleting change: " + changeId);
         changeLogDAO.delete(changeId);
         cachingHandler.reset();

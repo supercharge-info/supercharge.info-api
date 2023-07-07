@@ -4,10 +4,12 @@ import com.google.common.cache.LoadingCache;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.tesla.dao.user.UserResetPwdDAO;
+import com.redshiftsoft.tesla.web.filter.CookieHelper;
 import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
 import com.redshiftsoft.tesla.web.mvc.RedirectURLBuilder;
 import com.redshiftsoft.tesla.web.mvc.user.email.UserEditEmailSender;
+import com.redshiftsoft.tesla.web.mvc.userlogin.LoginCookie;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
@@ -24,20 +27,14 @@ import java.util.Optional;
 @RequestMapping("email-verification")
 public class EmailVerificationController {
 
-    private final UserEditEmailSender userEditEmailSender;
-    private final UserResetPwdDAO userResetPwdDAO;
-    private final UserDAO userDAO;
-    private final LoadingCache<String, User> userCache;
-
-    public EmailVerificationController(UserEditEmailSender userEditEmailSender,
-                                       UserResetPwdDAO userResetPwdDAO,
-                                       UserDAO userDAO,
-                                       @Qualifier("userFilterCache") LoadingCache<String, User> userCache) {
-        this.userEditEmailSender = userEditEmailSender;
-        this.userResetPwdDAO = userResetPwdDAO;
-        this.userDAO = userDAO;
-        this.userCache = userCache;
-    }
+    @Resource
+    private UserEditEmailSender userEditEmailSender;
+    @Resource
+    private UserResetPwdDAO userResetPwdDAO;
+    @Resource
+    private UserDAO userDAO;
+    @Resource(name = "userFilterCache")
+    private LoadingCache<String, User> cache;
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
@@ -49,8 +46,8 @@ public class EmailVerificationController {
         if (userIdOption.isPresent()) {
             userDAO.updateEmailVerified(user.getId(), true);
             userResetPwdDAO.markUsed(user.getId());
-            /* The cached user is now stale. */
-            userCache.invalidateAll();
+            /* The cached 'User' is now stale. */
+            cache.refresh(CookieHelper.getCookie(request, LoginCookie.NAME).getValue());
         }
         return RedirectURLBuilder.build(request);
     }

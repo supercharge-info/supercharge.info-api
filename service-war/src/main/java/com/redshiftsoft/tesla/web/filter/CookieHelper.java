@@ -38,6 +38,8 @@ public class CookieHelper {
         } else if ("development".equals(System.getProperty("spring.profiles.active"))) {
             cookie = cookie.secure(false);
         }
+        // Use SameSite=Lax so cookies will only be included when redirecting to GET method
+        // https://stackoverflow.com/a/59995877/1507941
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.sameSite("Lax").build().toString());
     }
 

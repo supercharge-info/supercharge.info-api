@@ -81,7 +81,55 @@ public class Validations {
                         "WHERE c.site_id is null and s.status != 'OPEN'")
         );
 
+        validationMap.add(
+                new Validation(CHANGE_LOG, "sequential changelogs do not repeat site status", "" +
+                        "SELECT site_id, name, site_status, array_agg(id ORDER BY id) change_ids, " +
+                               "array_agg(to_char(change_date, 'YYYY-MM-DD') ORDER BY id) change_dates " +
+                        "FROM ( " +
+                          "SELECT id, site_id, change_date, site_status, count(is_reset) OVER (ORDER BY site_id, change_date) AS grp " +
+                          "FROM (SELECT id, site_id, change_date, site_status, " +
+                                  "CASE WHEN lag(site_status) OVER (ORDER BY site_id, change_date) <> site_status " +
+                                         "OR lag(site_id) OVER (ORDER BY site_id, change_date) <> site_id " +
+                                       "THEN 1 END AS is_reset " +
+                                "FROM changelog) AS t " +
+                        ") AS g inner join site using (site_id) " +
+                        "GROUP BY name, site_id, grp, site_status " +
+                        "HAVING COUNT(*) > 1 " +
+                        "ORDER BY min(site_id)")
+        );
+
+        validationMap.add(
+                new Validation(CHANGE_LOG, "site status does not progress backwards", "" +
+                        "SELECT site_id, site.name, to_char(opened_date, 'YYYY-MM-DD') opened_date, " +
+                               "site_status, to_char(change_date, 'YYYY-MM-DD') change_date " +
+                        "FROM changelog o " +
+                        "INNER JOIN site using (site_id) " +
+                        "WHERE site_status in ('PERMIT', 'CONSTRUCTION') " +
+                        "AND exists (SELECT 'Y' " +
+                                    "FROM changelog i " +
+                                    "WHERE i.site_id = o.site_id " +
+                                    "AND i.change_date < o.change_date " +
+                                    "AND i.site_status != o.site_status " +
+                                    "AND i.site_status != 'PERMIT') " +
+                        "OR site_status = 'CLOSED_PERM'" +
+                        "AND exists (SELECT 'Y' " +
+                                    "FROM changelog i " +
+                                    "WHERE i.site_id = o.site_id " +
+                                    "AND i.change_date > o.change_date) " +
+                        "ORDER BY site_id")
+        );
+
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - | USER_CONFIG
+
+        validationMap.add(
+                new Validation(USER_CONFIG, "every user has a user config", "" +
+                        "SELECT user_id, username, email, enabled, created_date, modified_date " +
+                        "FROM users o " +
+                        "WHERE not exists (SELECT 'Y' " +
+                                          "FROM user_config i " +
+                                          "WHERE i.user_id = o.user_id)"
+                )
+        );
 
         validationMap.add(
                 new Validation(USER_CONFIG, "every user config has valid lat/lng", "" +

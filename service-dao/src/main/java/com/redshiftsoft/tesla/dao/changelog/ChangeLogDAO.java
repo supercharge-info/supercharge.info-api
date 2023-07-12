@@ -3,6 +3,7 @@ package com.redshiftsoft.tesla.dao.changelog;
 
 import com.redshiftsoft.tesla.dao.BaseDAO;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,6 @@ import java.util.Map;
 public class ChangeLogDAO extends BaseDAO {
 
     private static final ChangeLogRowMapper CHANGE_LOG_ROW_MAPPER = new ChangeLogRowMapper();
-
     public ChangeLog getById(int id) {
         String sql = ChangeLogRowMapper.SELECT + " where cl.id=?";
         return getJdbcTemplate().queryForObject(sql, CHANGE_LOG_ROW_MAPPER, id);
@@ -45,7 +45,12 @@ public class ChangeLogDAO extends BaseDAO {
         return resultMap;
     }
 
-    public void insert(ChangeLog changeLog) {
+    public List<ChangeLogEdit> getChangeLogEdits(int siteId) {
+        String sql = "select changelog.*, username from changelog left join users using (user_id) where site_id = ? order by change_date desc";
+        return getJdbcTemplate().query(sql, CHANGE_LOG_EDIT_ROW_MAPPER, siteId);
+    }
+
+    public void insert(ChangeLogEdit changeLog) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         getJdbcTemplate().update(new InsertChangeLogPreparedStatementCreator(changeLog), keyHolder);
         changeLog.setId((Integer) keyHolder.getKeys().get("id"));
@@ -60,6 +65,12 @@ public class ChangeLogDAO extends BaseDAO {
         String sql = "select count(*) from changelog where id=?";
         Long count = getJdbcTemplate().queryForObject(sql, Long.class, changeLogId);
         return count != 0;
+    }
+
+    public int update(int id, Instant date, SiteStatus status, int userId) {
+        String UPDATE_SQL = "UPDATE changelog SET change_date = ?, site_status = ?::SITE_STATUS_TYPE, " +
+                            "modified_date = now(), user_id = ? WHERE id = ? RETURNING site_id";
+        return getJdbcTemplate().queryForObject(UPDATE_SQL, Integer.class, toTimestamp(date), status.toString(), userId, id);
     }
 
     /* Returns map <siteId, days at current status> */
@@ -80,6 +91,35 @@ public class ChangeLogDAO extends BaseDAO {
         }
         return resultMap;
     }
+
+    public List<ChangeLogEdit> setFirstToAdded(int siteId) {
+        String UPDATE_SQL = "UPDATE changelog o SET change_type = " +
+                                    "CASE (select min(i.change_date) from changelog i " +
+                                            "where i.site_id = o.site_id) " +
+                                    "WHEN change_date THEN 'ADD'::CHANGE_TYPE " +
+                                    "ELSE 'UPDATE'::CHANGE_TYPE END WHERE site_id = ? " +
+                            "RETURNING o.*, (select username from users where user_id = o.user_id)";
+        return getJdbcTemplate().query(UPDATE_SQL, CHANGE_LOG_EDIT_ROW_MAPPER, siteId);
+    }
+
+    private static final RowMapper<ChangeLogEdit> CHANGE_LOG_EDIT_ROW_MAPPER = (rs, rowNum) -> {
+        ChangeLogEdit cl = new ChangeLogEdit();
+
+        int c = 1;
+
+        cl.setId(rs.getInt(c++));
+        cl.setSiteId(rs.getInt(c++));
+        cl.setDate(Instant.ofEpochMilli(rs.getTimestamp(c++).getTime()));
+        cl.setChangeType(ChangeType.valueOf(rs.getString(c++)));
+        cl.setSiteStatus(SiteStatus.valueOf(rs.getString(c++)));
+        cl.setModifiedInstant(Instant.ofEpochMilli(rs.getTimestamp(c++).getTime()));
+        cl.setUserId(rs.getInt(c++));
+        if (rs.getMetaData().getColumnCount() >= c) {
+            cl.setUsername(rs.getString(c));
+        }
+
+        return cl;
+    };
 
 
 }

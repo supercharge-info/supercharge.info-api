@@ -37,7 +37,8 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
         log.setDate(Instant.ofEpochMilli(rs.getTimestamp(c++).getTime()));
         log.setChangeType(ChangeType.valueOf(rs.getString(c++)));
         log.setSiteStatus(SiteStatus.valueOf(rs.getString(c++)));
-        log.setModifiedInstant(Instant.ofEpochMilli(rs.getTimestamp(c).getTime()));
+        log.setModifiedInstant(Instant.ofEpochMilli(rs.getTimestamp(c++).getTime()));
+        log.setNotify(rs.getBoolean(c));
 
         log.setSiteName(rs.getString("site_name"));
 

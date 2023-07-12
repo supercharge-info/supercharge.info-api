@@ -120,13 +120,13 @@ public class SiteEditController {
             if (newOrModifiedSite.getId() == 0) {
                 return handleSaveNew(user, site);
             } else {
-                return handleEdit(user, site);
+                return handleEdit(user, site, newOrModifiedSite.getNotify());
             }
         }
         return new JsonResponse(JsonResponse.Result.FAIL, errorMessages);
     }
 
-    private JsonResponse handleEdit(User user, Site site) {
+    private JsonResponse handleEdit(User user, Site site, SiteEditDTO.NotifyEnum notify) {
         List<String> messages = Lists.newArrayList();
 
         Site oldSite = siteDAO.getById(site.getId());
@@ -141,8 +141,8 @@ public class SiteEditController {
         messages.add(format("UPDATED site '%s'", site.getName()));
         siteDAO.update(site);
 
-        if (oldSiteStatus != site.getStatus()) {
-            ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.UPDATE, site.getStatus(), Instant.now(), Instant.now(), user.getId());
+        if (oldSiteStatus != site.getStatus() && !SiteEditDTO.NotifyEnum.no.equals(notify)) {
+            ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.UPDATE, site.getStatus(), Instant.now(), Instant.now(), SiteEditDTO.NotifyEnum.yes.equals(notify), user.getId());
             if (changeLogDAO.getSiteList(site.getId()).isEmpty()) {
                 changeLogEdit.setChangeType(ChangeType.ADD);
             }
@@ -156,7 +156,7 @@ public class SiteEditController {
     private JsonResponse handleSaveNew(User user, Site site) {
         siteDAO.insert(site);
 
-        ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.ADD, site.getStatus(), Instant.now(), Instant.now(), user.getId());
+        ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.ADD, site.getStatus(), Instant.now(), Instant.now(), true, user.getId());
         changeLogDAO.insert(changeLogEdit);
         siteDiffLogger.recordNew(user, site);
         return new SiteEditResponse(site.getId(), Lists.newArrayList(

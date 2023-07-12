@@ -2,6 +2,7 @@ package com.redshiftsoft.tesla.dao.changelog;
 
 import com.redshiftsoft.tesla.dao.DAOConfiguration;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
+import com.redshiftsoft.tesla.dao.TestUsers;
 import com.redshiftsoft.tesla.dao.site.Address;
 import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.site.SiteDAO;
@@ -34,6 +35,8 @@ public class ChangeLogDAO_UT {
     @Resource
     private TestSiteSaver testSiteSaver;
     @Resource
+    private TestUsers testUsers;
+    @Resource
     private SiteDAO siteDAO;
 
     private Site testSite;
@@ -47,7 +50,7 @@ public class ChangeLogDAO_UT {
     public void insert_getById() {
 
         // given
-        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
+        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
         changeLogDAO.insert(changeLogIn);
 
         // when
@@ -85,7 +88,7 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void insert_delete() {
-        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
+        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
         changeLogDAO.insert(changeLogIn);
         int changeLogId = changeLogIn.getId();
         assertTrue(changeLogDAO.exists(changeLogId));
@@ -99,7 +102,7 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void update_invalidChangeType() {
-        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
+        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
         changeLogDAO.insert(changeLogIn);
         assertThrows(DataIntegrityViolationException.class, () -> {
             jdbcTemplate.update("update changelog set change_type='invalid' where id=?", changeLogIn.getId());
@@ -108,7 +111,7 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void update_emptyChangeType() {
-        ChangeLog changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
+        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
         changeLogDAO.insert(changeLogIn);
         assertThrows(DataIntegrityViolationException.class, () -> {
             jdbcTemplate.update("update changelog set change_type=''::CHANGE_TYPE where id=?", changeLogIn.getId());
@@ -130,9 +133,9 @@ public class ChangeLogDAO_UT {
     @Test
     public void getStatusDurations() {
         // given
-        ChangeLog changeLog1 = ChangeLog.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now());
+        ChangeLogEdit changeLog1 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now(), true, testUsers.createUser().getId());
         changeLogDAO.insert(changeLog1);
-        ChangeLog changeLog2 = ChangeLog.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.CONSTRUCTION, Instant.now(), Instant.now());
+        ChangeLogEdit changeLog2 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.CONSTRUCTION, Instant.now(), Instant.now(), false, testUsers.createUser().getId());
         changeLogDAO.insert(changeLog2);
         testSite.setStatus(SiteStatus.CONSTRUCTION);
         siteDAO.update(testSite);

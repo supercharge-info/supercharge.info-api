@@ -28,25 +28,27 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
     // PERMIT, CONSTRUCTION, OPEN
     private SiteStatus siteStatus;
 
+    private boolean notify;
     private int userId;
     private String username;
 
     /**
      * Factory method with all fields required to persist.
      */
-    public static ChangeLogEdit toPersist(int siteId, ChangeType changeType, SiteStatus siteStatus, Instant date, Instant modifiedInstant, int userId) {
-        return new ChangeLogEdit(siteId, changeType, siteStatus, date, modifiedInstant, userId);
+    public static ChangeLogEdit toPersist(int siteId, ChangeType changeType, SiteStatus siteStatus, Instant date, Instant modifiedInstant, boolean notify, int userId) {
+        return new ChangeLogEdit(siteId, changeType, siteStatus, date, modifiedInstant, notify, userId);
     }
 
     public ChangeLogEdit() {
     }
 
-    private ChangeLogEdit(int siteId, ChangeType changeType, SiteStatus siteStatus, Instant date, Instant modifiedInstant, int userId) {
+    private ChangeLogEdit(int siteId, ChangeType changeType, SiteStatus siteStatus, Instant date, Instant modifiedInstant, boolean notify, int userId) {
         this.siteId = siteId;
         this.date = date;
         this.changeType = changeType;
         this.siteStatus = siteStatus;
         this.modifiedInstant = modifiedInstant;
+        this.notify = notify;
         this.userId = userId;
     }
 
@@ -98,6 +100,14 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
 
     public void setModifiedInstant(Instant modifiedInstant) {
         this.modifiedInstant = modifiedInstant;
+    }
+
+    public boolean getNotify() {
+        return notify;
+    }
+
+    public void setNotify(boolean notify) {
+        this.notify = notify;
     }
 
     public int getUserId() {

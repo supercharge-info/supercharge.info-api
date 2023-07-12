@@ -113,6 +113,7 @@ public class ChangeLogDAO extends BaseDAO {
         cl.setChangeType(ChangeType.valueOf(rs.getString(c++)));
         cl.setSiteStatus(SiteStatus.valueOf(rs.getString(c++)));
         cl.setModifiedInstant(Instant.ofEpochMilli(rs.getTimestamp(c++).getTime()));
+        cl.setNotify(rs.getBoolean(c++));
         cl.setUserId(rs.getInt(c++));
         if (rs.getMetaData().getColumnCount() >= c) {
             cl.setUsername(rs.getString(c));

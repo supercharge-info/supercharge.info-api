@@ -38,27 +38,10 @@ public class ChangeLog implements Comparable<ChangeLog> {
     // PERMIT, CONSTRUCTION, OPEN
     private SiteStatus siteStatus;
 
+    private boolean notify;
     private int stallCount;
     private int powerKilowatt;
     private boolean otherEVs;
-
-    /**
-     * Factory method with all fields required to persist.
-     */
-    public static ChangeLog toPersist(int siteId, ChangeType changeType, SiteStatus siteStatus, Instant date, Instant modifiedInstant) {
-        return new ChangeLog(siteId, changeType, siteStatus, date, modifiedInstant);
-    }
-
-    public ChangeLog() {
-    }
-
-    private ChangeLog(int siteId, ChangeType changeType, SiteStatus siteStatus, Instant date, Instant modifiedInstant) {
-        this.siteId = siteId;
-        this.date = date;
-        this.changeType = changeType;
-        this.siteStatus = siteStatus;
-        this.modifiedInstant = modifiedInstant;
-    }
 
     public int getId() {
         return id;
@@ -92,6 +75,14 @@ public class ChangeLog implements Comparable<ChangeLog> {
 
     public void setSiteStatus(SiteStatus siteStatus) {
         this.siteStatus = siteStatus;
+    }
+
+    public boolean getNotify() {
+        return notify;
+    }
+
+    public void setNotify(boolean notify) {
+        this.notify = notify;
     }
 
     public int getStallCount() {

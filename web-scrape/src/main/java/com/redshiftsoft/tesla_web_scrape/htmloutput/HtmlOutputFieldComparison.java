@@ -136,8 +136,8 @@ class HtmlOutputFieldComparison {
     private static boolean locationCompare(Tr localRow, Site site, Tr teslaRow, TeslaSite teslaSite) {
         double distanceKm = Distances.distanceKm(site, teslaSite);
         double distanceM = distanceKm * 1000.0;
-        Td localCell = new Td(String.format("%,.9f,%,.9f", site.getGps().getLatitude(), site.getGps().getLongitude()));
-        Td teslaCell = new Td(String.format("%,.9f,%,.9f", teslaSite.getLatitude(), teslaSite.getLongitude()));
+        Td localCell = new Td(String.format("%,.9f, %,.9f", site.getGps().getLatitude(), site.getGps().getLongitude()));
+        Td teslaCell = new Td(String.format("%,.9f, %,.9f", teslaSite.getLatitude(), teslaSite.getLongitude()));
         localRow.add(localCell);
         teslaRow.add(teslaCell);
         if (distanceM > 100.0) {

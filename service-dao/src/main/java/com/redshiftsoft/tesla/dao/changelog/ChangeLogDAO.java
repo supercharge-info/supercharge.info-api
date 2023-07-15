@@ -67,10 +67,10 @@ public class ChangeLogDAO extends BaseDAO {
         return count != 0;
     }
 
-    public int update(int id, Instant date, SiteStatus status, int userId) {
-        String UPDATE_SQL = "UPDATE changelog SET change_date = ?, site_status = ?::SITE_STATUS_TYPE, " +
+    public int update(int id, Instant date, SiteStatus status, boolean notify, int userId) {
+        String UPDATE_SQL = "UPDATE changelog SET change_date = ?, site_status = ?::SITE_STATUS_TYPE, notify = ?, " +
                             "modified_date = now(), user_id = ? WHERE id = ? RETURNING site_id";
-        return getJdbcTemplate().queryForObject(UPDATE_SQL, Integer.class, toTimestamp(date), status.toString(), userId, id);
+        return getJdbcTemplate().queryForObject(UPDATE_SQL, Integer.class, toTimestamp(date), status.toString(), notify, userId, id);
     }
 
     /* Returns map <siteId, days at current status> */

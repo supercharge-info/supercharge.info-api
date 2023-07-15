@@ -14,6 +14,7 @@ public class ChangeLogEditDTO {
     private Instant changeDate;
     private ChangeType changeType;
     private SiteStatus siteStatus;
+    private boolean notify;
     private int userId;
     private String username;
     private SiteChangeDateDTO dateModified;
@@ -24,12 +25,13 @@ public class ChangeLogEditDTO {
     public ChangeLogEditDTO() {
     }
 
-    public ChangeLogEditDTO(int id, int siteId, Instant changeDate, ChangeType changeType, SiteStatus siteStatus, int userId, String username, Instant dateModified) {
+    public ChangeLogEditDTO(int id, int siteId, Instant changeDate, ChangeType changeType, SiteStatus siteStatus, boolean notify, int userId, String username, Instant dateModified) {
         this.id = id;
         this.siteId = siteId;
         this.changeDate = changeDate;
         this.changeType = changeType;
         this.siteStatus = siteStatus;
+        this.notify = notify;
         this.userId = userId;
         this.username = username;
         this.dateModified = new SiteChangeDateDTO(dateModified);
@@ -57,6 +59,10 @@ public class ChangeLogEditDTO {
 
     public SiteStatus getSiteStatus() {
         return siteStatus;
+    }
+
+    public boolean getNotify() {
+        return notify;
     }
 
     public int getUserId() {
@@ -92,6 +98,10 @@ public class ChangeLogEditDTO {
 
     public void setSiteStatus(SiteStatus siteStatus) {
         this.siteStatus = siteStatus;
+    }
+
+    public void setNotify(boolean notify) {
+        this.notify = notify;
     }
 
     public void setUserId(int id) {

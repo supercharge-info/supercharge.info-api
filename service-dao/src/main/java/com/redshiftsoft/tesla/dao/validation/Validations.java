@@ -71,14 +71,36 @@ public class Validations {
                         "SELECT * FROM address WHERE address_id NOT IN (SELECT address_id FROM site)")
         );
 
+        validationMap.add(
+                new Validation(ADDRESS, "contintents and gps coordinates do not conflict",
+                        "SELECT site_id, site.name, gps_latitude, gps_longitude, street, city, state, " +
+                               "zip, country.name country, region.name region " +
+                        "FROM address inner join country using (country_id) " +
+                             "inner join region using (region_id) " +
+                             "inner join site using (address_id) " +
+                        "WHERE region.name = 'North America' " +
+                           "and (gps_longitude between -44 and 172 or gps_latitude < 0) " +
+                           "OR region.name = 'Europe' " +
+                           "and (gps_longitude not between -44 and 47 or gps_latitude < 0) " +
+                           "OR region.name = 'Asia Pacific' and gps_longitude between -148 and 24")
+        );
+
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - | CHANGELOG
 
         validationMap.add(
-                new Validation(CHANGE_LOG, "every non-open site has open status entry in changelog", "" +
+                new Validation(CHANGE_LOG, "every site has a changelog entry matching its status", "" +
                         "SELECT s.* " +
                         "FROM site s " +
-                        "LEFT JOIN changelog c on (s.site_id = c.site_id AND s.status = c.site_status) " +
-                        "WHERE c.site_id is null and s.status != 'OPEN'")
+                        "LEFT JOIN changelog c on (s.site_id = c.site_id AND c.site_status = s.status) " +
+                        "WHERE c.site_id is null")
+        );
+
+        validationMap.add(
+                new Validation(CHANGE_LOG, "every closed site has a changelog entry of open status", "" +
+                        "SELECT s.* " +
+                        "FROM site s " +
+                        "LEFT JOIN changelog c on (s.site_id = c.site_id AND c.site_status = 'OPEN') " +
+                        "WHERE c.site_id is null and s.status in ('CLOSED_PERM', 'CLOSED_TEMP')")
         );
 
         validationMap.add(

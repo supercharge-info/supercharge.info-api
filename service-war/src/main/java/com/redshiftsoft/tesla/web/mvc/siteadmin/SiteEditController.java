@@ -182,6 +182,37 @@ public class SiteEditController {
 
     // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     //
+    // manually create a change log
+    //
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @PreAuthorize("hasRole('editor')")
+    @RequestMapping(method = RequestMethod.POST, value = "/changeAdd")
+    @ResponseBody
+    @Transactional
+    public List<ChangeLogEditDTO> changeAdd(@RequestParam int siteId,
+                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                       @RequestParam LocalDate changeDate,
+                                       @RequestParam SiteStatus siteStatus,
+                                       @RequestParam boolean notify) {
+        User user = Security.user();
+        Instant changeDateInstant = changeDate.atTime(12, 0).atZone(LocalDateUtil.ZONE_ID).toInstant();
+        ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(siteId, ChangeType.UPDATE, siteStatus, changeDateInstant, Instant.now(), notify, user.getId());
+        if (changeLogDAO.getSiteList(siteId).isEmpty()) {
+            changeLogEdit.setChangeType(ChangeType.ADD);
+        }
+
+        // Create procedure
+        changeLogDAO.insert(changeLogEdit);
+        return changeLogDAO.setFirstToAdded(siteId).stream()
+            .map(new ChangeLogEditDTOFunction())
+            .sorted(Comparator.comparing(ChangeLogEditDTO::getChangeDate)
+                        .thenComparing(ChangeLogEditDTO::getId).reversed())
+            .collect(Collectors.toList());
+    }
+
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //
     // update a change log
     //
     // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -193,15 +224,15 @@ public class SiteEditController {
     public List<ChangeLogEditDTO> changeEdit(@RequestParam int changeId,
                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                        @RequestParam LocalDate changeDate,
-                                       @RequestParam SiteStatus siteStatus) {
+                                       @RequestParam SiteStatus siteStatus,
+                                       @RequestParam boolean notify) {
         User user = Security.user();
         Instant changeDateInstant = changeDate.atTime(12, 0).atZone(LocalDateUtil.ZONE_ID).toInstant();
 
         // Update procedure
-        int siteId = changeLogDAO.update(changeId, changeDateInstant, siteStatus, user.getId());
-        List<ChangeLogEdit> changeLogs = changeLogDAO.setFirstToAdded(siteId);
-        dbInfoDAO.setLastModifiedToNow();
-        return changeLogs.stream().map(new ChangeLogEditDTOFunction())
+        int siteId = changeLogDAO.update(changeId, changeDateInstant, siteStatus, notify, user.getId());
+        return changeLogDAO.setFirstToAdded(siteId).stream()
+            .map(new ChangeLogEditDTOFunction())
             .sorted(Comparator.comparing(ChangeLogEditDTO::getChangeDate)
                         .thenComparing(ChangeLogEditDTO::getId).reversed())
             .collect(Collectors.toList());

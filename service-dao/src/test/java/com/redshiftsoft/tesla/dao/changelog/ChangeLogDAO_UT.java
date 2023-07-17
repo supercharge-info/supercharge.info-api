@@ -7,6 +7,8 @@ import com.redshiftsoft.tesla.dao.site.Address;
 import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.site.SiteDAO;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
+import com.redshiftsoft.tesla.dao.user.User;
+import com.redshiftsoft.tesla.dao.user.UserDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,9 +37,9 @@ public class ChangeLogDAO_UT {
     @Resource
     private TestSiteSaver testSiteSaver;
     @Resource
-    private TestUsers testUsers;
-    @Resource
     private SiteDAO siteDAO;
+    @Resource
+    private UserDAO userDAO;
 
     private Site testSite;
 
@@ -133,9 +135,11 @@ public class ChangeLogDAO_UT {
     @Test
     public void getStatusDurations() {
         // given
-        ChangeLogEdit changeLog1 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now(), true, testUsers.createUser().getId());
+        User user = TestUsers.createUser();
+        userDAO.insert(user);
+        ChangeLogEdit changeLog1 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now(), true, user.getId());
         changeLogDAO.insert(changeLog1);
-        ChangeLogEdit changeLog2 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.CONSTRUCTION, Instant.now(), Instant.now(), false, testUsers.createUser().getId());
+        ChangeLogEdit changeLog2 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.CONSTRUCTION, Instant.now(), Instant.now(), false, user.getId());
         changeLogDAO.insert(changeLog2);
         testSite.setStatus(SiteStatus.CONSTRUCTION);
         siteDAO.update(testSite);

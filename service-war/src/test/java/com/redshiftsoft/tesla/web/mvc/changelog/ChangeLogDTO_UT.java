@@ -44,6 +44,7 @@ public class ChangeLogDTO_UT {
                 "siteStatus\":\"CONSTRUCTION\",\"" +
                 "stallCount\":19,\"" +
                 "powerKilowatt\":125,\"" +
+                "notify\":false,\"" +
                 "siteName\":\"testSiteName\",\"" +
                 "regionId\":9999,\"" +
                 "region\":\"testRegion\",\"" +

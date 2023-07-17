@@ -25,6 +25,6 @@ public class ValidationDAO_UT {
     public void doValidations() {
         Collection<ValidationResult> results = validationDAO.doValidations();
 
-        assertEquals(16, results.size());
+        assertEquals(17, results.size());
     }
 }

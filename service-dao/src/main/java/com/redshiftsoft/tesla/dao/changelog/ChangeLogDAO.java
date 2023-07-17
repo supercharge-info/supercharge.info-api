@@ -33,7 +33,7 @@ public class ChangeLogDAO extends BaseDAO {
     }
 
     public Map<Instant, SiteStatus> getSiteList(int siteId) {
-        String sql = "select change_date, site_status from changelog where site_id = ? order by change_date";
+        String sql = "select change_date, site_status from changelog where site_id = ? order by change_date, id";
         List<Map<String, Object>> rowList = getJdbcTemplate().queryForList(sql, siteId);
 
         Map<Instant, SiteStatus> resultMap = new HashMap<>();
@@ -46,7 +46,7 @@ public class ChangeLogDAO extends BaseDAO {
     }
 
     public List<ChangeLogEdit> getChangeLogEdits(int siteId) {
-        String sql = "select changelog.*, username from changelog left join users using (user_id) where site_id = ? order by change_date desc";
+        String sql = "select changelog.*, username from changelog left join users using (user_id) where site_id = ? order by change_date desc, id desc";
         return getJdbcTemplate().query(sql, CHANGE_LOG_EDIT_ROW_MAPPER, siteId);
     }
 
@@ -94,9 +94,10 @@ public class ChangeLogDAO extends BaseDAO {
 
     public List<ChangeLogEdit> setFirstToAdded(int siteId) {
         String UPDATE_SQL = "UPDATE changelog o SET change_type = " +
-                                    "CASE (select min(i.change_date) from changelog i " +
-                                            "where i.site_id = o.site_id) " +
-                                    "WHEN change_date THEN 'ADD'::CHANGE_TYPE " +
+                                    "CASE (select i.id from changelog i " +
+                                            "where i.site_id = o.site_id " +
+                                            "order by i.change_date, i.id limit 1) " +
+                                    "WHEN id THEN 'ADD'::CHANGE_TYPE " +
                                     "ELSE 'UPDATE'::CHANGE_TYPE END WHERE site_id = ? " +
                             "RETURNING o.*, (select username from users where user_id = o.user_id)";
         return getJdbcTemplate().query(UPDATE_SQL, CHANGE_LOG_EDIT_ROW_MAPPER, siteId);

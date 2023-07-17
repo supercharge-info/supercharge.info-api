@@ -96,7 +96,7 @@ public class Validations {
         );
 
         validationMap.add(
-                new Validation(CHANGE_LOG, "every closed site has a changelog entry of open status", "" +
+                new Validation(CHANGE_LOG, "every closed site has a prior changelog entry of open status", "" +
                         "SELECT s.* " +
                         "FROM site s " +
                         "LEFT JOIN changelog c on (s.site_id = c.site_id AND c.site_status = 'OPEN') " +
@@ -139,6 +139,15 @@ public class Validations {
                                     "WHERE i.site_id = o.site_id " +
                                     "AND i.change_date > o.change_date) " +
                         "ORDER BY site_id")
+        );
+
+        validationMap.add(
+                new Validation(CHANGE_LOG, "only one change log exists per day for each site", "" +
+                        "SELECT site_id, name, to_char(change_date, 'YYYY-MM-DD') change_date, " +
+                               "array_agg(id ORDER BY id) change_ids, array_agg(site_status ORDER BY id) site_statuses " +
+                        "FROM site inner join changelog using (site_id) " +
+                        "GROUP BY site_id, name, to_char(change_date, 'YYYY-MM-DD') " +
+                        "HAVING count(*) > 1 ORDER BY site_id, to_char(change_date, 'YYYY-MM-DD')")
         );
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - | USER_CONFIG

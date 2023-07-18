@@ -27,23 +27,27 @@ public class SiteEditController_IT extends Mvc_IT {
     public void delete_requires_admin_role() throws Exception {
 
         // when no login
-        mockMvc.perform(get("/siteadmin/delete?siteId=100"))
+        mockMvc.perform(post("/siteadmin/delete?siteId=100"))
                 .andExpect(status().isForbidden());
 
 
         // when login
         User user1 = testUser();
         Security.setAuth(user1);
-        mockMvc.perform(get("/siteadmin/delete?siteId=100"))
+        mockMvc.perform(post("/siteadmin/delete?siteId=100"))
                 .andExpect(status().isForbidden());
 
 
-        // when admin
         User user2 = testUserWithRoles(Collections.singletonList("admin"));
         Security.setAuth(user2);
         Site site = testSite();
 
+        // when wrong method
         mockMvc.perform(get("/siteadmin/delete?siteId=" + site.getId()))
+                .andExpect(status().isMethodNotAllowed());
+
+        // when admin
+        mockMvc.perform(post("/siteadmin/delete?siteId=" + site.getId()))
                 .andExpect(status().isOk());
 
 

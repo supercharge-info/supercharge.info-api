@@ -117,7 +117,7 @@ public class Validations {
                         ") AS g inner join site using (site_id) " +
                         "GROUP BY name, site_id, grp, site_status " +
                         "HAVING COUNT(*) > 1 " +
-                        "ORDER BY min(site_id)")
+                        "ORDER BY site_id")
         );
 
         validationMap.add(
@@ -133,7 +133,11 @@ public class Validations {
                                     "AND i.change_date < o.change_date " +
                                     "AND i.site_status != o.site_status " +
                                     "AND i.site_status != 'PERMIT') " +
-                        "OR site_status = 'CLOSED_PERM'" +
+                  "UNION SELECT site_id, site.name, to_char(opened_date, 'YYYY-MM-DD'), " +
+                               "site_status, to_char(change_date, 'YYYY-MM-DD') " +
+                        "FROM changelog o " +
+                        "INNER JOIN site using (site_id) " +
+                        "WHERE site_status = 'CLOSED_PERM' " +
                         "AND exists (SELECT 'Y' " +
                                     "FROM changelog i " +
                                     "WHERE i.site_id = o.site_id " +

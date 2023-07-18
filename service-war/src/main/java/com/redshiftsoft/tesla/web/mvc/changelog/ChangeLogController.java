@@ -115,6 +115,15 @@ public class ChangeLogController {
         cachingHandler.reset();
     }
 
+    @PreAuthorize("hasAnyRole('editor')")
+    @Transactional
+    @RequestMapping(method = RequestMethod.POST, value = "/changes/restoreAdded")
+    @ResponseBody
+    public void restoreAdded(@RequestParam Integer siteId) {
+        changeLogDAO.setFirstToAdded(siteId);
+        cachingHandler.reset();
+    }
+
     private class ChangeLogDTOSupplier implements Supplier<List<ChangeLogDTO>> {
 
         final ChangeLogDTOFunction CONVERTER = new ChangeLogDTOFunction();

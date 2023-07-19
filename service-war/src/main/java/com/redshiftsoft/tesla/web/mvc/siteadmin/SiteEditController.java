@@ -60,7 +60,7 @@ public class SiteEditController {
     @PreAuthorize("hasAnyRole('editor')")
     @RequestMapping(method = RequestMethod.GET, value = "/load")
     @ResponseBody
-    public SiteEditDTO load(@RequestParam("siteId") Integer siteId) {
+    public SiteEditDTO load(@RequestParam Integer siteId) {
         /* Bypass cache here because this is used for the admin/edit-site page. */
         Site site = siteDAO.getById(siteId);
         return SiteEditDTOFunctions.transform(site);
@@ -160,10 +160,10 @@ public class SiteEditController {
     // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     @PreAuthorize("hasRole('admin')")
-    @RequestMapping(method = RequestMethod.GET, value = "/delete")
+    @RequestMapping(method = RequestMethod.POST, value = "/delete")
     @ResponseBody
     @Transactional
-    public void delete(@RequestParam("siteId") int siteId) {
+    public void delete(@RequestParam int siteId) {
         siteDAO.delete(siteId);
         dbInfoDAO.setLastModifiedToNow();
     }
@@ -179,7 +179,7 @@ public class SiteEditController {
     @RequestMapping(method = RequestMethod.GET, value = "/changeDetail")
     @ResponseBody
     @Transactional
-    public List<SiteChangeDTO> listChangeDetail(@RequestParam("siteId") int siteId) {
+    public List<SiteChangeDTO> listChangeDetail(@RequestParam int siteId) {
         return siteChangeDAO.list(siteId).stream()
                 .map(x -> new SiteChangeDTO(
                         x.getSiteId(),

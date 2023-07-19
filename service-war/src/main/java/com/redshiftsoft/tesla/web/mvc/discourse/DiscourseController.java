@@ -103,9 +103,9 @@ public class DiscourseController {
         StringBuilder payloadOut = new StringBuilder(256);
         payloadOut.append(payloadIn);
         payloadOut.append('&');
-        payloadOut.append("username=" + user.getUsername());
+        payloadOut.append("username=" + URLEncoder.encode(user.getUsername()));
         payloadOut.append('&');
-        payloadOut.append("email=" + user.getEmail());
+        payloadOut.append("email=" + URLEncoder.encode(user.getEmail()));
         payloadOut.append('&');
         payloadOut.append("external_id=" + user.getId());
         payloadOut.append('&');
@@ -116,7 +116,7 @@ public class DiscourseController {
         // "editor" group is called "editors" on forum.
         payloadOut.append("groups=" + COMMA_JOINER.join(user.getRoles()).replace("editor", "editors"));
         payloadOut.append('&');
-        payloadOut.append("bio=" + user.getDescription());
+        payloadOut.append("bio=" + URLEncoder.encode(user.getDescription()));
 
         return payloadOut;
     }

@@ -1,5 +1,8 @@
 package com.redshiftsoft.tesla.web.filter;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,16 +29,18 @@ public class CookieHelper {
     }
 
     /**
-     * Add the specified cookie to the the response.
+     * Add the specified cookie builder to the the response.
      */
-    public static void addCookie(final HttpServletRequest request, final HttpServletResponse response, Cookie cookie) {
+    public static void addCookie(final HttpServletRequest request, final HttpServletResponse response, ResponseCookie.ResponseCookieBuilder cookie) {
         /* Important security measure: see design decisions on cookie security. */
         if (request.isSecure()) {
-            cookie.setSecure(true);
+            cookie = cookie.secure(true);
         } else if ("development".equals(System.getProperty("spring.profiles.active"))) {
-            cookie.setSecure(false);
+            cookie = cookie.secure(false);
         }
-        response.addCookie(cookie);
+        // Use SameSite=Lax so cookies will only be included when redirecting to GET method
+        // https://stackoverflow.com/a/59995877/1507941
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.sameSite("Lax").build().toString());
     }
 
     /**

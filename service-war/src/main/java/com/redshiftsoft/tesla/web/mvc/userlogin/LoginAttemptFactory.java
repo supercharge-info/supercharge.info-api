@@ -30,6 +30,14 @@ public class LoginAttemptFactory {
     }
 
     // - - - - - - - - - - -
+    // LoginResult = CHANGED
+    // - - - - - - - - - - -
+
+    public static LoginAttempt changedPassword(HttpServletRequest request, User user) {
+        return new LoginAttempt(user, LoginResult.CHANGED, LoginType.RESET_PWD, request.getRemoteAddr(), request.getLocale());
+    }
+
+    // - - - - - - - - - - -
     // LoginResult = INVALID_CREDENTIALS
     // - - - - - - - - - - -
 

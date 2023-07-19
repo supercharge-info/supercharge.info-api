@@ -3,9 +3,12 @@ package com.redshiftsoft.tesla.web.mvc.user;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.Mvc_IT;
+import com.redshiftsoft.tesla.web.mvc.userlogin.LoginCookie;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+
+import javax.servlet.http.Cookie;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -40,6 +43,7 @@ public class UserEditController_IT extends Mvc_IT {
                 .content(objectMapper.writeValueAsString(userEditDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
+                .cookie(new Cookie(LoginCookie.NAME, LoginCookie.from(user).build().getValue()))
         ).andExpect(status().isMethodNotAllowed());
 
         // when
@@ -47,6 +51,7 @@ public class UserEditController_IT extends Mvc_IT {
                 .content(objectMapper.writeValueAsString(userEditDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
+                .cookie(new Cookie(LoginCookie.NAME, LoginCookie.from(user).build().getValue()))
         ).andExpect(status().isOk()).andExpect(jsonPath("$.result").value("SUCCESS"));
 
         // then

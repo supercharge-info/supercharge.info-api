@@ -222,7 +222,7 @@ CREATE TABLE user_reset_password
 -- -----------------------------------------------------------
 -- LOGIN
 --  -----------------------------------------------------------
-CREATE TYPE LOGIN_RESULT_TYPE AS ENUM ('SUCCESS', 'INVALID_CREDENTIALS', 'DISABLED', 'LOCKED');
+CREATE TYPE LOGIN_RESULT_TYPE AS ENUM ('SUCCESS', 'INVALID_CREDENTIALS', 'DISABLED', 'LOCKED', 'CHANGED');
 CREATE TYPE LOGIN_TYPE AS ENUM ('FORM', 'COOKIE', 'RESET_PWD', 'USER_CREATE');
 
 create table login

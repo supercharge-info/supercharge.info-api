@@ -27,7 +27,7 @@ public class FeatureController_IT extends Mvc_IT {
     public void feature_delete_no_login() throws Exception {
         // given -- no login
         // when
-        mockMvc.perform(get("/feature/delete/100")).andExpect(status().isForbidden());
+        mockMvc.perform(post("/feature/delete?featureId=100")).andExpect(status().isForbidden());
     }
 
     @Test
@@ -37,7 +37,7 @@ public class FeatureController_IT extends Mvc_IT {
         Security.setAuth(user1);
 
         // when
-        mockMvc.perform(get("/feature/delete/100")).andExpect(status().isForbidden());
+        mockMvc.perform(post("/feature/delete?featureId=100")).andExpect(status().isForbidden());
     }
 
     @Test
@@ -47,7 +47,17 @@ public class FeatureController_IT extends Mvc_IT {
         Security.setAuth(user1);
 
         // when
-        mockMvc.perform(get("/feature/delete/100")).andExpect(status().isForbidden());
+        mockMvc.perform(post("/feature/delete?featureId=100")).andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void feature_delete_get() throws Exception {
+        // given
+        User user1 = testUserWithRoles(Collections.singletonList("admin"));
+        Security.setAuth(user1);
+
+        // when
+        mockMvc.perform(get("/feature/delete?featureId=100")).andExpect(status().isMethodNotAllowed());
     }
 
     @Test
@@ -57,7 +67,7 @@ public class FeatureController_IT extends Mvc_IT {
         Security.setAuth(user1);
 
         // when
-        mockMvc.perform(get("/feature/delete/100")).andExpect(status().isOk());
+        mockMvc.perform(post("/feature/delete?featureId=100")).andExpect(status().isOk());
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

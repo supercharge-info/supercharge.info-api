@@ -1,5 +1,6 @@
 package com.redshiftsoft.tesla.web.mvc.user;
 
+import com.google.common.cache.LoadingCache;
 import com.redshiftsoft.tesla.dao.login.LoginDAO;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 
@@ -48,22 +50,36 @@ public class PasswordController {
     private PasswordValidation passwordValidation;
     @Resource
     private PasswordResetEmailSender emailSender;
+    @Resource(name = "userFilterCache")
+    private LoadingCache<String, User> cache;
 
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
     @RequestMapping(value = "/change", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse change(@RequestParam(value = "password", required = false) String password,
-                               HttpServletResponse response) {
+    public JsonResponse change(HttpServletRequest request,
+                               HttpServletResponse response,
+                               @RequestParam(required = false) String password) {
         User user = Security.user();
         List<String> errors = passwordValidation.validate(password, user.getUsername());
         if (!errors.isEmpty()) {
             return JsonResponse.fail(errors).withStatus(response, SC_BAD_REQUEST);
         }
 
-        String newPasswordHash = passwordHashLogic.hash(password, user.getPasswordSalt());
-        userDAO.updatePasswordHash(user.getId(), newPasswordHash);
+        user.setPasswordHash(passwordHashLogic.hash(password, user.getPasswordSalt()));
+        userDAO.updatePasswordHash(user.getId(), user.getPasswordHash());
+        LOG.info("password SUCCESS username=" + user.getUsername());
+        loginDAO.insertAttempt(LoginAttemptFactory.changedPassword(request, user));
+
+        // Invalidate old cookies
+        List<String> invalidCookies = cache.asMap().keySet()
+            .stream()
+            .filter(c -> user.getId().equals(LoginCookie.getUserId(c)))
+            .collect(Collectors.toList());
+        cache.invalidateAll(invalidCookies);
+        CookieHelper.addCookie(request, response, LoginCookie.from(user));
+
         return JsonResponse.success();
     }
 
@@ -93,7 +109,7 @@ public class PasswordController {
     @RequestMapping("/login")
     public String loginUsingResetKey(HttpServletRequest request,
                                      HttpServletResponse response,
-                                     @RequestParam(value = "key") String key) {
+                                     @RequestParam String key) {
 
         Optional<Integer> userIdOption = userResetPwdDAO.validateKey(key);
         if (userIdOption.isPresent()) {
@@ -102,7 +118,7 @@ public class PasswordController {
             User user = userDAO.getById(userId);
             LOG.info("login SUCCESS username=" + user.getUsername());
             loginDAO.insertAttempt(LoginAttemptFactory.successResetPassword(request, user));
-            CookieHelper.addCookie(request, response, LoginCookie.fromUser(user));
+            CookieHelper.addCookie(request, response, LoginCookie.from(user));
         }
 
         return RedirectURLBuilder.build(request);

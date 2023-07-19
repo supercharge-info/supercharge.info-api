@@ -2,6 +2,7 @@ package com.redshiftsoft.tesla.web.mvc.feature;
 
 import com.redshiftsoft.tesla.dao.feature.Feature;
 import com.redshiftsoft.tesla.dao.feature.FeatureDAO;
+import com.redshiftsoft.tesla.web.filter.CookieHelper;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
 import com.redshiftsoft.util.NumberUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +12,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.logging.Level;
@@ -72,8 +74,8 @@ public class FeatureController {
     @Transactional
     @ResponseBody
     @PreAuthorize("hasAnyRole('admin')")
-    @RequestMapping(method = RequestMethod.GET, value = "/delete/{featureId}")
-    public JsonResponse deleteChange(@PathVariable Integer featureId) {
+    @RequestMapping(method = RequestMethod.POST, value = "/delete")
+    public JsonResponse deleteChange(@RequestParam Integer featureId) {
         featureDAO.delete(featureId);
         return JsonResponse.success();
     }
@@ -81,14 +83,15 @@ public class FeatureController {
     @Transactional
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/check")
-    public JsonResponse checkForNewFeatures(HttpServletResponse response,
+    public JsonResponse checkForNewFeatures(HttpServletRequest request,
+                                            HttpServletResponse response,
                                             @CookieValue(name = FeatureCookie.COOKIE_NAME, required = false) String lastSeenFeatureId) {
         Integer lastSeenFeatureIdInt = NumberUtils.parse(lastSeenFeatureId, Integer.class);
         int latestFeatureId = featureDAO.getLatestFeatureId();
 
         // CASE 1: There is no feature cookie, or there is, but the last seen feature is OLD.
         if (lastSeenFeatureIdInt == null || (lastSeenFeatureIdInt < latestFeatureId)) {
-            response.addCookie(new FeatureCookie(latestFeatureId));
+            CookieHelper.addCookie(request, response, FeatureCookie.from(latestFeatureId));
             return JsonResponse.success("new features");
         }
         // CASE 2: They have already been notified of all the new features.

@@ -4,11 +4,12 @@ package com.redshiftsoft.tesla.web.mvc.user;
 import com.google.common.cache.LoadingCache;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
+import com.redshiftsoft.tesla.web.filter.CookieHelper;
 import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
 import com.redshiftsoft.tesla.web.mvc.user.validation.EmailValidation;
+import com.redshiftsoft.tesla.web.mvc.userlogin.LoginCookie;
 import com.redshiftsoft.util.StringTools;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -26,22 +29,21 @@ import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 @RequestMapping("/user")
 public class UserEditController {
 
-    private final EmailValidation emailValidation;
-    private final UserDAO userDAO;
-    private final LoadingCache<String, User> cache;
+    @Resource
+    private EmailValidation emailValidation;
+    @Resource
+    private UserDAO userDAO;
+    @Resource(name = "userFilterCache")
+    private LoadingCache<String, User> cache;
 
-    public UserEditController(EmailValidation emailValidation, UserDAO userDAO,
-                              @Qualifier("userFilterCache") LoadingCache<String, User> cache) {
-        this.emailValidation = emailValidation;
-        this.userDAO = userDAO;
-        this.cache = cache;
-    }
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse edit(@RequestBody UserEditDTO userEditDTO, HttpServletResponse response) {
+    public JsonResponse edit(HttpServletRequest request,
+                             HttpServletResponse response,
+                             @RequestBody UserEditDTO userEditDTO) {
 
         User user = Security.user();
 
@@ -63,7 +65,7 @@ public class UserEditController {
         }
 
         /* The cached 'User' is now stale. */
-        cache.invalidateAll();
+        cache.refresh(CookieHelper.getCookie(request, LoginCookie.NAME).getValue());
 
         return JsonResponse.success();
     }

@@ -103,9 +103,9 @@ public class ChangeLogController {
 
     @PreAuthorize("hasAnyRole('editor')")
     @Transactional
-    @RequestMapping(method = RequestMethod.GET, value = "/changes/delete/{changeId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/changes/delete")
     @ResponseBody
-    public void deleteChange(@PathVariable Integer changeId) {
+    public void deleteChange(@RequestParam Integer changeId) {
         LOG.info("Deleting change: " + changeId);
         ChangeLog cl = changeLogDAO.getById(changeId);
         changeLogDAO.delete(changeId);

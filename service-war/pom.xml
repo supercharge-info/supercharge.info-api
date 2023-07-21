@@ -3,7 +3,7 @@
     <parent>
         <groupId>info.supercharge.api</groupId>
         <artifactId>supercharge.info-api</artifactId>
-        <version>4.9.2-SNAPSHOT</version>
+        <version>5.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

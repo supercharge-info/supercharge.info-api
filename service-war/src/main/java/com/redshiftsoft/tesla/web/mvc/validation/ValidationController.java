@@ -1,10 +1,14 @@
 package com.redshiftsoft.tesla.web.mvc.validation;
 
+import com.redshiftsoft.tesla.dao.validation.ValidationCategory;
 import com.redshiftsoft.tesla.dao.validation.ValidationDAO;
 import com.redshiftsoft.tesla.dao.validation.ValidationResult;
+import com.redshiftsoft.tesla.dao.user.User;
+import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla_web_scrape.WebCompare;
 import com.redshiftsoft.tesla_web_scrape.http.WebClient;
 import com.redshiftsoft.tesla_web_scrape.http.WebScrapeResult;
+import com.redshiftsoft.util.StringTools;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/validation")
@@ -35,7 +40,11 @@ public class ValidationController {
     @RequestMapping(method = RequestMethod.GET, value = "/database")
     @ResponseBody
     public List<ValidationResult> doDatabaseValidations() {
-        return validationDAO.doValidations();
+        User user = Security.user();
+        return validationDAO.doValidations()
+            .stream()
+            .filter(v -> user.hasRole("admin") || !ValidationCategory.USER_CONFIG.equals(v.getValidation().getCategory()))
+            .collect(Collectors.toList());
     }
 
 

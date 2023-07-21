@@ -22,7 +22,7 @@ public class FeatureDTO_UT {
 
         String result = new ObjectMapper().writeValueAsString(dto);
 
-        assertEquals("{\"id\":123456,\"title\":\"the title\",\"description\":\"This is a test description.\",\"addedDate\":\"2016-12-29\",\"modifiedDate\":\"2017-10-14 17:30:45\"}", result);
+        assertEquals("{\"id\":123456,\"title\":\"the title\",\"description\":\"This is a test description.\",\"addedDate\":\"2016-12-29\",\"modifiedDate\":\"2017-10-14 17:30:45-05:00\"}", result);
 
     }
 

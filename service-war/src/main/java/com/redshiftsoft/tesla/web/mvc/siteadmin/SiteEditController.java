@@ -1,10 +1,11 @@
 package com.redshiftsoft.tesla.web.mvc.siteadmin;
 
 import com.google.common.collect.Lists;
-import com.redshiftsoft.tesla.dao.changelog.ChangeLog;
+import com.redshiftsoft.tesla.dao.changelog.ChangeLogEdit;
 import com.redshiftsoft.tesla.dao.changelog.ChangeLogDAO;
 import com.redshiftsoft.tesla.dao.changelog.ChangeType;
 import com.redshiftsoft.tesla.dao.dbinfo.DBInfoDAO;
+import com.redshiftsoft.tesla.dao.LocalDateUtil;
 import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.site.SiteDAO;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
@@ -12,6 +13,7 @@ import com.redshiftsoft.tesla.dao.sitechanges.SiteChangeDAO;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.web.filter.Security;
 import com.redshiftsoft.tesla.web.mvc.JsonResponse;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -116,26 +120,34 @@ public class SiteEditController {
             if (newOrModifiedSite.getId() == 0) {
                 return handleSaveNew(user, site);
             } else {
-                return handleEdit(user, site);
+                return handleEdit(user, site, newOrModifiedSite.getNotify());
             }
         }
         return new JsonResponse(JsonResponse.Result.FAIL, errorMessages);
     }
 
-    private JsonResponse handleEdit(User user, Site site) {
+    private JsonResponse handleEdit(User user, Site site, SiteEditDTO.NotifyEnum notify) {
         List<String> messages = Lists.newArrayList();
-        messages.add(format("UPDATED site '%s'", site.getName()));
 
         Site oldSite = siteDAO.getById(site.getId());
         SiteStatus oldSiteStatus = oldSite.getStatus();
 
-        siteDAO.update(site);
-        siteDiffLogger.record(user, oldSite, site);
+        boolean changes = siteDiffLogger.record(user, oldSite, site);
+        if (!changes) {
+            messages.add("Nothing to do");
+            return new JsonResponse(JsonResponse.Result.FAIL, messages);
+        }
 
-        if (oldSiteStatus != site.getStatus()) {
-            ChangeLog changeLog = ChangeLog.toPersist(site.getId(), ChangeType.UPDATE, site.getStatus(), Instant.now(), Instant.now());
-            changeLogDAO.insert(changeLog);
-            messages.add(format("INSERTED changelog for '%s' with status %s", site.getName(), changeLog.getSiteStatus()));
+        messages.add(format("UPDATED site '%s'", site.getName()));
+        siteDAO.update(site);
+
+        if (oldSiteStatus != site.getStatus() && !SiteEditDTO.NotifyEnum.no.equals(notify)) {
+            ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.UPDATE, site.getStatus(), Instant.now(), Instant.now(), SiteEditDTO.NotifyEnum.yes.equals(notify), user.getId());
+            if (changeLogDAO.getSiteList(site.getId()).isEmpty()) {
+                changeLogEdit.setChangeType(ChangeType.ADD);
+            }
+            changeLogDAO.insert(changeLogEdit);
+            messages.add(format("INSERTED changelog for '%s' with status %s", site.getName(), changeLogEdit.getSiteStatus()));
         }
 
         return new SiteEditResponse(site.getId(), messages);
@@ -144,12 +156,12 @@ public class SiteEditController {
     private JsonResponse handleSaveNew(User user, Site site) {
         siteDAO.insert(site);
 
-        ChangeLog changeLog = ChangeLog.toPersist(site.getId(), ChangeType.ADD, site.getStatus(), Instant.now(), Instant.now());
-        changeLogDAO.insert(changeLog);
+        ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.ADD, site.getStatus(), Instant.now(), Instant.now(), true, user.getId());
+        changeLogDAO.insert(changeLogEdit);
         siteDiffLogger.recordNew(user, site);
         return new SiteEditResponse(site.getId(), Lists.newArrayList(
                 format("INSERTED site '%s'", site.getName()),
-                format("INSERTED changelog for '%s' with status %s", site.getName(), changeLog.getSiteStatus())
+                format("INSERTED changelog for '%s' with status %s", site.getName(), changeLogEdit.getSiteStatus())
         ));
     }
 
@@ -166,6 +178,64 @@ public class SiteEditController {
     public void delete(@RequestParam int siteId) {
         siteDAO.delete(siteId);
         dbInfoDAO.setLastModifiedToNow();
+    }
+
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //
+    // manually create a change log
+    //
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @PreAuthorize("hasRole('editor')")
+    @RequestMapping(method = RequestMethod.POST, value = "/changeAdd")
+    @ResponseBody
+    @Transactional
+    public List<ChangeLogEditDTO> changeAdd(@RequestParam int siteId,
+                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                       @RequestParam LocalDate changeDate,
+                                       @RequestParam SiteStatus siteStatus,
+                                       @RequestParam boolean notify) {
+        User user = Security.user();
+        Instant changeDateInstant = changeDate.atTime(12, 0).atZone(LocalDateUtil.ZONE_ID).toInstant();
+        ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(siteId, ChangeType.UPDATE, siteStatus, changeDateInstant, Instant.now(), notify, user.getId());
+        if (changeLogDAO.getSiteList(siteId).isEmpty()) {
+            changeLogEdit.setChangeType(ChangeType.ADD);
+        }
+
+        // Create procedure
+        changeLogDAO.insert(changeLogEdit);
+        return changeLogDAO.setFirstToAdded(siteId).stream()
+            .map(new ChangeLogEditDTOFunction())
+            .sorted(Comparator.comparing(ChangeLogEditDTO::getChangeDate)
+                        .thenComparing(ChangeLogEditDTO::getId).reversed())
+            .collect(Collectors.toList());
+    }
+
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //
+    // update a change log
+    //
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @PreAuthorize("hasRole('editor')")
+    @RequestMapping(method = RequestMethod.POST, value = "/changeEdit")
+    @ResponseBody
+    @Transactional
+    public List<ChangeLogEditDTO> changeEdit(@RequestParam int changeId,
+                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                       @RequestParam LocalDate changeDate,
+                                       @RequestParam SiteStatus siteStatus,
+                                       @RequestParam boolean notify) {
+        User user = Security.user();
+        Instant changeDateInstant = changeDate.atTime(12, 0).atZone(LocalDateUtil.ZONE_ID).toInstant();
+
+        // Update procedure
+        int siteId = changeLogDAO.update(changeId, changeDateInstant, siteStatus, notify, user.getId());
+        return changeLogDAO.setFirstToAdded(siteId).stream()
+            .map(new ChangeLogEditDTOFunction())
+            .sorted(Comparator.comparing(ChangeLogEditDTO::getChangeDate)
+                        .thenComparing(ChangeLogEditDTO::getId).reversed())
+            .collect(Collectors.toList());
     }
 
 
@@ -190,6 +260,23 @@ public class SiteEditController {
                         x.getOldValue(),
                         x.getNewValue(),
                         x.getChangeDate())).collect(Collectors.toList());
+    }
+
+
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //
+    // list change logs for a site
+    //
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @PreAuthorize("hasAnyRole('editor')")
+    @RequestMapping(method = RequestMethod.GET, value = "/changeLogEdits")
+    @ResponseBody
+    @Transactional
+    public List<ChangeLogEditDTO> listChangeEdits(@RequestParam int siteId) {
+        return changeLogDAO.getChangeLogEdits(siteId).stream()
+                .map(new ChangeLogEditDTOFunction())
+                .collect(Collectors.toList());
     }
 
 

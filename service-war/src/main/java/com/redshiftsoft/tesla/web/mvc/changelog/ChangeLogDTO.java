@@ -30,6 +30,7 @@ public class ChangeLogDTO {
     private int stallCount;
     private int powerKilowatt;
     private boolean otherEVs;
+    private boolean notify;
 
     private String siteName;
     private int regionId;
@@ -107,6 +108,14 @@ public class ChangeLogDTO {
 
     public void setOtherEVs(boolean otherEVs) {
         this.otherEVs = otherEVs;
+    }
+
+    public boolean getNotify() {
+        return notify;
+    }
+
+    public void setNotify(boolean notify) {
+        this.notify = notify;
     }
 
     public String getRegion() {

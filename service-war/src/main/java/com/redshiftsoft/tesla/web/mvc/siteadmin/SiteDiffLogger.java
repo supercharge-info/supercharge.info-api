@@ -28,7 +28,7 @@ public class SiteDiffLogger {
     /**
      * Record the edit of an EXISTING site in the site changes table.
      */
-    public void record(User user, Site oldSite, Site newSite) {
+    public boolean record(User user, Site oldSite, Site newSite) {
 
         int nextVersion = oldSite.getVersion() + 1;
         SiteChangeBuilder builder = new SiteChangeBuilder(oldSite.getId(), user.getId(), nextVersion, Instant.now());
@@ -57,7 +57,11 @@ public class SiteDiffLogger {
         diff(builder, "address.zip", oldSite.getAddress().getZip(), newSite.getAddress().getZip());
         diff(builder, "address.countryId", oldSite.getAddress().getCountryId(), newSite.getAddress().getCountryId());
 
+        if (builder.getChangeList().size() == 0) {
+            return false;
+        }
         siteChangesDAO.insert(builder.getChangeList());
+        return true;
     }
 
     private static void diff(SiteChangeBuilder builder, String fieldName, Object a, Object b) {

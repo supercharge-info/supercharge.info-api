@@ -41,6 +41,7 @@ public class SiteEditDTO {
 
     /* Power in kW */
     private int powerKiloWatt;
+    private NotifyEnum notify;
     private boolean solarCanopy;
     private boolean battery;
     private boolean otherEVs;
@@ -221,6 +222,14 @@ public class SiteEditDTO {
         this.powerKiloWatt = powerKiloWatt;
     }
 
+    public NotifyEnum getNotify() {
+        return notify;
+    }
+
+    public void setNotify(NotifyEnum notify) {
+        this.notify = notify;
+    }
+
     public boolean isSolarCanopy() {
         return solarCanopy;
     }
@@ -259,6 +268,10 @@ public class SiteEditDTO {
 
     public void setOtherEVs(boolean otherEVs) {
         this.otherEVs = otherEVs;
+    }
+
+    public enum NotifyEnum {
+        yes, log, no
     }
 }
 

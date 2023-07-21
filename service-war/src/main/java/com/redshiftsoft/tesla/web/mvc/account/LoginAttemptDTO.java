@@ -3,19 +3,19 @@ package com.redshiftsoft.tesla.web.mvc.account;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.redshiftsoft.tesla.dao.login.LoginResult;
 import com.redshiftsoft.tesla.dao.login.LoginType;
-import com.redshiftsoft.tesla.web.json.LocalDateTimeSerializer;
+import com.redshiftsoft.tesla.web.json.InstantSerializer;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class LoginAttemptDTO {
 
-    private LocalDateTime date;
+    private Instant date;
     private LoginResult result;
     private LoginType type;
     private String remoteIP;
     private String locale;
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(Instant date) {
         this.date = date;
     }
 
@@ -35,8 +35,8 @@ public class LoginAttemptDTO {
         this.locale = locale;
     }
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    public LocalDateTime getDate() {
+    @JsonSerialize(using = InstantSerializer.class)
+    public Instant getDate() {
         return date;
     }
 

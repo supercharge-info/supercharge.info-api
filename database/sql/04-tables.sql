@@ -132,12 +132,16 @@ create table changelog
     change_date   timestamptz      not null,
     change_type   change_type      not null,
     site_status   site_status_type not null,
-    modified_date timestamptz      not null default current_timestamp
-);
-alter table changelog
-    add constraint fk_changelog_1 foreign key (site_id) references site (site_id)
+    modified_date timestamptz      not null default current_timestamp,
+    notify        boolean          not null default true,
+    user_id       int              null,
+    CONSTRAINT fk_changelog_1 foreign key (site_id) references site (site_id)
         on update cascade
-        on delete cascade;
+        on delete cascade,
+    CONSTRAINT fk_changelog_2 foreign key (user_id) references users (user_id)
+        on update cascade
+        on delete cascade
+);
 alter sequence changelog_id_seq restart with 100000;
 
 -- -----------------------------------------------------------

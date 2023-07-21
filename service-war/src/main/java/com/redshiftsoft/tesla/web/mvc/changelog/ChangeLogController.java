@@ -107,7 +107,20 @@ public class ChangeLogController {
     @ResponseBody
     public void deleteChange(@RequestParam Integer changeId) {
         LOG.info("Deleting change: " + changeId);
+        ChangeLog cl = changeLogDAO.getById(changeId);
         changeLogDAO.delete(changeId);
+        if (ChangeType.ADD.equals(cl.getChangeType())) {
+            changeLogDAO.setFirstToAdded(cl.getSiteId());
+        }
+        cachingHandler.reset();
+    }
+
+    @PreAuthorize("hasAnyRole('editor')")
+    @Transactional
+    @RequestMapping(method = RequestMethod.POST, value = "/changes/restoreAdded")
+    @ResponseBody
+    public void restoreAdded(@RequestParam Integer siteId) {
+        changeLogDAO.setFirstToAdded(siteId);
         cachingHandler.reset();
     }
 

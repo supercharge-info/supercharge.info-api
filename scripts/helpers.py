@@ -1,6 +1,7 @@
 import json
 import os
 import psycopg2
+import psycopg2.extras
 import re
 import smtplib
 from urllib.request import urlopen
@@ -36,25 +37,32 @@ def readQuery(connection, query):
         cursor.execute(query)
         return cursor.fetchall()
 
+def readQueryDict(connection, query):
+    with connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+        cursor.execute(query)
+        return cursor.fetchall()
+
 def getConfig(prefixes):
     configProps = {}
     if os.path.isfile('.env'):
         with open('.env') as f:
             # Read config file
             for line in f:
-                conf = [x.strip() for x in line.split('=', 1)]
-                if len(conf) == 2:
-                    configProps[conf[0]] = conf[1]
+                if not line.startswith('#'):
+                    conf = [x.strip() for x in line.split('=', 1)]
+                    if len(conf) == 2:
+                        configProps[conf[0]] = conf[1]
     if 'properties.file' in configProps and os.path.isfile(configProps['properties.file']):
         with open(configProps['properties.file']) as f:
             # Read props file
             for line in reversed(f.readlines()):
-                # Reverse order to not overwrite config keys and respect order of properties keys at same time
-                prop = [x.strip() for x in line.split('=', 1)]
-                if len(prop) == 2 and prop[0] not in configProps:
-                    for p in prefixes.split(' '):
-                        if prop[0] == p or prop[0].startswith(f'{p}.'):
-                            configProps[prop[0]] = prop[1]
+                if not line.startswith('#'):
+                    # Reverse order to not overwrite config keys and respect order of properties keys at same time
+                    prop = [x.strip() for x in line.split('=', 1)]
+                    if len(prop) == 2 and prop[0] not in configProps:
+                        for p in prefixes.split(' '):
+                            if prop[0] == p or prop[0].startswith(f'{p}.'):
+                                configProps[prop[0]] = prop[1]
     return configProps
 
 def sendEmails(msgs, config):

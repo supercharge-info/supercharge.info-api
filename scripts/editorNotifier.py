@@ -42,12 +42,12 @@ def getEditors(configProps, testing_editors=[]):
 
 
 def getEditorMessageContent(config, editor):
-    editor.update({'last_action': "made your last edit" if editor['last_edit'] else "became an editor"})
+    editor.update({'last_action': "made your last edit" if editor['last_edit'] else "joined the editor team"})
     template = """Hi {username},
 
         It's been quite some time since you {last_action} at supercharge.info on {last_activity}.
 
-        The list of editors has grown quite large, and many editors have not been active in more than a year. 
+        The group of editors has grown quite large, and many editors have not been active in more than a year.
 
         If you intend to continue contributing to supercharge.info as an editor please post a message to the following forum thread to inform us that you'd like to remain an editor. Please also include any geographical areas that you will be monitoring.
 
@@ -61,7 +61,11 @@ def getEditorMessageContent(config, editor):
     """.format(**dict(**config, **editor))
 
     # strip away leading whitespace from the template, but leave blank lines intact
-    return re.sub(r'^[^\S\r\n]+|[^\S\r\n]+$', '', template, flags=re.MULTILINE)
+    template = re.sub(r'^[^\S\r\n]+|[^\S\r\n]+$', '', template, flags=re.MULTILINE)
+    # add back two spaces before discourse url
+    template = template.replace(config['discourse_url'], "  {}".format(config['discourse_url']))
+
+    return template
 
 
 def main(testing=False, testing_editors=[], send_editor_emails=False):
@@ -88,7 +92,7 @@ def main(testing=False, testing_editors=[], send_editor_emails=False):
             
             for editor in editors:
                 editor.update({'last_activity': editor['last_edit'] if editor['last_edit'] else "{}*".format(editor['editor_date'])})
-                admin_summary += '<tr><td>{username}</td><td>{email}</td><td>{last_activity}*</td></tr>'.format(**editor)
+                admin_summary += '<tr><td>{username}</td><td>{email}</td><td>{last_activity}</td></tr>'.format(**editor)
 
                 if send_editor_emails:
                     print('Building email to editor {username} at {email}'.format(**editor))

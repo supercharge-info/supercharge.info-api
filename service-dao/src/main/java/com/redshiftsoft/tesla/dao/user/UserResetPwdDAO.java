@@ -2,8 +2,10 @@ package com.redshiftsoft.tesla.dao.user;
 
 import com.redshiftsoft.tesla.dao.BaseDAO;
 import com.redshiftsoft.util.RandomUtils;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,15 +32,16 @@ public class UserResetPwdDAO extends BaseDAO {
      * @param key The key to validate.
      * @return The userID that this key goes with.
      */
-    public Optional<Integer> validateKey(final String key) {
+    public ResetPwdResult validateKey(final String key) {
         String sql = "" +
-                "SELECT user_id " +
+                "SELECT user_id, used_time is not null is_used, request_time < now() - interval'2 days' is_expired " +
                 "FROM user_reset_password " +
-                "WHERE reset_key=? " +
-                "  AND used_time is null " +
-                "  AND request_time > (now() - INTERVAL '48 hours')";
-        List<Integer> userIDList = getJdbcTemplate().queryForList(sql, Integer.class, key);
-        return userIDList.isEmpty() ? Optional.empty() : Optional.of(userIDList.get(0));
+                "WHERE reset_key=?";
+        List<ResetPwdResult> results = getJdbcTemplate().query(sql, RESET_PWD_RESULT_MAPPER, key);
+        if (results.isEmpty()) {
+            return null;
+        }
+        return results.get(0);
     }
 
     /**
@@ -67,5 +70,13 @@ public class UserResetPwdDAO extends BaseDAO {
         // 26^26 ~= 10^36
         return RandomUtils.secure().getString(26, 'a', 'z');
     }
+
+    private final RowMapper<ResetPwdResult> RESET_PWD_RESULT_MAPPER = (rs, rowNum) -> {
+        int userId = rs.getInt(1);
+        boolean used = rs.getBoolean(2);
+        boolean expired = rs.getBoolean(3);
+
+        return new ResetPwdResult(userId, used, expired);
+    };
 
 }

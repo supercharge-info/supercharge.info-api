@@ -185,11 +185,10 @@ create table changelog
         on delete cascade,
     CONSTRAINT fk_changelog_2 foreign key (user_id) references users (user_id)
         on update cascade
-        on delete cascade,
-    CONSTRAINT unique_site_id_change_date UNIQUE (site_id, change_date)
+        on delete cascade
 );
 alter sequence changelog_id_seq restart with 100000;
-CREATE INDEX changelog_site_id_change_date ON changelog (site_id, change_date);
+-- CREATE INDEX changelog_site_id_change_date ON changelog (site_id, change_date);
 
 -- -----------------------------------------------------------
 -- SITE CHANGES

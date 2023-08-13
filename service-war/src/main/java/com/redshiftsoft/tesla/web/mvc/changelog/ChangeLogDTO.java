@@ -16,6 +16,7 @@ import java.time.Instant;
  * "siteName"     : "Canmore, Canada",
  * "changeType"   : "UPDATE",
  * "siteStatus"   : "CONSTRUCTION",
+ * "prevStatus"   : "PERMIT",
  * "date"         : "2014-11-06",
  * "dateFormatted": "Thu, Nov 6 2014"
  * }

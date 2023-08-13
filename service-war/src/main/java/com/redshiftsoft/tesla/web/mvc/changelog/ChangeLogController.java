@@ -43,7 +43,6 @@ public class ChangeLogController {
         if (count != null) {
             int toIndex = Math.min(count, changes.size());
             changes = changes.subList(0, toIndex);
-            LOG.info("allChanges first: " + changes.get(0));
         }
         return changes;
     }

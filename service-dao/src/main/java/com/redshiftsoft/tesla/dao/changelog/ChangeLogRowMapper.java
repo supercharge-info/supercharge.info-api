@@ -61,7 +61,11 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
         log.setStallCount(rs.getInt("stall_count"));
         log.setPowerKilowatt(rs.getInt("power_kwatt"));
         log.setOtherEVs(rs.getBoolean("other_evs"));
-        log.setPrevStatus(SiteStatus.valueOf(rs.getString("prev_status")));
+
+        String prevStatus = rs.getString("prev_status");
+        if (prevStatus != null) {
+            log.setPrevStatus(SiteStatus.valueOf(rs.getString("prev_status")));
+        }
 
         return log;
     }

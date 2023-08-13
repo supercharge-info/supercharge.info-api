@@ -19,12 +19,20 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
             "       a.state as state, " +
             "       s.stall_count as stall_count, " +
             "       s.power_kwatt as power_kwatt, " +
-            "       s.other_evs as other_evs " +
+            "       s.other_evs as other_evs, " +
+            "       pcl.site_status as prev_status " +
             "from changelog cl  " +
             "join site      s on cl.site_id   = s.site_id " +
             "join address   a on s.address_id = a.address_id " +
             "join country   c on a.country_id = c.country_id " +
-            "join region    r on r.region_id  = c.region_id ";
+            "join region    r on r.region_id  = c.region_id " +
+            "left join changelog pcl " +
+            "    on pcl.site_id = cl.site_id " +
+            "    and pcl.id = (" +
+            "        select max(id) from changelog where site_id = cl.site_id and change_date = (" +
+            "            select max(change_date) from changelog where site_id = cl.site_id and change_date < cl.change_date" +
+            "        )" +
+            "    )";
 
     @Override
     public ChangeLog mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -53,6 +61,7 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
         log.setStallCount(rs.getInt("stall_count"));
         log.setPowerKilowatt(rs.getInt("power_kwatt"));
         log.setOtherEVs(rs.getBoolean("other_evs"));
+        log.setPrevStatus(SiteStatus.valueOf(rs.getString("prev_status")));
 
         return log;
     }

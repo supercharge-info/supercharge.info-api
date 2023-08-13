@@ -29,6 +29,7 @@ public class ChangeLogDTO_UT {
         dto.setCountry("testCountry");
         dto.setState("testState");
         dto.setSiteStatus(SiteStatus.CONSTRUCTION);
+        dto.setPrevStatus(SiteStatus.PERMIT);
         dto.setStallCount(19);
         dto.setPowerKilowatt(125);
 
@@ -42,6 +43,7 @@ public class ChangeLogDTO_UT {
                 "date\":\"2017-11-20\",\"" +
                 "changeType\":\"UPDATE\",\"" +
                 "siteStatus\":\"CONSTRUCTION\",\"" +
+                "prevStatus\":\"PERMIT\",\"" +
                 "stallCount\":19,\"" +
                 "powerKilowatt\":125,\"" +
                 "notify\":false,\"" +

@@ -64,7 +64,7 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
 
         String prevStatus = rs.getString("prev_status");
         if (prevStatus != null) {
-            log.setPrevStatus(SiteStatus.valueOf(rs.getString("prev_status")));
+            log.setPrevStatus(SiteStatus.valueOf(prevStatus));
         }
 
         return log;

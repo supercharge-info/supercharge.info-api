@@ -65,7 +65,7 @@ public class UserEditController {
         }
 
         /* The cached 'User' is now stale. */
-        cache.refresh(CookieHelper.getCookie(request, LoginCookie.NAME).getValue());
+        cache.invalidate(CookieHelper.getCookie(request, LoginCookie.NAME).getValue());
 
         return JsonResponse.success();
     }

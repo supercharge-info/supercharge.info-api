@@ -115,8 +115,10 @@ public class DiscourseController {
         payloadOut.append('&');
         // "editor" group is called "editors" on forum.
         payloadOut.append("groups=" + COMMA_JOINER.join(user.getRoles()).replace("editor", "editors"));
-        payloadOut.append('&');
-        payloadOut.append("bio=" + URLEncoder.encode(user.getDescription()));
+        if (user.getDescription() != null) {
+            payloadOut.append('&');
+            payloadOut.append("bio=" + URLEncoder.encode(user.getDescription()));
+        }
 
         return payloadOut;
     }

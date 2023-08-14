@@ -2,6 +2,7 @@ package com.redshiftsoft.tesla.web.mvc.user;
 
 import com.google.common.cache.LoadingCache;
 import com.redshiftsoft.tesla.dao.login.LoginDAO;
+import com.redshiftsoft.tesla.dao.user.ResetPwdResult;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
 import com.redshiftsoft.tesla.dao.user.UserResetPwdDAO;
@@ -25,8 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -106,22 +107,28 @@ public class PasswordController {
     }
 
     @Transactional
-    @RequestMapping("/login")
-    public String loginUsingResetKey(HttpServletRequest request,
-                                     HttpServletResponse response,
-                                     @RequestParam String key) {
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public void loginUsingResetKey(HttpServletRequest request,
+                                   HttpServletResponse response,
+                                   @RequestParam String key)
+            throws IOException {
 
-        Optional<Integer> userIdOption = userResetPwdDAO.validateKey(key);
-        if (userIdOption.isPresent()) {
-            Integer userId = userIdOption.get();
-            userResetPwdDAO.markUsed(userId);
-            User user = userDAO.getById(userId);
+        ResetPwdResult resetResult = userResetPwdDAO.validateKey(key);
+        if (resetResult == null) {
+            response.sendError(400, "This verification link is invalid.");
+        } else if (resetResult.isUsed()) {
+            response.sendError(400, "This verification link has already been used.");
+        } else if (resetResult.isExpired()) {
+            response.sendError(400, "This verification link has expired.");
+        } else {
+            userResetPwdDAO.markUsed(resetResult.getUserId());
+            User user = userDAO.getById(resetResult.getUserId());
+
             LOG.info("login SUCCESS username=" + user.getUsername());
             loginDAO.insertAttempt(LoginAttemptFactory.successResetPassword(request, user));
             CookieHelper.addCookie(request, response, LoginCookie.from(user));
+            response.sendRedirect(RedirectURLBuilder.buildURL(request));
         }
-
-        return RedirectURLBuilder.build(request);
     }
 
 

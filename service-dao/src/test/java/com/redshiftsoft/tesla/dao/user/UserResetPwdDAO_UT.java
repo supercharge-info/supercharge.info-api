@@ -38,25 +38,21 @@ public class UserResetPwdDAO_UT {
         assertEquals(key.length(), 26);
 
         /* Now test getting */
-        Optional<Integer> userID = userResetPwdDAO.validateKey(key);
-        assertTrue(userID.isPresent());
-        assertEquals(userID.get(), user.getId());
-
-        /* Can get a second time if not yet marked used. */
-        userID = userResetPwdDAO.validateKey(key);
-        assertTrue(userID.isPresent());
-        assertEquals(userID.get(), user.getId());
+        ResetPwdResult result = userResetPwdDAO.validateKey(key);
+        assertNotNull(result);
+        assertEquals(result.getUserId(), user.getId());
 
         /* Mark used */
         userResetPwdDAO.markUsed(user.getId());
-        userID = userResetPwdDAO.validateKey(key);
-        assertFalse(userID.isPresent());
+        result = userResetPwdDAO.validateKey(key);
+        assertNotNull(result);
+        assertTrue(result.isUsed());
     }
 
     @Test
     public void validateKey_random() {
-        Optional<Integer> userID = userResetPwdDAO.validateKey(RandomUtils.fast().getString(12, 'a', 'z'));
-        assertFalse(userID.isPresent());
+        ResetPwdResult result = userResetPwdDAO.validateKey(RandomUtils.fast().getString(12, 'a', 'z'));
+        assertNull(result);
     }
 
     @Test

@@ -37,6 +37,7 @@ public class ChangeLog implements Comparable<ChangeLog> {
 
     // PERMIT, CONSTRUCTION, OPEN
     private SiteStatus siteStatus;
+    private SiteStatus prevStatus;
 
     private boolean notify;
     private int stallCount;
@@ -75,6 +76,14 @@ public class ChangeLog implements Comparable<ChangeLog> {
 
     public void setSiteStatus(SiteStatus siteStatus) {
         this.siteStatus = siteStatus;
+    }
+
+    public SiteStatus getPrevStatus() {
+        return prevStatus;
+    }
+
+    public void setPrevStatus(SiteStatus prevStatus) {
+        this.prevStatus = prevStatus;
     }
 
     public boolean getNotify() {

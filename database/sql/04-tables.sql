@@ -121,30 +121,6 @@ create table site_stall_count
 );
 
 -- -----------------------------------------------------------
--- CHANGE LOG
--- -----------------------------------------------------------
-CREATE TYPE CHANGE_TYPE AS ENUM ('ADD', 'UPDATE');
-
-create table changelog
-(
-    id            serial primary key,
-    site_id       int              not null,
-    change_date   timestamptz      not null,
-    change_type   change_type      not null,
-    site_status   site_status_type not null,
-    modified_date timestamptz      not null default current_timestamp,
-    notify        boolean          not null default true,
-    user_id       int              null,
-    CONSTRAINT fk_changelog_1 foreign key (site_id) references site (site_id)
-        on update cascade
-        on delete cascade,
-    CONSTRAINT fk_changelog_2 foreign key (user_id) references users (user_id)
-        on update cascade
-        on delete cascade
-);
-alter sequence changelog_id_seq restart with 100000;
-
--- -----------------------------------------------------------
 -- role
 -- -----------------------------------------------------------
 create table roles
@@ -188,6 +164,31 @@ create table user_role
     constraint user_role_user_id_role_id_unique unique (user_id, role_id)
 );
 
+
+-- -----------------------------------------------------------
+-- CHANGE LOG
+-- -----------------------------------------------------------
+CREATE TYPE CHANGE_TYPE AS ENUM ('ADD', 'UPDATE');
+
+create table changelog
+(
+    id            serial primary key,
+    site_id       int              not null,
+    change_date   timestamptz      not null,
+    change_type   change_type      not null,
+    site_status   site_status_type not null,
+    modified_date timestamptz      not null default current_timestamp,
+    notify        boolean          not null default true,
+    user_id       int              null,
+    CONSTRAINT fk_changelog_1 foreign key (site_id) references site (site_id)
+        on update cascade
+        on delete cascade,
+    CONSTRAINT fk_changelog_2 foreign key (user_id) references users (user_id)
+        on update cascade
+        on delete cascade
+);
+alter sequence changelog_id_seq restart with 100000;
+CREATE INDEX changelog_site_id_change_date ON changelog (site_id, change_date);
 
 -- -----------------------------------------------------------
 -- SITE CHANGES

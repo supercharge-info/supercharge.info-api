@@ -14,6 +14,7 @@ public class ChangeLogDTOFunction implements Function<ChangeLog, ChangeLogDTO> {
         changeLogDTO.setChangeType(changeLog.getChangeType());
         changeLogDTO.setDate(changeLog.getDate());
         changeLogDTO.setSiteStatus(changeLog.getSiteStatus());
+        changeLogDTO.setPrevStatus(changeLog.getPrevStatus());
         changeLogDTO.setStallCount(changeLog.getStallCount());
         changeLogDTO.setPowerKilowatt(changeLog.getPowerKilowatt());
         changeLogDTO.setOtherEVs(changeLog.isOtherEVs());

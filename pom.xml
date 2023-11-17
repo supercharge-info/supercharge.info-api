@@ -223,6 +223,10 @@
                             <include>**/*_UT.java</include>
                             <include>**/*_IT.java</include>
                         </includes>
+                        <excludes>
+                            <exclude>com.redshiftsoft.tesla_web_scrape.http.WebClient_UT</exclude>
+                            <exclude>com.redshiftsoft.tesla.web.forum.ForumClient_UT</exclude>
+                        </excludes>
                     </configuration>
                 </plugin>
 

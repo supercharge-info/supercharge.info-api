@@ -42,17 +42,20 @@ public class ChangeLogDAO_UT {
     private UserDAO userDAO;
 
     private Site testSite;
+    private User testUser;
 
     @BeforeEach
     public void insertTestSite() {
         testSite = testSiteSaver.persistRandomSite();
+        testUser = TestUsers.createUser();
+        userDAO.insert(testUser);
     }
 
     @Test
     public void insert_getById() {
 
         // given
-        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
+        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId(), testUser.getId());
         changeLogDAO.insert(changeLogIn);
 
         // when
@@ -90,7 +93,8 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void insert_delete() {
-        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
+        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId(), testUser.getId());
+
         changeLogDAO.insert(changeLogIn);
         int changeLogId = changeLogIn.getId();
         assertTrue(changeLogDAO.exists(changeLogId));
@@ -104,7 +108,7 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void update_invalidChangeType() {
-        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
+        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId(), testUser.getId());
         changeLogDAO.insert(changeLogIn);
         assertThrows(DataIntegrityViolationException.class, () -> {
             jdbcTemplate.update("update changelog set change_type='invalid' where id=?", changeLogIn.getId());
@@ -113,7 +117,7 @@ public class ChangeLogDAO_UT {
 
     @Test
     public void update_emptyChangeType() {
-        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId());
+        ChangeLogEdit changeLogIn = RandomChangeLog.randomChangeLog(testSite.getId(), testUser.getId());
         changeLogDAO.insert(changeLogIn);
         assertThrows(DataIntegrityViolationException.class, () -> {
             jdbcTemplate.update("update changelog set change_type=''::CHANGE_TYPE where id=?", changeLogIn.getId());
@@ -135,11 +139,9 @@ public class ChangeLogDAO_UT {
     @Test
     public void getStatusDurations() {
         // given
-        User user = TestUsers.createUser();
-        userDAO.insert(user);
-        ChangeLogEdit changeLog1 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now(), true, user.getId());
+        ChangeLogEdit changeLog1 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now(), true, testUser.getId());
         changeLogDAO.insert(changeLog1);
-        ChangeLogEdit changeLog2 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.CONSTRUCTION, Instant.now(), Instant.now(), false, user.getId());
+        ChangeLogEdit changeLog2 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.CONSTRUCTION, Instant.now(), Instant.now(), false, testUser.getId());
         changeLogDAO.insert(changeLog2);
         testSite.setStatus(SiteStatus.CONSTRUCTION);
         siteDAO.update(testSite);

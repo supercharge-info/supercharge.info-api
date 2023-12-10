@@ -3,6 +3,9 @@ package com.redshiftsoft.tesla.web.mvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redshiftsoft.tesla.dao.TestSiteSaver;
 import com.redshiftsoft.tesla.dao.TestUsers;
+import com.redshiftsoft.tesla.dao.changelog.ChangeLogDAO;
+import com.redshiftsoft.tesla.dao.changelog.ChangeLogEdit;
+import com.redshiftsoft.tesla.dao.changelog.RandomChangeLog;
 import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.user.User;
 import com.redshiftsoft.tesla.dao.user.UserDAO;
@@ -29,6 +32,8 @@ public class Mvc_IT {
     @Resource
     protected UserDAO userDAO;
 
+    @Resource
+    protected ChangeLogDAO changeLogDAO;
     @Resource
     protected TestSiteSaver testSiteSaver;
 
@@ -66,6 +71,14 @@ public class Mvc_IT {
 
     public Site testSite() {
         return testSiteSaver.persistRandomSite();
+    }
+
+    public ChangeLogEdit testChange() {
+        Site site = testSite();
+        User user = testUserWithRoles(Collections.singletonList("editor"));
+        ChangeLogEdit change = RandomChangeLog.randomChangeLog(site.getId(), user.getId());
+        changeLogDAO.insert(change);
+        return change;
     }
 
 

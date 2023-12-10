@@ -16,6 +16,7 @@ import java.time.Instant;
  * "siteName"     : "Canmore, Canada",
  * "changeType"   : "UPDATE",
  * "siteStatus"   : "CONSTRUCTION",
+ * "prevStatus"   : "PERMIT",
  * "date"         : "2014-11-06",
  * "dateFormatted": "Thu, Nov 6 2014"
  * }
@@ -27,6 +28,7 @@ public class ChangeLogDTO {
     private Instant date;
     private ChangeType changeType;
     private SiteStatus siteStatus;
+    private SiteStatus prevStatus;
     private int stallCount;
     private int powerKilowatt;
     private boolean otherEVs;
@@ -83,6 +85,14 @@ public class ChangeLogDTO {
 
     public void setSiteStatus(SiteStatus siteStatus) {
         this.siteStatus = siteStatus;
+    }
+
+    public SiteStatus getPrevStatus() {
+        return prevStatus;
+    }
+
+    public void setPrevStatus(SiteStatus prevStatus) {
+        this.prevStatus = prevStatus;
     }
 
     public int getStallCount() {

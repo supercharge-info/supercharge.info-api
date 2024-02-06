@@ -121,12 +121,12 @@ body = {
 }
 
 configProps = helpers.getConfig('smtp')
-if configProps.keys() & {'smtp.host', 'smtp.port', 'smtp.user', 'smtp.password', 'admin.email'}:
+if configProps.keys() & {'smtp.host', 'smtp.port', 'smtp.user', 'smtp.password', 'admin.email.address'}:
     # Build email
     msg = EmailMessage()
     msg['Subject'] = '{} Supercharger Stats: {}'.format(period, body['datespan'])
     msg['From'] = configProps['smtp.user']
-    msg['To'] = configProps['admin.email']
+    msg['To'] = configProps['admin.email.address']
     msg.add_alternative("""<!DOCTYPE html><html><body><p>supercharge.info Global stats for {datespan}:</p><p>{worldwide}</p>
             <p>Regional stats for {datespan}:</p><p>{regional}</p>
             <p>National stats for {datespan}:</p><p>{national}</p></body></html>""".format(**body), subtype='html')

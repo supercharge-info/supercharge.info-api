@@ -6,7 +6,7 @@ Summarizes weekly network statistics by newly opened sites, stalls for new sites
 
 ## editorNag.py
 
-Emails editors inactive for the past `editor.interval` months to let them know their access is pending removal, and they can maintain the privilege by submitting an edit or messaging `admin.user` on the forums. A summary of the editors messaged is emailed to `admin.email`
+Emails editors inactive for the past `editor.interval` months to let them know their access is pending removal, and they can maintain the privilege by submitting an edit or messaging `admin.user` on the forums. A summary of the editors messaged is emailed to `admin.email.address`
 
 ### Parameters:
 
@@ -23,7 +23,7 @@ A sample configuration file with required and optional parameters. Copy to `.env
 ### Parameters
 
 - `properties.file`: Points to a properties file which is used by the java API. A sample of this can be found at /service-dao/src/main/resources/com/redshiftsoft/tesla/dev-config.properties
-- `admin.email`: The email used as a recipient for reports
+- `admin.email.address`: The email used as a recipient for reports
 - `admin.user`: The username of the admin
 - `admin.name`: The friendly name of the admin
 - `editor.thread`: The thread ID of editor instructions

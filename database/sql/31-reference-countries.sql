@@ -60,6 +60,7 @@ INSERT INTO country (country_id,"name",code,region_id,state_required,modified_da
 INSERT INTO country (country_id,"name",code,region_id,state_required,modified_date) VALUES (158,'Morocco','MA',101,false,now());
 INSERT INTO country (country_id,"name",code,region_id,state_required,modified_date) VALUES (159,'Thailand','TH',102,false,now());
 INSERT INTO country (country_id,"name",code,region_id,state_required,modified_date) VALUES (160,'Malaysia','MY',102,false,now());
+INSERT INTO country (country_id,"name",code,region_id,state_required,modified_date) VALUES (161,'Qatar','QA',102,false,now());
 
 -- pre-populate valid plug types per country
 UPDATE country SET plugs_gbt = false WHERE name != 'China';

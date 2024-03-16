@@ -38,7 +38,7 @@ else:
 # Send email(s)
 if not editors:
     print('No results found')
-elif configProps.keys() & {'smtp.host', 'smtp.port', 'smtp.user', 'smtp.password', 'discourse.url', 'editor.thread', 'admin.name', 'admin.user', 'admin.email'}:
+elif configProps.keys() & {'smtp.host', 'smtp.port', 'smtp.user', 'smtp.password', 'discourse.url', 'editor.thread', 'admin.name', 'admin.user', 'admin.email.address'}:
     msgs = []
     summary = f"""<!DOCTYPE html><html><head><style>th{{text-align:left}}th,td{{padding:2px 5px}}</style></head><body>
         <p>The following {len(editors)} editors haven't contributed and {'were <strong>NOT</strong>' if dryRun else 'were'} notified:</p>
@@ -81,11 +81,11 @@ The team at supercharge.info""".format(configProps['discourse.url'], configProps
             msgs.append(msg)
 
     # Summary email
-    print('Building email to {}'.format(configProps['admin.email']))
+    print('Building email to {}'.format(configProps['admin.email.address']))
     msg = EmailMessage()
     msg['Subject'] = f"Inactive Editors {'NOT Emailed' if dryRun else 'Emailed'}"
     msg['From'] = configProps['smtp.user']
-    msg['To'] = configProps['admin.email']
+    msg['To'] = configProps['admin.email.address']
     summary += "</table><p>* Denotes when the editor was added instead since they've never made an edit.</p></body></html>"
     msg.add_alternative(summary, subtype='html')
     msgs.append(msg)

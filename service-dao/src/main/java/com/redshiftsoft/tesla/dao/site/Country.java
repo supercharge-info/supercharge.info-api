@@ -15,6 +15,13 @@ public class Country {
     /* Is the state field required for addresses in this country. */
     private boolean stateRequired;
 
+    private boolean plugTPC;
+    private boolean plugNACS;
+    private boolean plugCCS1;
+    private boolean plugCCS2;
+    private boolean plugType2;
+    private boolean plugGBT;
+
     public Country() {
     }
 
@@ -65,7 +72,6 @@ public class Country {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -73,7 +79,6 @@ public class Country {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -81,7 +86,6 @@ public class Country {
     public String getCode() {
         return code;
     }
-
     public void setCode(String code) {
         this.code = code;
     }
@@ -89,7 +93,6 @@ public class Country {
     public int getRegionId() {
         return regionId;
     }
-
     public void setRegionId(int regionId) {
         this.regionId = regionId;
     }
@@ -97,7 +100,6 @@ public class Country {
     public String getRegionName() {
         return regionName;
     }
-
     public void setRegionName(String regionName) {
         this.regionName = regionName;
     }
@@ -105,8 +107,50 @@ public class Country {
     public boolean isStateRequired() {
         return stateRequired;
     }
-
     public void setStateRequired(boolean stateRequired) {
         this.stateRequired = stateRequired;
     }
+
+    public boolean isPlugTPC() {
+        return plugTPC;
+    }
+    public void setPlugTPC(boolean plugTPC) {
+        this.plugTPC = plugTPC;
+    }
+
+    public boolean isPlugNACS() {
+        return plugNACS;
+    }
+    public void setPlugNACS(boolean plugNACS) {
+        this.plugNACS = plugNACS;
+    }
+
+    public boolean isPlugCCS1() {
+        return plugCCS1;
+    }
+    public void setPlugCCS1(boolean plugCCS1) {
+        this.plugCCS1 = plugCCS1;
+    }
+
+    public boolean isPlugCCS2() {
+        return plugCCS2;
+    }
+    public void setPlugCCS2(boolean plugCCS2) {
+        this.plugCCS2 = plugCCS2;
+    }
+
+    public boolean isPlugType2() {
+        return plugType2;
+    }
+    public void setPlugType2(boolean plugType2) {
+        this.plugType2 = plugType2;
+    }
+
+    public boolean isPlugGBT() {
+        return plugGBT;
+    }
+    public void setPlugGBT(boolean plugGBT) {
+        this.plugGBT = plugGBT;
+    }
+
 }

@@ -2,6 +2,10 @@ package com.redshiftsoft.tesla.web.mvc.siteadmin;
 
 import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.web.mvc.site.AddressDTOFunctions;
+import com.redshiftsoft.tesla.web.mvc.site.PlugsDTO;
+import com.redshiftsoft.tesla.web.mvc.site.PlugsDTOFunctions;
+import com.redshiftsoft.tesla.web.mvc.site.SiteDTOFunction;
+import com.redshiftsoft.tesla.web.mvc.site.StallsDTOFunctions;
 
 import java.util.Collection;
 import java.util.List;
@@ -56,6 +60,15 @@ public final class SiteEditDTOFunctions {
             siteDTO.setSolarCanopy(site.isSolarCanopy());
             siteDTO.setBattery(site.isBattery());
             siteDTO.setOtherEVs(site.isOtherEVs());
+            siteDTO.setStalls(StallsDTOFunctions.transform(site.getStalls()));
+            siteDTO.setPlugs(PlugsDTOFunctions.transform(site.getPlugs()));
+            siteDTO.setParkingId(site.getParkingId());
+            siteDTO.setFacilityName(site.getFacilityName());
+            siteDTO.setFacilityHours(site.getFacilityHours());
+            siteDTO.setAccessNotes(site.getAccessNotes());
+            siteDTO.setAddressNotes(site.getAddressNotes());
+            siteDTO.setPlugshareId(site.getPlugshareId());
+            siteDTO.setOsmId(site.getOsmId());
             siteDTO.setDeveloperNotes(site.getDeveloperNotes());
 
             return siteDTO;
@@ -89,6 +102,15 @@ public final class SiteEditDTOFunctions {
             site.setSolarCanopy(siteDTO.isSolarCanopy());
             site.setBattery(siteDTO.isBattery());
             site.setOtherEVs(siteDTO.isOtherEVs());
+            site.setStalls(StallsDTOFunctions.transform(siteDTO.getStalls()));
+            site.setPlugs(PlugsDTOFunctions.transform(siteDTO.getPlugs()));
+            site.setParkingId(siteDTO.getParkingId());
+            site.setFacilityName(siteDTO.getFacilityName());
+            site.setFacilityHours(siteDTO.getFacilityHours());
+            site.setAccessNotes(siteDTO.getAccessNotes());
+            site.setAddressNotes(siteDTO.getAddressNotes());
+            site.setPlugshareId(siteDTO.getPlugshareId());
+            site.setOsmId(siteDTO.getOsmId());
             site.setDeveloperNotes(siteDTO.getDeveloperNotes());
 
             return site;

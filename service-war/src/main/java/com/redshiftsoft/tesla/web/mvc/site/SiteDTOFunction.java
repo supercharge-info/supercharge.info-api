@@ -28,6 +28,15 @@ public class SiteDTOFunction implements Function<Site, SiteDTO> {
         siteDTO.setSolarCanopy(site.isSolarCanopy());
         siteDTO.setBattery(site.isBattery());
         siteDTO.setOtherEVs(site.isOtherEVs());
+        siteDTO.setStalls(StallsDTOFunctions.transform(site.getStalls()));
+        siteDTO.setPlugs(PlugsDTOFunctions.transform(site.getPlugs()));
+        siteDTO.setParkingId(site.getParkingId());
+        siteDTO.setFacilityName(site.getFacilityName());
+        siteDTO.setFacilityHours(site.getFacilityHours());
+        siteDTO.setAccessNotes(site.getAccessNotes());
+        siteDTO.setAddressNotes(site.getAddressNotes());
+        siteDTO.setPlugshareId(site.getPlugshareId());
+        siteDTO.setOsmId(site.getOsmId());
 
         return siteDTO;
     }

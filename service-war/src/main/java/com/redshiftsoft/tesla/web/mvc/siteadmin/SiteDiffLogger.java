@@ -1,6 +1,8 @@
 package com.redshiftsoft.tesla.web.mvc.siteadmin;
 
+import com.redshiftsoft.tesla.dao.site.Plugs;
 import com.redshiftsoft.tesla.dao.site.Site;
+import com.redshiftsoft.tesla.dao.site.Stalls;
 import com.redshiftsoft.tesla.dao.sitechanges.SiteChange;
 import com.redshiftsoft.tesla.dao.sitechanges.SiteChangeBuilder;
 import com.redshiftsoft.tesla.dao.sitechanges.SiteChangeDAO;
@@ -33,6 +35,13 @@ public class SiteDiffLogger {
         int nextVersion = oldSite.getVersion() + 1;
         SiteChangeBuilder builder = new SiteChangeBuilder(oldSite.getId(), user.getId(), nextVersion, Instant.now());
 
+        Stalls oldStalls = oldSite.getStalls(), newStalls = newSite.getStalls();
+        if (oldStalls == null) oldStalls = new Stalls();
+        if (newStalls == null) newStalls = new Stalls();
+        Plugs oldPlugs = oldSite.getPlugs(), newPlugs = newSite.getPlugs();
+        if (oldPlugs == null) oldPlugs = new Plugs();
+        if (newPlugs == null) newPlugs = new Plugs();
+        
         diff(builder, "locationId", oldSite.getLocationId(), newSite.getLocationId());
         diff(builder, "name", oldSite.getName(), newSite.getName());
         diff(builder, "status", oldSite.getStatus(), newSite.getStatus());
@@ -50,6 +59,31 @@ public class SiteDiffLogger {
         diff(builder, "isBattery", oldSite.isBattery(), newSite.isBattery());
         diff(builder, "otherEVs", oldSite.isOtherEVs(), newSite.isOtherEVs());
         diff(builder, "developerNotes", oldSite.getDeveloperNotes(), newSite.getDeveloperNotes());
+
+        diff(builder, "stallsUrban", oldStalls.getUrban(), newStalls.getUrban());
+        diff(builder, "stallsV2", oldStalls.getV2(), newStalls.getV2());
+        diff(builder, "stallsV3", oldStalls.getV3(), newStalls.getV3());
+        diff(builder, "stallsV4", oldStalls.getV4(), newStalls.getV4());
+        diff(builder, "stallsOther", oldStalls.getOther(), newStalls.getOther());
+        diff(builder, "stallsAccessible", oldStalls.getAccessible(), newStalls.getAccessible());
+        diff(builder, "stallsTrailerFriendly", oldStalls.getTrailerFriendly(), newStalls.getTrailerFriendly());
+
+        diff(builder, "plugsTPC", oldPlugs.getTPC(), newPlugs.getTPC());
+        diff(builder, "plugsNACS", oldPlugs.getNACS(), newPlugs.getNACS());
+        diff(builder, "plugsCCS1", oldPlugs.getCCS1(), newPlugs.getCCS1());
+        diff(builder, "plugsCCS2", oldPlugs.getCCS2(), newPlugs.getCCS2());
+        diff(builder, "plugsType2", oldPlugs.getType2(), newPlugs.getType2());
+        diff(builder, "plugsGBT", oldPlugs.getGBT(), newPlugs.getGBT());
+        diff(builder, "plugsOther", oldPlugs.getOther(), newPlugs.getOther());
+        diff(builder, "plugsMulti", oldPlugs.getMulti(), newPlugs.getMulti());
+
+        diff(builder, "parkingId", oldSite.getParkingId(), newSite.getParkingId());
+        diff(builder, "facilityName", oldSite.getFacilityName(), newSite.getFacilityName());
+        diff(builder, "facilityHours", oldSite.getFacilityHours(), newSite.getFacilityHours());
+        diff(builder, "accessNotes", oldSite.getAccessNotes(), newSite.getAccessNotes());
+        diff(builder, "addressNotes", oldSite.getAddressNotes(), newSite.getAddressNotes());
+        diff(builder, "plugshareId", oldSite.getPlugshareId(), newSite.getPlugshareId());
+        diff(builder, "osmId", oldSite.getOsmId(), newSite.getOsmId());
 
         diff(builder, "address.street", oldSite.getAddress().getStreet(), newSite.getAddress().getStreet());
         diff(builder, "address.city", oldSite.getAddress().getCity(), newSite.getAddress().getCity());

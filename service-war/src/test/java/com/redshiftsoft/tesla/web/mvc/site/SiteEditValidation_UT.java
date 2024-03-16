@@ -48,6 +48,10 @@ public class SiteEditValidation_UT {
         site.setDateOpened(LocalDate.now());
         site.setGps(new SiteGPS(1, 2));
         site.setStallCount(4);
+        site.setStalls(new StallsDTO());
+        site.getStalls().setV3(4);
+        site.setPlugs(new PlugsDTO());
+        site.getPlugs().setNACS(4);
         site.setElevationMeters(1000);
         site.setAddress(address);
         return site;

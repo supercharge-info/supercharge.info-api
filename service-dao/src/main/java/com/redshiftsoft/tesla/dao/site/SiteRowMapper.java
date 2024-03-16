@@ -52,6 +52,36 @@ public class SiteRowMapper implements RowMapper<Site> {
         site.setVersion(rs.getInt(c++));
         site.setOtherEVs(rs.getBoolean(c++));
 
+        // Used typed getObject() instead of specific getX() for better null handling
+        Stalls stalls = new Stalls();
+        stalls.setUrban(rs.getObject(c++, Integer.class));
+        stalls.setV2(rs.getObject(c++, Integer.class));
+        stalls.setV3(rs.getObject(c++, Integer.class));
+        stalls.setV4(rs.getObject(c++, Integer.class));
+        stalls.setOther(rs.getObject(c++, Integer.class));
+        stalls.setAccessible(rs.getObject(c++, Integer.class));
+        stalls.setTrailerFriendly(rs.getObject(c++, Integer.class));
+        site.setStalls(stalls.nullIfEmpty());
+
+        Plugs plugs = new Plugs();
+        plugs.setTPC(rs.getObject(c++, Integer.class));
+        plugs.setNACS(rs.getObject(c++, Integer.class));
+        plugs.setCCS1(rs.getObject(c++, Integer.class));
+        plugs.setCCS2(rs.getObject(c++, Integer.class));
+        plugs.setType2(rs.getObject(c++, Integer.class));
+        plugs.setGBT(rs.getObject(c++, Integer.class));
+        plugs.setOther(rs.getObject(c++, Integer.class));
+        plugs.setMulti(rs.getObject(c++, Integer.class));
+        site.setPlugs(plugs.nullIfEmpty());
+
+        site.setParkingId(rs.getObject(c++, Integer.class));
+        site.setFacilityName(rs.getString(c++));
+        site.setFacilityHours(rs.getString(c++));
+        site.setAccessNotes(rs.getString(c++));
+        site.setAddressNotes(rs.getString(c++));
+        site.setPlugshareId(rs.getObject(c++, Long.class));
+        site.setOsmId(rs.getObject(c++, Long.class));
+
         site.setAddress(new AddressRowMapper(c).mapRow(rs, rowNum));
 
         return site;

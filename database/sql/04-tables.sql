@@ -14,6 +14,7 @@ drop table if exists user_config;
 drop table if exists user_reset;
 drop table if exists changelog;
 drop table if exists site_change;
+drop table if exists parking;
 drop table if exists site;
 drop table if exists address;
 drop table if exists country;
@@ -40,12 +41,18 @@ alter sequence region_region_id_seq restart with 150;
 -- -----------------------------------------------------------
 create table country
 (
-    country_id     serial primary key,
-    name           varchar(100) not null unique,
-    code           varchar(2)   not null unique,
-    region_id      int          not null,
-    state_required boolean      not null default false,
-    modified_date  timestamptz  not null default current_timestamp,
+    country_id       serial primary key,
+    name             varchar(100) not null unique,
+    code             varchar(2)   not null unique,
+    region_id        int          not null,
+    state_required   boolean      not null default false,
+    modified_date    timestamptz  not null default current_timestamp,
+    plugs_tpc        boolean      not null default true,
+    plugs_nacs       boolean      not null default true,
+    plugs_ccs1       boolean      not null default true,
+    plugs_ccs2       boolean      not null default true,
+    plugs_type2      boolean      not null default true,
+    plugs_gbt        boolean      not null default true,
     foreign key (region_id) references region (region_id)
         on update cascade
         on delete cascade
@@ -76,39 +83,73 @@ create table address
 alter sequence address_address_id_seq restart with 2000000;
 
 -- -----------------------------------------------------------
+-- PARKING - lookup table
+-- -----------------------------------------------------------
+create table parking
+(
+    parking_id    serial primary key,
+    name          varchar(100) not null,
+    description   text null
+);
+
+-- -----------------------------------------------------------
 -- SITE
 -- -----------------------------------------------------------
-create type site_status_type as enum ('CLOSED_PERM','CLOSED_TEMP', 'PERMIT', 'CONSTRUCTION', 'OPEN');
+create type site_status_type as enum ('CLOSED_PERM','CLOSED_TEMP', 'PERMIT', 'CONSTRUCTION', 'OPEN', 'VOTING', 'PLAN', 'EXPANDING');
 
 create table site
 (
-    site_id          serial                         not null,
-    location_id      varchar(300)                   null     default null::character varying,
-    "name"           varchar(100)                   not null,
-    status           "site_status_type" not null,
-    opened_date      timestamptz                    null,
-    hours            varchar(100)                   null     default null::character varying,
-    enabled          bool                           not null default true,
-    counted          bool                           not null,
-    address_id       int4                           not null,
-    gps_latitude     float8                         not null,
-    gps_longitude    float8                         not null,
-    elevation_meters int4                           not null,
-    url_discuss      varchar(200)                   null     default null::character varying,
-    stall_count      int4                           null,
-    power_kwatt      int4                           not null default 0,
-    has_solar_canopy bool                           not null default false,
-    has_battery      bool                           not null default false,
-    developer_notes  varchar(1000)                  null     default null::character varying,
-    modified_date    timestamptz                    not null default now(),
-    "version"        int4                           not null default 1,
-    other_evs        bool                           not null default false,
+    site_id           serial                         not null,
+    location_id       varchar(300)                   null     default null::character varying,
+    "name"            varchar(100)                   not null,
+    status            "site_status_type"             not null,
+    opened_date       timestamptz                    null,
+    hours             varchar(100)                   null     default null::character varying,
+    enabled           bool                           not null default true,
+    counted           bool                           not null,
+    address_id        int4                           not null,
+    gps_latitude      float8                         not null,
+    gps_longitude     float8                         not null,
+    elevation_meters  int4                           not null,
+    url_discuss       varchar(200)                   null     default null::character varying,
+    stall_count       int4                           null,
+    power_kwatt       int4                           not null default 0,
+    has_solar_canopy  bool                           not null default false,
+    has_battery       bool                           not null default false,
+    developer_notes   varchar(1000)                  null     default null::character varying,
+    modified_date     timestamptz                    not null default now(),
+    "version"         int4                           not null default 1,
+    other_evs         bool                           not null default false, -- TO BE DEPRECATED
+    stalls_urban      int4                           null,
+    stalls_v2         int4                           null,
+    stalls_v3         int4                           null,
+    stalls_v4         int4                           null,
+    stalls_other      int4                           null,
+    stalls_accessible int4                           null,
+    stalls_trailer    int4                           null,
+    plugs_tpc         int4                           null,
+    plugs_nacs        int4                           null,
+    plugs_ccs1        int4                           null,
+    plugs_ccs2        int4                           null,
+    plugs_type2       int4                           null,
+    plugs_gbt         int4                           null,
+    plugs_other       int4                           null,
+    plugs_multi       int4                           null,
+    parking_id        int4                           null,
+    facility_name     varchar(200)                   null     default null::character varying,
+    facility_hours    varchar(100)                   null     default null::character varying,
+    access_notes      varchar(1000)                  null     default null::character varying,
+    address_notes     varchar(1000)                  null     default null::character varying,
+    plugshare_id      int8                           null,
+    osm_id            int8                           null,
     constraint address_id_unique unique (address_id),
     constraint name_unique unique (name),
     constraint site_id_unique primary key (site_id)
 );
 alter table site
     add constraint site_address_id_fkey foreign key (address_id) references address(address_id) on delete cascade on update cascade;
+alter table site
+    add constraint site_parking_id_fkey foreign key (parking_id) references parking(parking_id) on delete cascade on update cascade;
 alter sequence site_site_id_seq restart with 100000;
 
 -- -----------------------------------------------------------

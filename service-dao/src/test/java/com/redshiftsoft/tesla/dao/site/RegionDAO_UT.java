@@ -25,7 +25,7 @@ public class RegionDAO_UT {
     public void getAll() {
         List<Region> allRegions = regionDAO.getAll();
 
-        assertEquals(3, allRegions.size());
+        assertEquals(4, allRegions.size());
         assertEquals("Asia Pacific", allRegions.get(0).getName());
         assertTrue(allRegions.get(0).getId() > 0);
     }

@@ -82,7 +82,9 @@ public class Validations {
                            "and (gps_longitude between -44 and 172 or gps_latitude < 0) " +
                            "OR region.name = 'Europe' " +
                            "and (gps_longitude not between -44 and 47 or gps_latitude < 0) " +
-                           "OR region.name = 'Asia Pacific' and gps_longitude between -148 and 24")
+                           "OR region.name = 'Asia Pacific' and gps_longitude between -148 and 24 " +
+                           "OR region.name = 'South America' " +
+                           "and (gps_longitude not between -30 and -80 or gps_latitude > 0) ")
         );
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - | CHANGELOG

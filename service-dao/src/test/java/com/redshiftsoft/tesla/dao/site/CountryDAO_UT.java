@@ -55,6 +55,15 @@ public class CountryDAO_UT {
         assertEquals(100, country.getRegionId());
         assertEquals("North America", country.getRegionName());
         assertTrue(country.isStateRequired());
+
+        country = countryDAO.getById(162);
+        assertEquals(162, country.getId());
+        assertEquals("CL", country.getCode());
+        assertEquals("Chile", country.getName());
+        assertEquals(103, country.getRegionId());
+        assertEquals("South America", country.getRegionName());
+        assertFalse(country.isStateRequired());
+
     }
 
     @Test

@@ -54,7 +54,7 @@ public class ChangeLogDTO {
                     if (!anyWord) return false;
                 }
             }
-            return false;
+            return !anyWord;
         }
         search = search.toLowerCase();
         if (search.equals("add") && changeType == ChangeType.ADD) return true;

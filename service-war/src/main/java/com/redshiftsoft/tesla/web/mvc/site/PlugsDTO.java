@@ -43,7 +43,7 @@ public class PlugsDTO {
                     if (!anyWord) return false;
                 }
             }
-            return false;
+            return !anyWord;
         }
         search = search.toLowerCase();
         if (search.equals("tpc") || search.equals("nacs")) {

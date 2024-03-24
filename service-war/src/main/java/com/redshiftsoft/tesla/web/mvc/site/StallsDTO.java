@@ -40,7 +40,7 @@ public class StallsDTO {
                     if (!anyWord) return false;
                 }
             }
-            return false;
+            return !anyWord;
         }
         search = search.toLowerCase();
         if (search.equals("v2") && NumberUtils.isPositive(v2)) return true;

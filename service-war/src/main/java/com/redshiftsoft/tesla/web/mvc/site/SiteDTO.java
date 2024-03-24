@@ -89,7 +89,7 @@ public class SiteDTO {
                     if (!anyWord) return false;
                 }
             }
-            return false;
+            return !anyWord;
         }
         search = search.toLowerCase();
         if (String.valueOf(id).contains(search)) return true;

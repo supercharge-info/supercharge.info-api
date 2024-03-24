@@ -37,7 +37,7 @@ public class AddressDTO {
                     if (!anyWord) return false;
                 }
             }
-            return false;
+            return !anyWord;
         }
         search = search.toLowerCase();
         if (street != null && street.toLowerCase().contains(search)) return true;

@@ -120,7 +120,6 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
         this.username = username;
     }
 
-
     public Integer getStallCount() {
         return stallCount;
     }

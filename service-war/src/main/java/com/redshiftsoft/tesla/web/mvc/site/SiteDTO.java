@@ -77,6 +77,62 @@ public class SiteDTO {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - -
+    // search
+    // - - - - - - - - - - - - - - - - - - - - - - -
+    public boolean matches(String search) {
+        if (search == null) return true;
+        if (search.indexOf(" ") >= 0) {
+            for (String s : search.split(" ")) {
+                if (this.matches(s)) return true;
+            }
+            return false;
+        }
+        search = search.toLowerCase();
+        if (String.valueOf(id).contains(search)) return true;
+        if (name != null && name.toLowerCase().contains(search)) return true;
+        if (status != null && status.toString().toLowerCase().contains(search)) return true;
+        if (address != null && address.matches(search)) return true;
+        if (gps != null) {
+            if (String.valueOf(gps.getLatitude()).contains(search)) return true;
+            if (String.valueOf(gps.getLongitude()).contains(search)) return true;
+        }
+        if (hours != null && hours.toLowerCase().contains(search)) return true;
+        if (elevationMeters != null && String.valueOf(elevationMeters).contains(search)) return true;
+        if (String.valueOf(powerKilowatt).contains(search)) return true;
+        if (stalls != null && stalls.matches(search)) return true;
+        if (plugs != null && plugs.matches(search)) return true;
+        if (facilityName != null && facilityName.toLowerCase().contains(search)) return true;
+        if (facilityHours != null && facilityHours.toLowerCase().contains(search)) return true;
+        return false;
+    }
+
+/*
+    private int id;
+    private String locationId;
+    private String name;
+    private SiteStatus status = SiteStatus.OPEN;
+    private AddressDTO address = new AddressDTO();
+    private SiteGPS gps;
+    private LocalDate dateOpened;
+    private int stallCount;
+    private String hours;
+    private boolean counted;
+    private boolean enabled;
+    private Integer elevationMeters;
+    private int powerKilowatt;
+    private boolean solarCanopy;
+    private boolean battery;
+    private boolean otherEVs;
+    private int statusDays;
+    private boolean urlDiscuss;
+    private StallsDTO stalls = null;
+    private PlugsDTO plugs = null;
+    private Integer parkingId;
+    private String facilityName, facilityHours, accessNotes, addressNotes;
+    private Long plugshareId, osmId;
+ */        
+
+    // - - - - - - - - - - - - - - - - - - - - - - -
     // getters/setters
     // - - - - - - - - - - - - - - - - - - - - - - -
 

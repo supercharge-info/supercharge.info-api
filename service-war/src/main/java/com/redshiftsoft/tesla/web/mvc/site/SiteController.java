@@ -85,6 +85,8 @@ public class SiteController {
                                                    Integer power,
                                            @RequestParam(required = false)
                                                    Boolean otherEVs,
+                                           @RequestParam(required = false, value = "search[value]")
+                                                   String search,
                                            @RequestParam(required = false, value = "order[0][column]", defaultValue = "0")
                                                    Integer orderCol,
                                            @RequestParam(required = false, value = "order[0][dir]")
@@ -95,13 +97,14 @@ public class SiteController {
         List<SiteDTO> filteredList = allList
                 .stream()
                 .sorted(SiteDTOComparatorFactory.build(orderCol, orderDir))
-                .filter(cl -> regionId == null || Objects.equals(cl.getAddress().getRegionId(), regionId))
-                .filter(cl -> countryId == null || Objects.equals(cl.getAddress().getCountryId(), countryId))
-                .filter(cl -> state == null || state.isEmpty() || state.contains(cl.getAddress().getState()))
-                .filter(cl -> status == null || status.isEmpty() || status.contains(cl.getStatus()))
-                .filter(cl -> stalls == null || cl.getStallCount() >= stalls)
-                .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
-                .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
+                .filter(s -> regionId == null || Objects.equals(s.getAddress().getRegionId(), regionId))
+                .filter(s -> countryId == null || Objects.equals(s.getAddress().getCountryId(), countryId))
+                .filter(s -> state == null || state.isEmpty() || state.contains(s.getAddress().getState()))
+                .filter(s -> status == null || status.isEmpty() || status.contains(s.getStatus()))
+                .filter(s -> stalls == null || s.getStallCount() >= stalls)
+                .filter(s -> power == null || s.getPowerKilowatt() >= power)
+                .filter(s -> otherEVs == null || s.isOtherEVs() == otherEVs)
+                .filter(s -> search == null || s.matches(search))
                 .collect(Collectors.toList());
 
         List<SiteDTO> pageList = filteredList.stream()

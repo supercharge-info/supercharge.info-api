@@ -32,6 +32,29 @@ public class PlugsDTO {
         return total;
     }
 
+    public boolean matches(String search) {
+        if (search == null) return true;
+        if (search.indexOf(" ") >= 0) {
+            for (String s : search.split(" ")) {
+                if (this.matches(s)) return true;
+            }
+            return false;
+        }
+        search = search.toLowerCase();
+        if (search.equals("tpc") || search.equals("nacs")) {
+            if (TPC != null && TPC > 0) return true;
+            if (NACS != null && NACS > 0) return true;
+        }
+        if (search.equals("ccs1") && CCS1 > 0) return true;
+        if (search.equals("ccs2") && CCS2 > 0) return true;
+        if (search.equals("ccs") && (CCS1 > 0 || CCS2 > 0)) return true;
+        if (search.equals("type2") && Type2 > 0) return true;
+        if (search.replace("/", "").equals("gbt") && GBT > 0) return true;
+        if (search.equals("multi") && Multi > 0) return true;
+        if (search.startsWith("magic") && (TPC > 0 || NACS > 0) && CCS1 > 0) return true;
+        return false;
+    }
+
     public Integer getTPC() {
         return TPC;
     }

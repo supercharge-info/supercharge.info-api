@@ -194,7 +194,7 @@ public class SiteEditController {
                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                        @RequestParam LocalDate changeDate,
                                        @RequestParam SiteStatus siteStatus,
-                                       @RequestParam Integer stallCount,
+                                       @RequestParam(required = false) Integer stallCount,
                                        @RequestParam boolean notify) {
         User user = Security.user();
         Instant changeDateInstant = changeDate.atTime(12, 0).atZone(LocalDateUtil.ZONE_ID).toInstant();
@@ -226,7 +226,7 @@ public class SiteEditController {
                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                        @RequestParam LocalDate changeDate,
                                        @RequestParam SiteStatus siteStatus,
-                                       @RequestParam Integer stallCount,
+                                       @RequestParam(required = false) Integer stallCount,
                                        @RequestParam boolean notify) {
         User user = Security.user();
         Instant changeDateInstant = changeDate.atTime(12, 0).atZone(LocalDateUtil.ZONE_ID).toInstant();

@@ -27,11 +27,28 @@ public class AddressDTO {
                 '}';
     }
 
+    public boolean matches(String search) {
+        if (search == null) return true;
+        if (search.indexOf(" ") >= 0) {
+            for (String s : search.split(" ")) {
+                if (this.matches(s)) return true;
+            }
+            return false;
+        }
+        search = search.toLowerCase();
+        if (street != null && street.toLowerCase().contains(search)) return true;
+        if (city != null && city.toLowerCase().contains(search)) return true;
+        if (state != null && state.toLowerCase().contains(search)) return true;
+        if (zip != null && zip.toLowerCase().contains(search)) return true;
+        if (country != null && country.toLowerCase().contains(search)) return true;
+        if (region != null && region.toLowerCase().contains(search)) return true;
+        return false;
+    }
+
     @JsonIgnore
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -39,7 +56,6 @@ public class AddressDTO {
     public String getStreet() {
         return street;
     }
-
     public void setStreet(String street) {
         this.street = street;
     }
@@ -47,7 +63,6 @@ public class AddressDTO {
     public String getCity() {
         return city;
     }
-
     public void setCity(String city) {
         this.city = city;
     }
@@ -55,7 +70,6 @@ public class AddressDTO {
     public String getState() {
         return state;
     }
-
     public void setState(String state) {
         this.state = state;
     }
@@ -63,7 +77,6 @@ public class AddressDTO {
     public String getZip() {
         return zip;
     }
-
     public void setZip(String zip) {
         this.zip = zip;
     }
@@ -71,7 +84,6 @@ public class AddressDTO {
     public String getCountry() {
         return country;
     }
-
     public void setCountry(String country) {
         this.country = country;
     }
@@ -79,7 +91,6 @@ public class AddressDTO {
     public int getCountryId() {
         return countryId;
     }
-
     public void setCountryId(int countryId) {
         this.countryId = countryId;
     }
@@ -87,7 +98,6 @@ public class AddressDTO {
     public String getRegion() {
         return region;
     }
-
     public void setRegion(String region) {
         this.region = region;
     }
@@ -95,7 +105,6 @@ public class AddressDTO {
     public int getRegionId() {
         return regionId;
     }
-
     public void setRegionId(int regionId) {
         this.regionId = regionId;
     }

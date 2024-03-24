@@ -30,6 +30,24 @@ public class StallsDTO {
         return total;
     }
 
+    public boolean matches(String search) {
+        if (search == null) return true;
+        if (search.indexOf(" ") >= 0) {
+            for (String s : search.split(" ")) {
+                if (this.matches(s)) return true;
+            }
+            return false;
+        }
+        search = search.toLowerCase();
+        if (v2 != null && v2 > 0 && search.equals("v2")) return true;
+        if (v3 != null && v3 > 0 && search.equals("v3")) return true;
+        if (v4 != null && v4 > 0 && search.equals("v4")) return true;
+        if (urban != null && urban > 0 && search.equals("urban")) return true;
+        if (accessible != null && accessible > 0 && search.startsWith("access")) return true;
+        if (trailerFriendly != null && trailerFriendly > 0 && search.startsWith("trailer")) return true;
+        return false;
+    }
+
     public Integer getUrban() {
         return urban;
     }

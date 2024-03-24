@@ -18,6 +18,7 @@ public class ChangeLogEditDTO {
     private int userId;
     private String username;
     private SiteChangeDateDTO dateModified;
+    private Integer stallCount;
 
     /**
      * Constructors
@@ -25,7 +26,7 @@ public class ChangeLogEditDTO {
     public ChangeLogEditDTO() {
     }
 
-    public ChangeLogEditDTO(int id, int siteId, Instant changeDate, ChangeType changeType, SiteStatus siteStatus, boolean notify, int userId, String username, Instant dateModified) {
+    public ChangeLogEditDTO(int id, int siteId, Instant changeDate, ChangeType changeType, SiteStatus siteStatus, boolean notify, int userId, String username, Instant dateModified, Integer stallCount) {
         this.id = id;
         this.siteId = siteId;
         this.changeDate = changeDate;
@@ -35,6 +36,7 @@ public class ChangeLogEditDTO {
         this.userId = userId;
         this.username = username;
         this.dateModified = new SiteChangeDateDTO(dateModified);
+        this.stallCount = stallCount;
     }
 
     /**
@@ -77,6 +79,10 @@ public class ChangeLogEditDTO {
         return dateModified;
     }
 
+    public Integer getStallCount() {
+        return stallCount;
+    }
+
     /**
      * Setters
      */
@@ -104,7 +110,7 @@ public class ChangeLogEditDTO {
         this.notify = notify;
     }
 
-    public void setUserId(int id) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -114,5 +120,9 @@ public class ChangeLogEditDTO {
 
     public void setDateModified(Instant dateModified) {
         this.dateModified = new SiteChangeDateDTO(dateModified);
+    }
+
+    public void setStallCount(Integer stallCount) {
+        this.stallCount = stallCount;
     }
 }

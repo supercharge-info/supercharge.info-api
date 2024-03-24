@@ -42,7 +42,8 @@ public class ChangeLog implements Comparable<ChangeLog> {
     private SiteStatus prevStatus;
 
     private boolean notify;
-    private int stallCount;
+    private Integer stallCount;
+    private Integer prevCount;
     private int powerKilowatt;
     private boolean otherEVs;
 
@@ -90,11 +91,18 @@ public class ChangeLog implements Comparable<ChangeLog> {
         this.notify = notify;
     }
 
-    public int getStallCount() {
+    public Integer getStallCount() {
         return stallCount;
     }
-    public void setStallCount(int stallCount) {
+    public void setStallCount(Integer stallCount) {
         this.stallCount = stallCount;
+    }
+
+    public Integer getPrevCount() {
+        return prevCount;
+    }
+    public void setPrevCount(Integer prevCount) {
+        this.prevCount = prevCount;
     }
 
     public int getPowerKilowatt() {

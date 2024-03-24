@@ -32,15 +32,20 @@ public class ChangeLogDAO extends BaseDAO {
         return getJdbcTemplate().query(sql, CHANGE_LOG_ROW_MAPPER, limit);
     }
 
-    public Map<Instant, SiteStatus> getSiteList(int siteId) {
-        String sql = "select change_date, site_status from changelog where site_id = ? order by change_date, id";
+    public Map<Instant, ChangeLog> getSiteList(int siteId) {
+        String sql = "select change_date, site_status, stall_count from changelog where site_id = ? order by change_date, id";
         List<Map<String, Object>> rowList = getJdbcTemplate().queryForList(sql, siteId);
 
-        Map<Instant, SiteStatus> resultMap = new HashMap<>();
+        Map<Instant, ChangeLog> resultMap = new HashMap<>();
         for (Map<String, Object> row : rowList) {
-            Instant changeDate = Instant.ofEpochMilli(((Timestamp) row.get("change_date")).getTime());
+            Instant changeDate = Instant.ofEpochMilli(((Timestamp) row.get("change_date")).getTime())
             SiteStatus siteStatus = SiteStatus.valueOf((String) row.get("site_status"));
-            resultMap.put(changeDate, siteStatus);
+            Integer stallCount = (Integer) row.get("stall_count");
+            ChangeLog cl = new ChangeLog();
+            cl.setDate(changeDate);
+            cl.setSiteStatus(SiteStatus.valueOf((String) row.get("site_status")));
+            cl.setStallCount((Integer) row.get("stall_count"));
+            resultMap.put(changeDate, cl);
         }
         return resultMap;
     }
@@ -67,10 +72,10 @@ public class ChangeLogDAO extends BaseDAO {
         return count != 0;
     }
 
-    public int update(int id, Instant date, SiteStatus status, boolean notify, int userId) {
-        String UPDATE_SQL = "UPDATE changelog SET change_date = ?, site_status = ?::SITE_STATUS_TYPE, notify = ?, " +
+    public int update(int id, Instant date, SiteStatus status, Integer stallCount, boolean notify, int userId) {
+        String UPDATE_SQL = "UPDATE changelog SET change_date = ?, site_status = ?::SITE_STATUS_TYPE, stall_count = ?, notify = ?, " +
                             "modified_date = now(), user_id = ? WHERE id = ? RETURNING site_id";
-        return getJdbcTemplate().queryForObject(UPDATE_SQL, Integer.class, toTimestamp(date), status.toString(), notify, userId, id);
+        return getJdbcTemplate().queryForObject(UPDATE_SQL, Integer.class, toTimestamp(date), status.toString(), stallCount, notify, userId, id);
     }
 
     /* Returns map <siteId, days at current status> */
@@ -116,6 +121,7 @@ public class ChangeLogDAO extends BaseDAO {
         cl.setModifiedInstant(Instant.ofEpochMilli(rs.getTimestamp(c++).getTime()));
         cl.setNotify(rs.getBoolean(c++));
         cl.setUserId(rs.getInt(c++));
+        cl.setStallCount(rs.getObject(c++, Integer.class));
         if (rs.getMetaData().getColumnCount() >= c) {
             cl.setUsername(rs.getString(c));
         }

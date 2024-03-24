@@ -17,10 +17,11 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
             "       r.region_id, " +
             "       r.name as region_name, " +
             "       a.state as state, " +
-            "       s.stall_count as stall_count, " +
+            "       s.stall_count as site_stall_count, " +
             "       s.power_kwatt as power_kwatt, " +
             "       s.other_evs as other_evs, " +
-            "       pcl.site_status as prev_status " +
+            "       pcl.site_status as prev_status, " +
+            "       pcl.stall_count as prev_count "
             "from changelog cl  " +
             "join site      s on cl.site_id   = s.site_id " +
             "join address   a on s.address_id = a.address_id " +

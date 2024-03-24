@@ -61,6 +61,8 @@ class FeedEntryFunction implements Function<ChangeLog, SyndEntryImpl> {
         b.append(changeLog.getSiteName());
         b.append(" - ");
         b.append(changeLog.getSiteStatus());
+        b.append(" - ");
+        b.append(changeLog.getStallCount());
         return b.toString();
     }
 

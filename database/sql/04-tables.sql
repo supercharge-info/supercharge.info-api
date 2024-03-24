@@ -221,6 +221,7 @@ create table changelog
     modified_date timestamptz      not null default current_timestamp,
     notify        boolean          not null default true,
     user_id       int              null,
+    stall_count   int              null,
     CONSTRAINT fk_changelog_1 foreign key (site_id) references site (site_id)
         on update cascade
         on delete cascade,

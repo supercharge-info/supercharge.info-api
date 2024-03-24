@@ -142,7 +142,7 @@ public class SiteController {
     public List<SiteHistoryDTO> siteHistory(@RequestParam("siteId") Integer siteId) {
         return changeLogDAO.getSiteList(siteId).entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
-                .map(e -> new SiteHistoryDTO(e.getKey(), e.getValue()))
+                .map(e -> new SiteHistoryDTO(e.getKey(), e.getValue().getSiteStatus(), e.getValue().getStallCount()))
                 .collect(Collectors.toList());
     }
 

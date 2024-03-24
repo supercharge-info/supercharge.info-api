@@ -67,6 +67,7 @@ public class ChangeLogDAO_UT {
         assertEquals(changeLogIn.getDate(), changeLogOut.getDate());
         assertEquals(changeLogIn.getChangeType(), changeLogOut.getChangeType());
         assertEquals(changeLogIn.getSiteStatus(), changeLogOut.getSiteStatus());
+        assertEquals(changeLogIn.getStallCount(), changeLogOut.getStallCount());
         assertTrue(Math.abs(System.currentTimeMillis() - changeLogOut.getModifiedInstant().toEpochMilli()) < 5000);
         // then -- joined fields
         assertEquals(testSite.getName(), changeLogOut.getSiteName());
@@ -80,14 +81,14 @@ public class ChangeLogDAO_UT {
     @Test
     public void insert_invalidChangeType() {
         assertThrows(DataIntegrityViolationException.class, () -> {
-            jdbcTemplate.update("insert into changelog values(NULL, 100, NOW(), 'invalid', 'OPEN', NULL)");
+            jdbcTemplate.update("insert into changelog values(NULL, 100, NOW(), 'invalid', 'OPEN', NULL, NULL)");
         }, "invalid input value for enum change_type: \"invalid\"");
     }
 
     @Test
     public void insert_emptyChangeType() {
         assertThrows(DataIntegrityViolationException.class, () -> {
-            jdbcTemplate.update("insert into changelog values(NULL, 100, NOW(), '', 'OPEN', NULL)");
+            jdbcTemplate.update("insert into changelog values(NULL, 100, NOW(), '', 'OPEN', NULL, NULL)");
         }, "invalid input value for enum change_type: \"\"");
     }
 
@@ -139,9 +140,9 @@ public class ChangeLogDAO_UT {
     @Test
     public void getStatusDurations() {
         // given
-        ChangeLogEdit changeLog1 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now(), true, testUser.getId());
+        ChangeLogEdit changeLog1 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.PERMIT, Instant.now(), Instant.now(), true, testUser.getId(), testSite.getStallCount());
         changeLogDAO.insert(changeLog1);
-        ChangeLogEdit changeLog2 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.CONSTRUCTION, Instant.now(), Instant.now(), false, testUser.getId());
+        ChangeLogEdit changeLog2 = ChangeLogEdit.toPersist(testSite.getId(), ChangeType.ADD, SiteStatus.CONSTRUCTION, Instant.now(), Instant.now(), false, testUser.getId(), testSite.getStallCount());
         changeLogDAO.insert(changeLog2);
         testSite.setStatus(SiteStatus.CONSTRUCTION);
         siteDAO.update(testSite);

@@ -57,30 +57,21 @@ public class ChangeLogController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/changes")
     @ResponseBody
-    public PageDTO<ChangeLogDTO> page(@RequestParam(required = false)
-                                              Integer draw,
-                                      @RequestParam(required = false, defaultValue = "0")
-                                              Integer start,
-                                      @RequestParam(required = false, defaultValue = "20")
-                                              Integer length,
-                                      @RequestParam(required = false)
-                                              Integer regionId,
-                                      @RequestParam(required = false)
-                                              Integer countryId,
-                                      @RequestParam(required = false)
-                                              List<String> state,
-                                      @RequestParam(required = false)
-                                              List<SiteStatus> status,
-                                      @RequestParam(required = false)
-                                              Integer stalls,
-                                      @RequestParam(required = false)
-                                              Integer power,
-                                      @RequestParam(required = false)
-                                              ChangeType changeType,
-                                      @RequestParam(required = false)
-                                              Boolean otherEVs,
-                                      @RequestParam(required = false)
-                                              String search) {
+    public PageDTO<ChangeLogDTO> page(
+        @RequestParam(required = false) Integer draw,
+        @RequestParam(required = false, defaultValue = "0") Integer start,
+        @RequestParam(required = false, defaultValue = "20") Integer length,
+        @RequestParam(required = false) Integer regionId,
+        @RequestParam(required = false) Integer countryId,
+        @RequestParam(required = false) List<String> state,
+        @RequestParam(required = false) List<SiteStatus> status,
+        @RequestParam(required = false) Integer stalls,
+        @RequestParam(required = false) Integer power,
+        @RequestParam(required = false) ChangeType changeType,
+        @RequestParam(required = false) Boolean otherEVs,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false, defaultValue = "false") Boolean anyWord
+    ) {
         List<ChangeLogDTO> allList = cachingHandler.getValues();
 
         List<ChangeLogDTO> filteredList = allList
@@ -93,7 +84,7 @@ public class ChangeLogController {
                 .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
                 .filter(cl -> changeType == null || Objects.equals(cl.getChangeType(), changeType))
                 .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
-                .filter(cl -> search == null || cl.matches(search))
+                .filter(cl -> search == null || cl.matches(search, anyWord))
                 .collect(Collectors.toList());
 
         List<ChangeLogDTO> pageList = filteredList.stream()

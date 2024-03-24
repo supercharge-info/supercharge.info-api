@@ -79,11 +79,15 @@ public class SiteDTO {
     // - - - - - - - - - - - - - - - - - - - - - - -
     // search
     // - - - - - - - - - - - - - - - - - - - - - - -
-    public boolean matches(String search) {
+    public boolean matches(String search, boolean anyWord) {
         if (search == null) return true;
         if (search.indexOf(" ") >= 0) {
             for (String s : search.split(" ")) {
-                if (this.matches(s)) return true;
+                if (this.matches(s, anyWord)) {
+                    if (anyWord) return true;
+                } else {
+                    if (!anyWord) return false;
+                }
             }
             return false;
         }

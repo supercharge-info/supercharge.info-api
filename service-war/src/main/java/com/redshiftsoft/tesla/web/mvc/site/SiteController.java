@@ -65,32 +65,21 @@ public class SiteController {
     @Transactional
     @RequestMapping(method = RequestMethod.GET, value = "/sites")
     @ResponseBody
-    public PageDTO<SiteDTO> pageDataTables(@RequestParam(required = false)
-                                                   Integer draw,
-                                           @RequestParam(required = false, defaultValue = "0")
-                                                   Integer start,
-                                           @RequestParam(required = false, defaultValue = "20")
-                                                   Integer length,
-                                           @RequestParam(required = false)
-                                                   Integer regionId,
-                                           @RequestParam(required = false)
-                                                   Integer countryId,
-                                           @RequestParam(required = false)
-                                                   List<String> state,
-                                           @RequestParam(required = false)
-                                                   List<SiteStatus> status,
-                                           @RequestParam(required = false)
-                                                   Integer stalls,
-                                           @RequestParam(required = false)
-                                                   Integer power,
-                                           @RequestParam(required = false)
-                                                   Boolean otherEVs,
-                                           @RequestParam(required = false)
-                                                   String search,
-                                           @RequestParam(required = false, value = "order[0][column]", defaultValue = "0")
-                                                   Integer orderCol,
-                                           @RequestParam(required = false, value = "order[0][dir]")
-                                                   String orderDir
+    public PageDTO<SiteDTO> pageDataTables(
+        @RequestParam(required = false) Integer draw,
+        @RequestParam(required = false, defaultValue = "0") Integer start,
+        @RequestParam(required = false, defaultValue = "20") Integer length,
+        @RequestParam(required = false) Integer regionId,
+        @RequestParam(required = false) Integer countryId,
+        @RequestParam(required = false) List<String> state,
+        @RequestParam(required = false) List<SiteStatus> status,
+        @RequestParam(required = false) Integer stalls,
+        @RequestParam(required = false) Integer power,
+        @RequestParam(required = false) Boolean otherEVs,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false, defaultValue = "false") Boolean anyWord,
+        @RequestParam(required = false, value = "order[0][column]", defaultValue = "0") Integer orderCol,
+        @RequestParam(required = false, value = "order[0][dir]") String orderDir
     ) {
         List<SiteDTO> allList = cachingHandler.getValues();
 
@@ -104,7 +93,7 @@ public class SiteController {
                 .filter(s -> stalls == null || s.getStallCount() >= stalls)
                 .filter(s -> power == null || s.getPowerKilowatt() >= power)
                 .filter(s -> otherEVs == null || s.isOtherEVs() == otherEVs)
-                .filter(s -> search == null || s.matches(search))
+                .filter(s -> search == null || s.matches(search, anyWord))
                 .collect(Collectors.toList());
 
         List<SiteDTO> pageList = filteredList.stream()

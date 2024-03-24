@@ -2,7 +2,7 @@ package com.redshiftsoft.tesla.web.mvc.site;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.redshiftsoft.tesla.dao.site.Stalls;
+import com.redshiftsoft.util.NumberUtils;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StallsDTO {
@@ -39,12 +39,12 @@ public class StallsDTO {
             return false;
         }
         search = search.toLowerCase();
-        if (v2 != null && v2 > 0 && search.equals("v2")) return true;
-        if (v3 != null && v3 > 0 && search.equals("v3")) return true;
-        if (v4 != null && v4 > 0 && search.equals("v4")) return true;
-        if (urban != null && urban > 0 && search.equals("urban")) return true;
-        if (accessible != null && accessible > 0 && search.startsWith("access")) return true;
-        if (trailerFriendly != null && trailerFriendly > 0 && search.startsWith("trailer")) return true;
+        if (search.equals("v2") && NumberUtils.isPositive(v2)) return true;
+        if (search.equals("v3") && NumberUtils.isPositive(v3)) return true;
+        if (search.equals("v4") && NumberUtils.isPositive(v4)) return true;
+        if (search.equals("urban") && NumberUtils.isPositive(urban)) return true;
+        if (search.startsWith("access") && NumberUtils.isPositive(accessible)) return true;
+        if (search.startsWith("trailer") && NumberUtils.isPositive(trailerFriendly)) return true;
         return false;
     }
 

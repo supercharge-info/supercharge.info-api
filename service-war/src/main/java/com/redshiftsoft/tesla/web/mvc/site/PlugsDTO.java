@@ -2,6 +2,7 @@ package com.redshiftsoft.tesla.web.mvc.site;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.redshiftsoft.util.NumberUtils;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlugsDTO {
@@ -45,13 +46,13 @@ public class PlugsDTO {
             if (TPC != null && TPC > 0) return true;
             if (NACS != null && NACS > 0) return true;
         }
-        if (search.equals("ccs1") && CCS1 > 0) return true;
-        if (search.equals("ccs2") && CCS2 > 0) return true;
-        if (search.equals("ccs") && (CCS1 > 0 || CCS2 > 0)) return true;
-        if (search.equals("type2") && Type2 > 0) return true;
-        if (search.replace("/", "").equals("gbt") && GBT > 0) return true;
-        if (search.equals("multi") && Multi > 0) return true;
-        if (search.startsWith("magic") && (TPC > 0 || NACS > 0) && CCS1 > 0) return true;
+        if (search.equals("ccs1") && NumberUtils.isPositive(CCS1)) return true;
+        if (search.equals("ccs2") && NumberUtils.isPositive(CCS2)) return true;
+        if (search.equals("ccs") && (NumberUtils.isPositive(CCS1) || NumberUtils.isPositive(CCS2))) return true;
+        if (search.equals("type2") && NumberUtils.isPositive(Type2)) return true;
+        if (search.replace("/", "").equals("gbt") && NumberUtils.isPositive(GBT)) return true;
+        if (search.equals("multi") && NumberUtils.isPositive(Multi)) return true;
+        if (search.startsWith("magic") && (NumberUtils.isPositive(TPC) || NumberUtils.isPositive(NACS)) && NumberUtils.isPositive(CCS1) && NumberUtils.isPositive(Multi)) return true;
         return false;
     }
 

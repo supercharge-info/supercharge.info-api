@@ -96,6 +96,7 @@ public class SiteDTO {
             if (String.valueOf(gps.getLatitude()).contains(search)) return true;
             if (String.valueOf(gps.getLongitude()).contains(search)) return true;
         }
+        if (String.valueOf(stallCount).contains(search)) return true;
         if (hours != null && hours.toLowerCase().contains(search)) return true;
         if (elevationMeters != null && String.valueOf(elevationMeters).contains(search)) return true;
         if (String.valueOf(powerKilowatt).contains(search)) return true;

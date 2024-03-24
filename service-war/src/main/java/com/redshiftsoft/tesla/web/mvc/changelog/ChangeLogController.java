@@ -78,7 +78,9 @@ public class ChangeLogController {
                                       @RequestParam(required = false)
                                               ChangeType changeType,
                                       @RequestParam(required = false)
-                                              Boolean otherEVs) {
+                                              Boolean otherEVs,
+                                      @RequestParam(required = false)
+                                              String search) {
         List<ChangeLogDTO> allList = cachingHandler.getValues();
 
         List<ChangeLogDTO> filteredList = allList
@@ -91,6 +93,7 @@ public class ChangeLogController {
                 .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
                 .filter(cl -> changeType == null || Objects.equals(cl.getChangeType(), changeType))
                 .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
+                .filter(cl -> search == null || cl.matches(search))
                 .collect(Collectors.toList());
 
         List<ChangeLogDTO> pageList = filteredList.stream()

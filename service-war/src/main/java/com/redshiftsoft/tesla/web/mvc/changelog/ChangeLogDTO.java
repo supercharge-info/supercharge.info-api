@@ -44,6 +44,28 @@ public class ChangeLogDTO {
     private String country;
     private String state;
 
+    public boolean matches(String search) {
+        if (search == null) return true;
+        if (search.indexOf(" ") >= 0) {
+            for (String s : search.split(" ")) {
+                if (this.matches(s)) return true;
+            }
+            return false;
+        }
+        search = search.toLowerCase();
+        if (search.equals("add") && changeType == ChangeType.ADD) return true;
+        if (search.equals("update") && changeType == ChangeType.UPDATE) return true;
+        if (String.valueOf(siteId).contains(search)) return true;
+        if (siteName != null && siteName.toLowerCase().contains(search)) return true;
+        if (siteStatus != null && siteStatus.toString().toLowerCase().contains(search)) return true;
+        if (String.valueOf(stallCount).contains(search)) return true;
+        if (String.valueOf(powerKilowatt).contains(search)) return true;
+        if (state != null && state.toLowerCase().contains(search)) return true;
+        if (country != null && country.toLowerCase().contains(search)) return true;
+        if (region != null && region.toLowerCase().contains(search)) return true;
+        return false;
+    }
+    
     public int getId() {
         return id;
     }

@@ -85,7 +85,7 @@ public class SiteController {
                                                    Integer power,
                                            @RequestParam(required = false)
                                                    Boolean otherEVs,
-                                           @RequestParam(required = false, value = "search[value]")
+                                           @RequestParam(required = false)
                                                    String search,
                                            @RequestParam(required = false, value = "order[0][column]", defaultValue = "0")
                                                    Integer orderCol,

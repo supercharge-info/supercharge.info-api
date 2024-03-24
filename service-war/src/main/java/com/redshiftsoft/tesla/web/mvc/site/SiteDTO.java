@@ -95,7 +95,7 @@ public class SiteDTO {
         if (String.valueOf(id).contains(search)) return true;
         if (name != null && name.toLowerCase().contains(search)) return true;
         if (status != null && status.toString().toLowerCase().contains(search)) return true;
-        if (address != null && address.matches(search)) return true;
+        if (address != null && address.matches(search, anyWord)) return true;
         if (gps != null) {
             if (String.valueOf(gps.getLatitude()).contains(search)) return true;
             if (String.valueOf(gps.getLongitude()).contains(search)) return true;
@@ -104,8 +104,8 @@ public class SiteDTO {
         if (hours != null && hours.toLowerCase().contains(search)) return true;
         if (elevationMeters != null && String.valueOf(elevationMeters).contains(search)) return true;
         if (String.valueOf(powerKilowatt).contains(search)) return true;
-        if (stalls != null && stalls.matches(search)) return true;
-        if (plugs != null && plugs.matches(search)) return true;
+        if (stalls != null && stalls.matches(search, anyWord)) return true;
+        if (plugs != null && plugs.matches(search, anyWord)) return true;
         if (facilityName != null && facilityName.toLowerCase().contains(search)) return true;
         if (facilityHours != null && facilityHours.toLowerCase().contains(search)) return true;
         return false;

@@ -38,9 +38,7 @@ public class ChangeLogDAO extends BaseDAO {
 
         Map<Instant, ChangeLog> resultMap = new HashMap<>();
         for (Map<String, Object> row : rowList) {
-            Instant changeDate = Instant.ofEpochMilli(((Timestamp) row.get("change_date")).getTime())
-            SiteStatus siteStatus = SiteStatus.valueOf((String) row.get("site_status"));
-            Integer stallCount = (Integer) row.get("stall_count");
+            Instant changeDate = Instant.ofEpochMilli(((Timestamp) row.get("change_date")).getTime());
             ChangeLog cl = new ChangeLog();
             cl.setDate(changeDate);
             cl.setSiteStatus(SiteStatus.valueOf((String) row.get("site_status")));

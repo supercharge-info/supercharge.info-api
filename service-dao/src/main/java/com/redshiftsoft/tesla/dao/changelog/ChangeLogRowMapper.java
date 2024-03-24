@@ -21,7 +21,7 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
             "       s.power_kwatt as power_kwatt, " +
             "       s.other_evs as other_evs, " +
             "       pcl.site_status as prev_status, " +
-            "       pcl.stall_count as prev_count "
+            "       pcl.stall_count as prev_count " +
             "from changelog cl  " +
             "join site      s on cl.site_id   = s.site_id " +
             "join address   a on s.address_id = a.address_id " +
@@ -59,7 +59,9 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
 
         log.setState(rs.getString("state"));
 
-        log.setStallCount(rs.getInt("stall_count"));
+        log.setStallCount(rs.getObject("stall_count", Integer.class));
+        if (log.getStallCount() == null) log.setStallCount(rs.getInt("site_stall_count"));
+
         log.setPowerKilowatt(rs.getInt("power_kwatt"));
         log.setOtherEVs(rs.getBoolean("other_evs"));
 
@@ -67,6 +69,8 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
         if (prevStatus != null) {
             log.setPrevStatus(SiteStatus.valueOf(prevStatus));
         }
+        log.setPrevCount(rs.getObject("prev_count", Integer.class));
+        if (log.getPrevCount() == null) log.setPrevCount(log.getStallCount());
 
         return log;
     }

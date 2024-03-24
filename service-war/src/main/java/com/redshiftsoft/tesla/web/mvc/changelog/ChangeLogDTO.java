@@ -13,10 +13,12 @@ import java.time.Instant;
  * {
  * "id"           : 435,
  * "siteId"       : 344,
- * "siteName"     : "Canmore, Canada",
+ * "siteName"     : "Canmore, AB",
  * "changeType"   : "UPDATE",
  * "siteStatus"   : "CONSTRUCTION",
  * "prevStatus"   : "PERMIT",
+ * "stallCount"   : 4,
+ * "prevCount"    : 4,
  * "date"         : "2014-11-06",
  * "dateFormatted": "Thu, Nov 6 2014"
  * }
@@ -30,6 +32,7 @@ public class ChangeLogDTO {
     private SiteStatus siteStatus;
     private SiteStatus prevStatus;
     private int stallCount;
+    private int prevCount;
     private int powerKilowatt;
     private boolean otherEVs;
     private boolean notify;
@@ -44,7 +47,6 @@ public class ChangeLogDTO {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -53,12 +55,10 @@ public class ChangeLogDTO {
     public Instant getDateFormatted() {
         return date;
     }
-
     @JsonSerialize(using = InstantIsoDateSerializer.class)
     public Instant getDate() {
         return date;
     }
-
     public void setDate(Instant date) {
         this.date = date;
     }
@@ -66,7 +66,6 @@ public class ChangeLogDTO {
     public ChangeType getChangeType() {
         return changeType;
     }
-
     public void setChangeType(ChangeType changeType) {
         this.changeType = changeType;
     }
@@ -74,7 +73,6 @@ public class ChangeLogDTO {
     public String getSiteName() {
         return siteName;
     }
-
     public void setSiteName(String siteName) {
         this.siteName = siteName;
     }
@@ -82,7 +80,6 @@ public class ChangeLogDTO {
     public SiteStatus getSiteStatus() {
         return siteStatus;
     }
-
     public void setSiteStatus(SiteStatus siteStatus) {
         this.siteStatus = siteStatus;
     }
@@ -90,7 +87,6 @@ public class ChangeLogDTO {
     public SiteStatus getPrevStatus() {
         return prevStatus;
     }
-
     public void setPrevStatus(SiteStatus prevStatus) {
         this.prevStatus = prevStatus;
     }
@@ -98,15 +94,20 @@ public class ChangeLogDTO {
     public int getStallCount() {
         return stallCount;
     }
-
     public void setStallCount(int stallCount) {
         this.stallCount = stallCount;
+    }
+
+    public int getPrevCount() {
+        return prevCount;
+    }
+    public void setPrevCount(int prevCount) {
+        this.prevCount = prevCount;
     }
 
     public int getPowerKilowatt() {
         return powerKilowatt;
     }
-
     public void setPowerKilowatt(int powerKilowatt) {
         this.powerKilowatt = powerKilowatt;
     }
@@ -115,7 +116,6 @@ public class ChangeLogDTO {
     public boolean isOtherEVs() {
         return otherEVs;
     }
-
     public void setOtherEVs(boolean otherEVs) {
         this.otherEVs = otherEVs;
     }
@@ -123,7 +123,6 @@ public class ChangeLogDTO {
     public boolean getNotify() {
         return notify;
     }
-
     public void setNotify(boolean notify) {
         this.notify = notify;
     }
@@ -131,7 +130,6 @@ public class ChangeLogDTO {
     public String getRegion() {
         return region;
     }
-
     public void setRegion(String region) {
         this.region = region;
     }
@@ -139,7 +137,6 @@ public class ChangeLogDTO {
     public String getCountry() {
         return country;
     }
-
     public void setCountry(String country) {
         this.country = country;
     }
@@ -147,7 +144,6 @@ public class ChangeLogDTO {
     public int getSiteId() {
         return siteId;
     }
-
     public void setSiteId(int siteId) {
         this.siteId = siteId;
     }
@@ -155,7 +151,6 @@ public class ChangeLogDTO {
     public int getRegionId() {
         return regionId;
     }
-
     public void setRegionId(int regionId) {
         this.regionId = regionId;
     }
@@ -163,7 +158,6 @@ public class ChangeLogDTO {
     public int getCountryId() {
         return countryId;
     }
-
     public void setCountryId(int countryId) {
         this.countryId = countryId;
     }
@@ -171,7 +165,6 @@ public class ChangeLogDTO {
     public String getState() {
         return state;
     }
-
     public void setState(String state) {
         this.state = state;
     }

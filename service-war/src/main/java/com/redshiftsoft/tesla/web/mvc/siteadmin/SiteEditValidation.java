@@ -3,6 +3,9 @@ package com.redshiftsoft.tesla.web.mvc.siteadmin;
 import com.google.common.collect.Lists;
 import com.redshiftsoft.tesla.dao.site.*;
 import com.redshiftsoft.tesla.web.mvc.site.AddressDTO;
+import com.redshiftsoft.tesla.web.mvc.site.PlugsDTO;
+import com.redshiftsoft.tesla.web.mvc.site.StallsDTO;
+
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -67,9 +70,9 @@ public class SiteEditValidation {
         //
         // Date Opened
         //
-        if (SiteStatus.OPEN.equals(site.getStatus())) {
+        if (SiteStatus.OPEN.equals(site.getStatus()) || SiteStatus.EXPANDING.equals(site.getStatus())) {
             if (site.getDateOpened() == null) {
-                errorMessages.add("missing open date for OPEN site");
+                errorMessages.add("missing open date for OPEN or EXPANDING site");
             }
         } else {
             if (site.getDateOpened() != null) {
@@ -111,12 +114,36 @@ public class SiteEditValidation {
         }
 
         //
-        // stall count
+        // stall/plug counts
         //
         if (site.getStallCount() <= 0) {
             errorMessages.add("stall count must be at least 1");
         }
 
+        StallsDTO stalls = site.getStalls();
+        if (stalls == null) stalls = new StallsDTO();
+        PlugsDTO plugs = site.getPlugs();
+        if (plugs == null) plugs = new PlugsDTO();
+
+        if (site.getStallCount() != stalls.getTotal()) {
+            errorMessages.add("stall count must equal total of individual stall type counts");
+        }
+        if (stalls.getAccessible() != null && stalls.getAccessible() > site.getStallCount()) {
+            errorMessages.add("# of accessible stalls cannot be more than total stall count");
+        }
+        if (stalls.getTrailerFriendly() != null && stalls.getTrailerFriendly() > site.getStallCount()) {
+            errorMessages.add("# of trailer-friendly stalls cannot be more than total stall count");
+        }
+        if (site.getStallCount() != plugs.getTotal() && (plugs.getMulti() == null || plugs.getMulti() == 0)) {
+            errorMessages.add("stall count must equal total of individual plug type counts (unless any stalls are multi-plug)");
+        }
+        if (plugs.getMulti() != null && plugs.getMulti() > 0 && site.getStallCount() > plugs.getTotal() - plugs.getMulti()) {
+            errorMessages.add("stall count cannot exceed total of individual plug type counts minus multi-plug count");
+        }
+
+		//
+		// power
+		//
         if (site.getPowerKiloWatt() < 0 || site.getPowerKiloWatt() > 500) {
             errorMessages.add("power must be in range [0,500]");
         }
@@ -144,6 +171,20 @@ public class SiteEditValidation {
             }
         }
 
+        //
+        // China-specific logic: Hong Kong is CCS2 only, Macau is CCS2 or GB/T, the rest of China is GB/T only
+        //
+        if (address.getCountry() == "China") {
+            if (address.getState().toLowerCase() == "hong kong") {
+                if (plugs.getGBT() > 0) {
+                    errorMessages.add("Hong Kong does not use GB/T plugs");
+                }
+            } else if (address.getState().toLowerCase() != "macau") {
+                if (plugs.getCCS2() > 0) {
+                    errorMessages.add("China locations (except Hong Kong and Macau) only use GB/T plugs");
+                }
+            }
+        }
     }
 
 }

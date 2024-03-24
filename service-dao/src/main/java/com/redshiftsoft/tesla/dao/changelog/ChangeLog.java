@@ -1,7 +1,9 @@
 package com.redshiftsoft.tesla.dao.changelog;
 
 import com.google.common.base.Preconditions;
+import com.redshiftsoft.tesla.dao.site.Plugs;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
+import com.redshiftsoft.tesla.dao.site.Stalls;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -35,7 +37,7 @@ public class ChangeLog implements Comparable<ChangeLog> {
     // ADD, UPDATE
     private ChangeType changeType;
 
-    // PERMIT, CONSTRUCTION, OPEN
+    // PERMIT, CONSTRUCTION, OPEN, etc
     private SiteStatus siteStatus;
     private SiteStatus prevStatus;
 
@@ -47,7 +49,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -55,7 +56,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public Instant getDate() {
         return date;
     }
-
     public void setDate(Instant date) {
         Preconditions.checkArgument(date != null);
         this.date = date;
@@ -64,7 +64,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public ChangeType getChangeType() {
         return changeType;
     }
-
     public void setChangeType(ChangeType changeType) {
         Preconditions.checkArgument(changeType != null);
         this.changeType = changeType;
@@ -73,7 +72,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public SiteStatus getSiteStatus() {
         return siteStatus;
     }
-
     public void setSiteStatus(SiteStatus siteStatus) {
         this.siteStatus = siteStatus;
     }
@@ -81,7 +79,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public SiteStatus getPrevStatus() {
         return prevStatus;
     }
-
     public void setPrevStatus(SiteStatus prevStatus) {
         this.prevStatus = prevStatus;
     }
@@ -89,7 +86,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public boolean getNotify() {
         return notify;
     }
-
     public void setNotify(boolean notify) {
         this.notify = notify;
     }
@@ -97,7 +93,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public int getStallCount() {
         return stallCount;
     }
-
     public void setStallCount(int stallCount) {
         this.stallCount = stallCount;
     }
@@ -105,7 +100,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public int getPowerKilowatt() {
         return powerKilowatt;
     }
-
     public void setPowerKilowatt(int powerKilowatt) {
         this.powerKilowatt = powerKilowatt;
     }
@@ -113,7 +107,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public boolean isOtherEVs() {
         return otherEVs;
     }
-
     public void setOtherEVs(boolean otherEVs) {
         this.otherEVs = otherEVs;
     }
@@ -121,7 +114,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public int getSiteId() {
         return siteId;
     }
-
     public void setSiteId(int siteId) {
         this.siteId = siteId;
     }
@@ -129,7 +121,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public Instant getModifiedInstant() {
         return modifiedInstant;
     }
-
     public void setModifiedInstant(Instant modifiedInstant) {
         this.modifiedInstant = modifiedInstant;
     }
@@ -137,7 +128,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public String getSiteName() {
         return siteName;
     }
-
     public void setSiteName(String siteName) {
         this.siteName = siteName;
     }
@@ -145,7 +135,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public int getRegionId() {
         return regionId;
     }
-
     public void setRegionId(int regionId) {
         this.regionId = regionId;
     }
@@ -153,7 +142,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public String getRegionName() {
         return regionName;
     }
-
     public void setRegionName(String regionName) {
         this.regionName = regionName;
     }
@@ -161,7 +149,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public int getCountryId() {
         return countryId;
     }
-
     public void setCountryId(int countryId) {
         this.countryId = countryId;
     }
@@ -169,7 +156,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public String getCountryName() {
         return countryName;
     }
-
     public void setCountryName(String countryName) {
         this.countryName = countryName;
     }
@@ -177,7 +163,6 @@ public class ChangeLog implements Comparable<ChangeLog> {
     public String getState() {
         return state;
     }
-
     public void setState(String state) {
         this.state = state;
     }

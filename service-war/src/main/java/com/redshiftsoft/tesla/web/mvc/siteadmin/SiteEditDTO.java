@@ -10,6 +10,8 @@ import com.redshiftsoft.tesla.web.json.LocalDateDeserializer;
 import com.redshiftsoft.tesla.web.json.LocalDateSerializer;
 import com.redshiftsoft.tesla.web.json.LocalDateTimeSerializer;
 import com.redshiftsoft.tesla.web.mvc.site.AddressDTO;
+import com.redshiftsoft.tesla.web.mvc.site.PlugsDTO;
+import com.redshiftsoft.tesla.web.mvc.site.StallsDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,6 +47,13 @@ public class SiteEditDTO {
     private boolean solarCanopy;
     private boolean battery;
     private boolean otherEVs;
+
+    private StallsDTO stalls = new StallsDTO();
+    private PlugsDTO plugs = new PlugsDTO();
+
+    private Integer parkingId;
+    private String facilityName, facilityHours, accessNotes, addressNotes;
+    private Long plugshareId, osmId;
 
     // - - - - - - - - - - - - - - - - - - - - - - -
     // java.lang.Object
@@ -96,11 +105,9 @@ public class SiteEditDTO {
     // getters/setters
     // - - - - - - - - - - - - - - - - - - - - - - -
 
-
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -108,7 +115,6 @@ public class SiteEditDTO {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -116,7 +122,6 @@ public class SiteEditDTO {
     public SiteStatus getStatus() {
         return status;
     }
-
     public void setStatus(SiteStatus status) {
         this.status = status;
     }
@@ -126,7 +131,6 @@ public class SiteEditDTO {
     public LocalDate getDateOpened() {
         return dateOpened;
     }
-
     public void setDateOpened(LocalDate dateOpened) {
         this.dateOpened = dateOpened;
     }
@@ -135,7 +139,6 @@ public class SiteEditDTO {
     public LocalDateTime getDateModified() {
         return dateModified;
     }
-
     public void setDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
     }
@@ -143,7 +146,6 @@ public class SiteEditDTO {
     public AddressDTO getAddress() {
         return address;
     }
-
     public void setAddress(AddressDTO address) {
         this.address = address;
     }
@@ -151,7 +153,6 @@ public class SiteEditDTO {
     public SiteGPS getGps() {
         return gps;
     }
-
     public void setGps(SiteGPS gps) {
         this.gps = gps;
     }
@@ -159,7 +160,6 @@ public class SiteEditDTO {
     public Integer getElevationMeters() {
         return elevationMeters;
     }
-
     public void setElevationMeters(Integer elevationMeters) {
         this.elevationMeters = elevationMeters;
     }
@@ -167,7 +167,6 @@ public class SiteEditDTO {
     public String getUrlDiscuss() {
         return urlDiscuss;
     }
-
     public void setUrlDiscuss(String urlDiscuss) {
         this.urlDiscuss = urlDiscuss;
     }
@@ -175,7 +174,6 @@ public class SiteEditDTO {
     public int getStallCount() {
         return stallCount;
     }
-
     public void setStallCount(int stallCount) {
         this.stallCount = stallCount;
     }
@@ -183,7 +181,6 @@ public class SiteEditDTO {
     public boolean isCounted() {
         return counted;
     }
-
     public void setCounted(boolean counted) {
         this.counted = counted;
     }
@@ -193,7 +190,6 @@ public class SiteEditDTO {
     public boolean isEnabled() {
         return enabled;
     }
-
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -201,7 +197,6 @@ public class SiteEditDTO {
     public String getHours() {
         return hours;
     }
-
     public void setHours(String hours) {
         this.hours = hours;
     }
@@ -209,7 +204,6 @@ public class SiteEditDTO {
     public String getLocationId() {
         return locationId;
     }
-
     public void setLocationId(String locationId) {
         this.locationId = locationId;
     }
@@ -217,7 +211,6 @@ public class SiteEditDTO {
     public int getPowerKiloWatt() {
         return powerKiloWatt;
     }
-
     public void setPowerKiloWatt(int powerKiloWatt) {
         this.powerKiloWatt = powerKiloWatt;
     }
@@ -225,7 +218,6 @@ public class SiteEditDTO {
     public NotifyEnum getNotify() {
         return notify;
     }
-
     public void setNotify(NotifyEnum notify) {
         this.notify = notify;
     }
@@ -233,7 +225,6 @@ public class SiteEditDTO {
     public boolean isSolarCanopy() {
         return solarCanopy;
     }
-
     public void setSolarCanopy(boolean solarCanopy) {
         this.solarCanopy = solarCanopy;
     }
@@ -241,7 +232,6 @@ public class SiteEditDTO {
     public boolean isBattery() {
         return battery;
     }
-
     public void setBattery(boolean battery) {
         this.battery = battery;
     }
@@ -249,7 +239,6 @@ public class SiteEditDTO {
     public String getDeveloperNotes() {
         return developerNotes;
     }
-
     public void setDeveloperNotes(String developerNotes) {
         this.developerNotes = developerNotes;
     }
@@ -257,7 +246,6 @@ public class SiteEditDTO {
     public int getVersion() {
         return version;
     }
-
     public void setVersion(int version) {
         this.version = version;
     }
@@ -265,9 +253,71 @@ public class SiteEditDTO {
     public boolean isOtherEVs() {
         return otherEVs;
     }
-
     public void setOtherEVs(boolean otherEVs) {
         this.otherEVs = otherEVs;
+    }
+
+    public StallsDTO getStalls() {
+        return stalls;
+    }
+    public void setStalls(StallsDTO stalls) {
+        this.stalls = stalls;
+    }
+
+    public PlugsDTO getPlugs() {
+        return plugs;
+    }
+    public void setPlugs(PlugsDTO plugs) {
+        this.plugs = plugs;
+    }
+
+    public Integer getParkingId() {
+        return parkingId;
+    }
+    public void setParkingId(Integer parkingId) {
+        this.parkingId = parkingId;
+    }
+
+    public String getFacilityName() {
+        return facilityName;
+    }
+    public void setFacilityName(String facilityName) {
+        this.facilityName = facilityName;
+    }
+
+    public String getFacilityHours() {
+        return facilityHours;
+    }
+    public void setFacilityHours(String facilityHours) {
+        this.facilityHours = facilityHours;
+    }
+
+    public String getAccessNotes() {
+        return accessNotes;
+    }
+    public void setAccessNotes(String accessNotes) {
+        this.accessNotes = accessNotes;
+    }
+
+    public String getAddressNotes() {
+        return addressNotes;
+    }
+    public void setAddressNotes(String addressNotes) {
+        this.addressNotes = addressNotes;
+    }
+
+    public Long getPlugshareId() {
+        return plugshareId;
+    }
+    public void setPlugshareId(Long plugshareId) {
+        this.plugshareId = plugshareId;
+    }
+
+    public Long getOsmId() {
+        return osmId;
+    }
+    public void setOsmId(Long osmId) {
+        this.osmId = osmId;
     }
 
     public enum NotifyEnum {

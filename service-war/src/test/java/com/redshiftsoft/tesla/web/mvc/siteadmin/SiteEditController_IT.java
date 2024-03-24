@@ -111,7 +111,13 @@ public class SiteEditController_IT extends Mvc_IT {
 
 
         // then
-        Assertions.assertEquals("{\"result\":\"FAIL\",\"messages\":[\"gps is required\",\"elevation is required\",\"street is required\",\"city is required\",\"country is required\"]}", response);
+        Assertions.assertEquals("{" +
+                "\"result\":\"FAIL\",\"messages\":[" +
+                        "\"gps is required\",\"elevation is required\"," + 
+                        "\"stall count must equal total of individual stall type counts\"," +
+                        "\"stall count must equal total of individual plug type counts (unless any stalls are multi-plug)\"," +
+                        "\"street is required\",\"city is required\",\"country is required\"" +
+                "]}", response);
     }
 
 }

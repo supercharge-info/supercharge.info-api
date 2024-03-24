@@ -33,6 +33,16 @@ public class Site {
     private boolean battery;
     private boolean otherEVs;
 
+    private Stalls stalls = new Stalls();
+    private Plugs plugs = new Plugs();
+    private Integer parkingId;
+    private String facilityName;
+    private String facilityHours;
+    private String accessNotes;
+    private String addressNotes;
+    private Long plugshareId;
+    private Long osmId;
+
     // - - - - - - - - - - - - - - - - - - - - - - -
     // java.lang.Object
     // - - - - - - - - - - - - - - - - - - - - - - -
@@ -90,7 +100,6 @@ public class Site {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -98,7 +107,6 @@ public class Site {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -106,7 +114,6 @@ public class Site {
     public SiteStatus getStatus() {
         return status;
     }
-
     public void setStatus(SiteStatus status) {
         this.status = status;
     }
@@ -114,7 +121,6 @@ public class Site {
     public LocalDate getDateOpened() {
         return dateOpened;
     }
-
     public void setDateOpened(LocalDate dateOpened) {
         this.dateOpened = dateOpened;
     }
@@ -122,7 +128,6 @@ public class Site {
     public LocalDateTime getDateModified() {
         return dateModified;
     }
-
     public void setDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
     }
@@ -130,7 +135,6 @@ public class Site {
     public Address getAddress() {
         return address;
     }
-
     public void setAddress(Address address) {
         this.address = address;
     }
@@ -138,7 +142,6 @@ public class Site {
     public SiteGPS getGps() {
         return gps;
     }
-
     public void setGps(SiteGPS gps) {
         this.gps = gps;
     }
@@ -146,7 +149,6 @@ public class Site {
     public Integer getElevationMeters() {
         return elevationMeters;
     }
-
     public void setElevationMeters(Integer elevationMeters) {
         this.elevationMeters = elevationMeters;
     }
@@ -154,7 +156,6 @@ public class Site {
     public String getUrlDiscuss() {
         return urlDiscuss;
     }
-
     public void setUrlDiscuss(String urlDiscuss) {
         this.urlDiscuss = urlDiscuss;
     }
@@ -162,7 +163,6 @@ public class Site {
     public int getStallCount() {
         return stallCount;
     }
-
     public void setStallCount(int stallCount) {
         this.stallCount = stallCount;
     }
@@ -170,7 +170,6 @@ public class Site {
     public boolean isCounted() {
         return counted;
     }
-
     public void setCounted(boolean counted) {
         this.counted = counted;
     }
@@ -178,7 +177,6 @@ public class Site {
     public boolean isEnabled() {
         return enabled;
     }
-
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -186,7 +184,6 @@ public class Site {
     public String getHours() {
         return hours;
     }
-
     public void setHours(String hours) {
         this.hours = hours;
     }
@@ -194,7 +191,6 @@ public class Site {
     public String getLocationId() {
         return locationId;
     }
-
     public void setLocationId(String locationId) {
         this.locationId = locationId;
     }
@@ -202,7 +198,6 @@ public class Site {
     public int getPowerKilowatt() {
         return powerKilowatt;
     }
-
     public void setPowerKilowatt(int powerKilowatt) {
         this.powerKilowatt = powerKilowatt;
     }
@@ -210,7 +205,6 @@ public class Site {
     public boolean isSolarCanopy() {
         return solarCanopy;
     }
-
     public void setSolarCanopy(boolean solarCanopy) {
         this.solarCanopy = solarCanopy;
     }
@@ -218,7 +212,6 @@ public class Site {
     public boolean isBattery() {
         return battery;
     }
-
     public void setBattery(boolean battery) {
         this.battery = battery;
     }
@@ -226,7 +219,6 @@ public class Site {
     public String getDeveloperNotes() {
         return developerNotes;
     }
-
     public void setDeveloperNotes(String developerNotes) {
         this.developerNotes = developerNotes;
     }
@@ -234,7 +226,6 @@ public class Site {
     public int getVersion() {
         return version;
     }
-
     public void setVersion(int version) {
         this.version = version;
     }
@@ -242,8 +233,71 @@ public class Site {
     public boolean isOtherEVs() {
         return otherEVs;
     }
-
     public void setOtherEVs(boolean otherEVs) {
         this.otherEVs = otherEVs;
     }
+
+    public Stalls getStalls() {
+        return stalls;
+    }
+    public void setStalls(Stalls stalls) {
+        this.stalls = stalls;
+    }
+
+    public Plugs getPlugs() {
+        return plugs;
+    }
+    public void setPlugs(Plugs plugs) {
+        this.plugs = plugs;
+    }
+
+    public Integer getParkingId() {
+        return parkingId;
+    }
+    public void setParkingId(Integer parkingId) {
+        this.parkingId = parkingId;
+    }
+
+    public String getFacilityName() {
+        return facilityName;
+    }
+    public void setFacilityName(String facilityName) {
+        this.facilityName = facilityName;
+    }
+
+    public String getFacilityHours() {
+        return facilityHours;
+    }
+    public void setFacilityHours(String facilityHours) {
+        this.facilityHours = facilityHours;
+    }
+
+    public String getAccessNotes() {
+        return accessNotes;
+    }
+    public void setAccessNotes(String accessNotes) {
+        this.accessNotes = accessNotes;
+    }
+
+    public String getAddressNotes() {
+        return addressNotes;
+    }
+    public void setAddressNotes(String addressNotes) {
+        this.addressNotes = addressNotes;
+    }
+
+    public Long getPlugshareId() {
+        return plugshareId;
+    }
+    public void setPlugshareId(Long plugshareId) {
+        this.plugshareId = plugshareId;
+    }
+
+    public Long getOsmId() {
+        return osmId;
+    }
+    public void setOsmId(Long osmId) {
+        this.osmId = osmId;
+    }
+
 }

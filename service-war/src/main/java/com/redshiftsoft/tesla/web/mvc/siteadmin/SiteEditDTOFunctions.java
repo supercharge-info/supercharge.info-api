@@ -2,9 +2,7 @@ package com.redshiftsoft.tesla.web.mvc.siteadmin;
 
 import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.web.mvc.site.AddressDTOFunctions;
-import com.redshiftsoft.tesla.web.mvc.site.PlugsDTO;
 import com.redshiftsoft.tesla.web.mvc.site.PlugsDTOFunctions;
-import com.redshiftsoft.tesla.web.mvc.site.SiteDTOFunction;
 import com.redshiftsoft.tesla.web.mvc.site.StallsDTOFunctions;
 
 import java.util.Collection;

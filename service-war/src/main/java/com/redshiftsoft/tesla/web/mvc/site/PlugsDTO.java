@@ -37,7 +37,7 @@ public class PlugsDTO {
         if (search == null) return true;
         if (search.indexOf(" ") >= 0) {
             for (String s : search.split(" ")) {
-                if (this.matches(s, anyWord)) {
+                if (this.matches(s)) {
                     if (anyWord) return true;
                 } else {
                     if (!anyWord) return false;
@@ -45,6 +45,10 @@ public class PlugsDTO {
             }
             return !anyWord;
         }
+        return this.matches(search);
+    }
+
+    public boolean matches(String search) {
         search = search.toLowerCase();
         if (search.equals("tpc") || search.equals("nacs")) {
             if (TPC != null && TPC > 0) return true;

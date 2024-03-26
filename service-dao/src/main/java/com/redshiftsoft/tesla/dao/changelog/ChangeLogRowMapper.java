@@ -1,5 +1,8 @@
 package com.redshiftsoft.tesla.dao.changelog;
 
+import com.redshiftsoft.tesla.dao.site.Address;
+import com.redshiftsoft.tesla.dao.site.Site;
+import com.redshiftsoft.tesla.dao.site.SiteRowMapper;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -10,18 +13,8 @@ import java.time.Instant;
 public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
 
     public static final String SELECT = "" +
-            "select cl.*, " +
-            "       s.name as site_name, " +
-            "       c.country_id, " +
-            "       c.name as country_name, " +
-            "       r.region_id, " +
-            "       r.name as region_name, " +
-            "       a.state as state, " +
-            "       s.stall_count as site_stall_count, " +
-            "       s.power_kwatt as power_kwatt, " +
-            "       s.other_evs as other_evs, " +
-            "       pcl.site_status as prev_status, " +
-            "       pcl.stall_count as prev_count " +
+            "select cl.*, s.*, a.*, c.name, r.region_id, r.name, " +
+            "       pcl.site_status as prev_status, pcl.stall_count as prev_count " +
             "from changelog cl  " +
             "join site      s on cl.site_id   = s.site_id " +
             "join address   a on s.address_id = a.address_id " +
@@ -47,28 +40,31 @@ public class ChangeLogRowMapper implements RowMapper<ChangeLog> {
         log.setChangeType(ChangeType.valueOf(rs.getString(c++)));
         log.setSiteStatus(SiteStatus.valueOf(rs.getString(c++)));
         log.setModifiedInstant(Instant.ofEpochMilli(rs.getTimestamp(c++).getTime()));
-        log.setNotify(rs.getBoolean(c));
+        log.setNotify(rs.getBoolean(c++));
 
-        log.setSiteName(rs.getString("site_name"));
+        c++; // user_id
 
-        log.setRegionId(rs.getInt("region_id"));
-        log.setRegionName(rs.getString("region_name"));
+        log.setStallCount(rs.getObject(c++, Integer.class));
+        
+        Site site = new SiteRowMapper(c).mapRow(rs, rowNum);
+        Address address = site.getAddress();
+        log.setSite(site);
 
-        log.setCountryId(rs.getInt("country_id"));
-        log.setCountryName(rs.getString("country_name"));
+        // For backward compatibility
+        log.setSiteName(site.getName());
+        log.setRegionId(address.getRegionId());
+        log.setRegionName(address.getRegion());
+        log.setCountryId(address.getCountryId());
+        log.setCountryName(address.getCountry());
+        log.setState(address.getState());
+        log.setPowerKilowatt(site.getPowerKilowatt());
+        log.setOtherEVs(site.isOtherEVs());
 
-        log.setState(rs.getString("state"));
-
-        log.setStallCount(rs.getObject("stall_count", Integer.class));
-        if (log.getStallCount() == null) log.setStallCount(rs.getInt("site_stall_count"));
-
-        log.setPowerKilowatt(rs.getInt("power_kwatt"));
-        log.setOtherEVs(rs.getBoolean("other_evs"));
+        if (log.getStallCount() == null) log.setStallCount(site.getStallCount());
 
         String prevStatus = rs.getString("prev_status");
-        if (prevStatus != null) {
-            log.setPrevStatus(SiteStatus.valueOf(prevStatus));
-        }
+        if (prevStatus != null) log.setPrevStatus(SiteStatus.valueOf(prevStatus));
+
         log.setPrevCount(rs.getObject("prev_count", Integer.class));
         if (log.getPrevCount() == null) log.setPrevCount(log.getStallCount());
 

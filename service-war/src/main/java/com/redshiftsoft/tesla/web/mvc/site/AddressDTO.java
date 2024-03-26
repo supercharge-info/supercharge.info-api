@@ -31,7 +31,7 @@ public class AddressDTO {
         if (search == null) return true;
         if (search.indexOf(" ") >= 0) {
             for (String s : search.split(" ")) {
-                if (this.matches(s, anyWord)) {
+                if (this.matches(s)) {
                     if (anyWord) return true;
                 } else {
                     if (!anyWord) return false;
@@ -39,6 +39,10 @@ public class AddressDTO {
             }
             return !anyWord;
         }
+        return this.matches(search);
+    }
+
+    public boolean matches(String search) {
         search = search.toLowerCase();
         if (street != null && street.toLowerCase().contains(search)) return true;
         if (city != null && city.toLowerCase().contains(search)) return true;

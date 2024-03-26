@@ -34,7 +34,7 @@ public class StallsDTO {
         if (search == null) return true;
         if (search.indexOf(" ") >= 0) {
             for (String s : search.split(" ")) {
-                if (this.matches(s, anyWord)) {
+                if (this.matches(s)) {
                     if (anyWord) return true;
                 } else {
                     if (!anyWord) return false;
@@ -42,6 +42,10 @@ public class StallsDTO {
             }
             return !anyWord;
         }
+        return this.matches(search);
+    }
+
+    public boolean matches(String search) {
         search = search.toLowerCase();
         if (search.equals("v2") && NumberUtils.isPositive(v2)) return true;
         if (search.equals("v3") && NumberUtils.isPositive(v3)) return true;

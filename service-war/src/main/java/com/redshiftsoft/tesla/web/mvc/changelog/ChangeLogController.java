@@ -61,14 +61,19 @@ public class ChangeLogController {
         @RequestParam(required = false) Integer draw,
         @RequestParam(required = false, defaultValue = "0") Integer start,
         @RequestParam(required = false, defaultValue = "20") Integer length,
+        @RequestParam(required = false) ChangeType changeType,
         @RequestParam(required = false) Integer regionId,
         @RequestParam(required = false) Integer countryId,
         @RequestParam(required = false) List<String> state,
         @RequestParam(required = false) List<SiteStatus> status,
         @RequestParam(required = false) Integer stalls,
         @RequestParam(required = false) Integer power,
-        @RequestParam(required = false) ChangeType changeType,
         @RequestParam(required = false) Boolean otherEVs,
+        @RequestParam(required = false) Boolean solarCanopy,
+        @RequestParam(required = false) Boolean battery,
+        @RequestParam(required = false) List<String> stallType,
+        @RequestParam(required = false) List<String> plugType,
+        @RequestParam(required = false) List<Integer> parkingId,
         @RequestParam(required = false) String search,
         @RequestParam(required = false, defaultValue = "false") Boolean anyWord
     ) {
@@ -76,14 +81,19 @@ public class ChangeLogController {
 
         List<ChangeLogDTO> filteredList = allList
                 .stream()
+                .filter(cl -> changeType == null || Objects.equals(cl.getChangeType(), changeType))
                 .filter(cl -> regionId == null || Objects.equals(cl.getRegionId(), regionId))
                 .filter(cl -> countryId == null || Objects.equals(cl.getCountryId(), countryId))
                 .filter(cl -> state == null || state.isEmpty() || state.contains(cl.getState()))
                 .filter(cl -> status == null || status.isEmpty() || status.contains(cl.getSiteStatus()))
                 .filter(cl -> stalls == null || cl.getStallCount() >= stalls)
                 .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
-                .filter(cl -> changeType == null || Objects.equals(cl.getChangeType(), changeType))
                 .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
+                .filter(cl -> solarCanopy == null || cl.getSite().isSolarCanopy() == solarCanopy)
+                .filter(cl -> battery == null || cl.getSite().isBattery() == battery)
+                .filter(cl -> stallType == null || (cl.getSite().getStalls() != null && cl.getSite().getStalls().matches(String.join(" ", stallType), true)))
+                .filter(cl-> plugType == null || (cl.getSite().getPlugs() != null && cl.getSite().getPlugs().matches(String.join(" ", plugType), true)))
+                .filter(cl -> parkingId == null || parkingId.isEmpty() || parkingId.contains(cl.getSite().getParkingId()))
                 .filter(cl -> search == null || cl.matches(search, anyWord))
                 .collect(Collectors.toList());
 

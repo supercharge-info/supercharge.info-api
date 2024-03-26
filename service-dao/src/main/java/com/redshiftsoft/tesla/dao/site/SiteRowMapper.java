@@ -18,11 +18,21 @@ public class SiteRowMapper implements RowMapper<Site> {
 
     public static final String SELECT_ENABLED = SELECT_ALL + " WHERE enabled = TRUE";
 
+    private final int startCol;
+
+    public SiteRowMapper() {
+        this.startCol = 1;
+    }
+    
+    public SiteRowMapper(int startCol) {
+        this.startCol = startCol;
+    }
+
     @Override
     public Site mapRow(ResultSet rs, int rowNum) throws SQLException {
         Site site = new Site();
 
-        int c = 1;
+        int c = startCol;
         site.setId(rs.getInt(c++));
         site.setLocationId(rs.getString(c++));
         site.setName(rs.getString(c++));

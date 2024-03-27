@@ -86,6 +86,15 @@ public class UserConfigDAO extends BaseDAO {
         Integer stallCount = (Integer) rs.getObject("stall_count");
         Integer powerKilowatt = (Integer) rs.getObject("power_kwatt");
         Boolean otherEVs = (Boolean) rs.getObject("other_evs");
+        Boolean solarCanopy = (Boolean) rs.getObject("solar_canopy");
+        Boolean battery = (Boolean) rs.getObject("battery");
+        Array stallTypeArr =  rs.getArray("stall_type");
+        List<String> stallType = stallTypeArr == null ? Lists.newArrayList() : Arrays.asList((String[]) stallTypeArr.getArray());
+        Array plugTypeArr =  rs.getArray("plug_type");
+        List<String> plugType = plugTypeArr == null ? Lists.newArrayList() : Arrays.asList((String[]) plugTypeArr.getArray());
+        Array parkingArr = rs.getArray("parking_id");
+        List<Integer> parkingId = parkingArr == null ? Lists.newArrayList() : Arrays.asList((Integer[]) parkingArr.getArray());
+        String search = rs.getString("search");
 
         Double latitude = (Double) rs.getObject("map_latitude");
         Double longitude = (Double) rs.getObject("map_longitude");
@@ -108,7 +117,9 @@ public class UserConfigDAO extends BaseDAO {
                 dataRegionId, dataCountryId,
                 chartsRegionId, chartsCountryId,
                 siteStatus, changeType,
-                stallCount, powerKilowatt, otherEVs,
+                stallCount, powerKilowatt,
+                otherEVs, solarCanopy, battery,
+                stallType, plugType, parkingId, search,
                 latitude, longitude, zoom,
                 markerType, markerSize, clusterSize,
                 customMarkers, lastModified, version);

@@ -1,7 +1,5 @@
 package com.redshiftsoft.tesla.web.mvc.userconfig;
 
-import com.redshiftsoft.tesla.dao.site.Country;
-import com.redshiftsoft.tesla.dao.site.Region;
 import com.redshiftsoft.tesla.dao.user.UserConfig;
 
 import java.util.function.Function;
@@ -33,6 +31,12 @@ public class UserConfigToDTOFunction implements Function<UserConfig, UserConfigD
         dto.filter.stalls = userConfig.getStallCount().orElse(null);
         dto.filter.power = userConfig.getPowerKilowatt().orElse(null);
         dto.filter.otherEVs = userConfig.isOtherEVs().orElse(null);
+        dto.filter.solarCanopy = userConfig.isSolarCanopy().orElse(null);
+        dto.filter.battery = userConfig.isBattery().orElse(null);
+        dto.filter.stallType = userConfig.getStallType().orElse(null);
+        dto.filter.plugType = userConfig.getPlugType().orElse(null);
+        dto.filter.parkingId = userConfig.getParkingId().orElse(null);
+        dto.filter.search = userConfig.getSearch().orElse(null);
 
         dto.latitude = userConfig.getLatitude().orElse(null);
         dto.longitude = userConfig.getLongitude().orElse(null);

@@ -1,8 +1,5 @@
 package com.redshiftsoft.tesla.dao.user;
 
-import com.redshiftsoft.tesla.dao.site.Country;
-import com.redshiftsoft.tesla.dao.site.Region;
-
 import org.springframework.jdbc.core.PreparedStatementCreator;
 
 import java.sql.Connection;
@@ -29,7 +26,8 @@ public class UpdateUserConfigPreparedStatementCreator implements PreparedStateme
                 "data_region_id=?,data_country_id=?," +
                 "chart_region_id=?,chart_country_id=?," +
                 "site_status=?::site_status_type[],change_type=?::change_type," +
-                "stall_count=?,power_kwatt=?,other_evs=?," +
+                "stall_count=?,power_kwatt=?,other_evs=?,solar_canopy=?,battery=?," +
+                "stall_type=?,plug_type=?,parking_id=?,search=?," +
                 "map_latitude=?,map_longitude=?,map_zoom=?," +
                 "marker_type=?::marker_type,marker_size=?,cluster_size=?," +
                 "modified_date=now(),version=version+1 " +
@@ -52,6 +50,12 @@ public class UpdateUserConfigPreparedStatementCreator implements PreparedStateme
         stat.setObject(c++, userConfig.getStallCount().orElse(null));
         stat.setObject(c++, userConfig.getPowerKilowatt().orElse(null));
         stat.setObject(c++, userConfig.isOtherEVs().orElse(null));
+        stat.setObject(c++, userConfig.isSolarCanopy().orElse(null));
+        stat.setObject(c++, userConfig.isBattery().orElse(null));
+        stat.setObject(c++, con.createArrayOf(JDBCType.VARCHAR.getName(), userConfig.getStallType().orElse(null).toArray(String[]::new)));
+        stat.setObject(c++, con.createArrayOf(JDBCType.VARCHAR.getName(), userConfig.getPlugType().orElse(null).toArray(String[]::new)));
+        stat.setObject(c++, con.createArrayOf(JDBCType.INTEGER.getName(), userConfig.getParkingId().orElse(null).toArray(Integer[]::new)));
+        stat.setObject(c++, userConfig.getSearch().orElse(null));
         stat.setObject(c++, userConfig.getLatitude().orElse(null));
         stat.setObject(c++, userConfig.getLongitude().orElse(null));
         stat.setObject(c++, userConfig.getZoom().orElse(null));

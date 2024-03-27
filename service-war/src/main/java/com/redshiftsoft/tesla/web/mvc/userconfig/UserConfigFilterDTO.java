@@ -49,9 +49,9 @@ public class UserConfigFilterDTO {
                 "; otherEVs=" + otherEVs +
                 "; solarCanopy=" + solarCanopy +
                 "; battery=" + battery +
-                "; stallType=" + String.join(",", stallType) +
-                "; plugType=" + String.join(",", plugType) +
-                "; parkingId=" + parkingId.stream().map(String::valueOf).collect(Collectors.joining(",")) +
+                (stallType == null ? "" : "; stallType=" + String.join(",", stallType)) +
+                (plugType == null ? "" : "; plugType=" + String.join(",", plugType)) +
+                (parkingId == null ? "" : "; parkingId=" + parkingId.stream().map(String::valueOf).collect(Collectors.joining(","))) +
                 "; search=" + search +
                 '}';
     }

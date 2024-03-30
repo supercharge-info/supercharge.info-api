@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 
 import static com.redshiftsoft.tesla.dao.BaseDAO.toTimestamp;
 
@@ -29,7 +30,7 @@ public class InsertChangeLogPreparedStatementCreator implements PreparedStatemen
         stat.setString(c++, changeLog.getSiteStatus().toString());
         stat.setBoolean(c++, changeLog.getNotify());
         stat.setInt(c++, changeLog.getUserId());
-        stat.setObject(c, changeLog.getStallCount(), JDBCType.INTEGER);
+        stat.setObject(c, changeLog.getStallCount(), Types.INTEGER);
         return stat;
     }
 

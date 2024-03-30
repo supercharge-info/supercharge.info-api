@@ -3,6 +3,7 @@ package com.redshiftsoft.tesla.dao.changelog;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 
 import java.sql.Connection;
+import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -18,7 +19,7 @@ public class InsertChangeLogPreparedStatementCreator implements PreparedStatemen
 
     @Override
     public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-        String SQL = "insert into changelog values (DEFAULT,?,?,?::CHANGE_TYPE,?::SITE_STATUS_TYPE,NOW(),?,?)";
+        String SQL = "insert into changelog values (DEFAULT,?,?,?::CHANGE_TYPE,?::SITE_STATUS_TYPE,NOW(),?,?,?)";
         PreparedStatement stat = con.prepareStatement(SQL, PreparedStatement.RETURN_GENERATED_KEYS);
 
         int c = 1;
@@ -27,7 +28,8 @@ public class InsertChangeLogPreparedStatementCreator implements PreparedStatemen
         stat.setString(c++, changeLog.getChangeType().toString());
         stat.setString(c++, changeLog.getSiteStatus().toString());
         stat.setBoolean(c++, changeLog.getNotify());
-        stat.setInt(c, changeLog.getUserId());
+        stat.setInt(c++, changeLog.getUserId());
+        stat.setObject(c, changeLog.getStallCount(), JDBCType.INTEGER);
         return stat;
     }
 

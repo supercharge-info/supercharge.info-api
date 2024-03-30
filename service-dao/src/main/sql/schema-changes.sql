@@ -3,6 +3,10 @@
 -- ============================================================================
 alter table changelog add column stall_count int null;
 
+-- initially set every changelog's stall_count to its site's current stall_count
+UPDATE changelog c SET stall_count = s.stall_count
+FROM site s WHERE c.site_id = s.site_id;
+
 alter table user_config
 add column solar_canopy      BOOLEAN,
 add column battery           BOOLEAN,

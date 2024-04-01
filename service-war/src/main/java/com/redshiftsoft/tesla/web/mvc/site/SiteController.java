@@ -75,12 +75,12 @@ public class SiteController {
         @RequestParam(required = false) List<SiteStatus> status,
         @RequestParam(required = false) Integer stalls,
         @RequestParam(required = false) Integer power,
-        @RequestParam(required = false) Boolean otherEVs,
-        @RequestParam(required = false) Boolean solarCanopy,
-        @RequestParam(required = false) Boolean battery,
         @RequestParam(required = false) List<String> stallType,
         @RequestParam(required = false) List<String> plugType,
         @RequestParam(required = false) List<Integer> parkingId,
+        @RequestParam(required = false) Boolean otherEVs,
+        @RequestParam(required = false) Boolean solarCanopy,
+        @RequestParam(required = false) Boolean battery,
         @RequestParam(required = false) String search,
         @RequestParam(required = false, defaultValue = "false") Boolean anyWord,
         @RequestParam(required = false, value = "order[0][column]", defaultValue = "0") Integer orderCol,
@@ -94,15 +94,16 @@ public class SiteController {
                 .filter(s -> regionId == null || Objects.equals(s.getAddress().getRegionId(), regionId))
                 .filter(s -> countryId == null || Objects.equals(s.getAddress().getCountryId(), countryId))
                 .filter(s -> state == null || state.isEmpty() || state.contains(s.getAddress().getState()))
-                .filter(s -> status == null || status.isEmpty() || status.contains(s.getStatus()))
+                .filter(s -> status == null || status.isEmpty() || status.contains(s.getStatus())
+                                || (s.getStatus() == SiteStatus.EXPANDING && status.contains(SiteStatus.OPEN)))
                 .filter(s -> stalls == null || s.getStallCount() >= stalls)
                 .filter(s -> power == null || s.getPowerKilowatt() >= power)
-                .filter(s -> otherEVs == null || s.isOtherEVs() == otherEVs)
-                .filter(s -> solarCanopy == null || s.isSolarCanopy() == solarCanopy)
-                .filter(s -> battery == null || s.isBattery() == battery)
                 .filter(s -> stallType == null || (s.getStalls() != null && s.getStalls().matches(String.join(" ", stallType), true)))
                 .filter(s -> plugType == null || (s.getPlugs() != null && s.getPlugs().matches(String.join(" ", plugType), true)))
                 .filter(s -> parkingId == null || parkingId.isEmpty() || parkingId.contains(s.getParkingId()))
+                .filter(s -> otherEVs == null || s.isOtherEVs() == otherEVs)
+                .filter(s -> solarCanopy == null || s.isSolarCanopy() == solarCanopy)
+                .filter(s -> battery == null || s.isBattery() == battery)
                 .filter(s -> search == null || s.matches(search, anyWord))
                 .collect(Collectors.toList());
 

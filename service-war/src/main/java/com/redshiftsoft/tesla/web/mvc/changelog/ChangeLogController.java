@@ -85,12 +85,14 @@ public class ChangeLogController {
                 .filter(cl -> regionId == null || Objects.equals(cl.getRegionId(), regionId))
                 .filter(cl -> countryId == null || Objects.equals(cl.getCountryId(), countryId))
                 .filter(cl -> state == null || state.isEmpty() || state.contains(cl.getState()))
-                .filter(cl -> status == null || status.isEmpty() || status.contains(cl.getSiteStatus())
-                                || (cl.getSiteStatus() == SiteStatus.EXPANDING && status.contains(SiteStatus.OPEN)))
+                .filter(cl -> status == null || status.isEmpty() || status.contains(cl.getSiteStatus()) ||
+                            (cl.getSiteStatus() == SiteStatus.EXPANDING && status.contains(SiteStatus.OPEN)))
                 .filter(cl -> stalls == null || cl.getStallCount() >= stalls)
                 .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
-                .filter(cl -> stallType == null || (cl.getSite().getStalls() != null && cl.getSite().getStalls().matches(String.join(" ", stallType), true)))
-                .filter(cl -> plugType == null || (cl.getSite().getPlugs() != null && cl.getSite().getPlugs().matches(String.join(" ", plugType), true)))
+                .filter(cl -> stallType == null || stallType.isEmpty() ||
+                            (cl.getSite().getStalls() != null && cl.getSite().getStalls().matches(String.join(" ", stallType), true)))
+                .filter(cl -> plugType == null || plugType.isEmpty() ||
+                            (cl.getSite().getPlugs() != null && cl.getSite().getPlugs().matches(String.join(" ", plugType), true)))
                 .filter(cl -> parkingId == null || parkingId.isEmpty() || parkingId.contains(cl.getSite().getParkingId()))
                 .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
                 .filter(cl -> solarCanopy == null || cl.getSite().isSolarCanopy() == solarCanopy)

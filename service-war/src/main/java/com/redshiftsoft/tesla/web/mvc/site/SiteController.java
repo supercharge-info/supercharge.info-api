@@ -94,12 +94,14 @@ public class SiteController {
                 .filter(s -> regionId == null || Objects.equals(s.getAddress().getRegionId(), regionId))
                 .filter(s -> countryId == null || Objects.equals(s.getAddress().getCountryId(), countryId))
                 .filter(s -> state == null || state.isEmpty() || state.contains(s.getAddress().getState()))
-                .filter(s -> status == null || status.isEmpty() || status.contains(s.getStatus())
-                                || (s.getStatus() == SiteStatus.EXPANDING && status.contains(SiteStatus.OPEN)))
+                .filter(s -> status == null || status.isEmpty() || status.contains(s.getStatus()) ||
+                            (s.getStatus() == SiteStatus.EXPANDING && status.contains(SiteStatus.OPEN)))
                 .filter(s -> stalls == null || s.getStallCount() >= stalls)
                 .filter(s -> power == null || s.getPowerKilowatt() >= power)
-                .filter(s -> stallType == null || (s.getStalls() != null && s.getStalls().matches(String.join(" ", stallType), true)))
-                .filter(s -> plugType == null || (s.getPlugs() != null && s.getPlugs().matches(String.join(" ", plugType), true)))
+                .filter(s -> stallType == null || stallType.isEmpty() ||
+                            (s.getStalls() != null && s.getStalls().matches(String.join(" ", stallType), true)))
+                .filter(s -> plugType == null || plugType.isEmpty() ||
+                            (s.getPlugs() != null && s.getPlugs().matches(String.join(" ", plugType), true)))
                 .filter(s -> parkingId == null || parkingId.isEmpty() || parkingId.contains(s.getParkingId()))
                 .filter(s -> otherEVs == null || s.isOtherEVs() == otherEVs)
                 .filter(s -> solarCanopy == null || s.isSolarCanopy() == solarCanopy)

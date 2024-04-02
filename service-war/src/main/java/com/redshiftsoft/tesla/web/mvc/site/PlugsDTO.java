@@ -50,10 +50,9 @@ public class PlugsDTO {
 
     public boolean matches(String search) {
         search = search.toLowerCase();
-        if (search.equals("tpc") || search.equals("nacs")) {
-            if (TPC != null && TPC > 0) return true;
-            if (NACS != null && NACS > 0) return true;
-        }
+        if (search.equals("tesla") && (NumberUtils.isPositive(TPC) || NumberUtils.isPositive(NACS))) return true;
+        if (search.equals("tpc") && NumberUtils.isPositive(TPC)) return true;
+        if (search.equals("nacs") && NumberUtils.isPositive(NACS)) return true;
         if (search.equals("ccs1") && NumberUtils.isPositive(CCS1)) return true;
         if (search.equals("ccs2") && NumberUtils.isPositive(CCS2)) return true;
         if (search.equals("ccs") && (NumberUtils.isPositive(CCS1) || NumberUtils.isPositive(CCS2))) return true;

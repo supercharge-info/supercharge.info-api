@@ -35,7 +35,7 @@ public class UserConfigToDTOFunction implements Function<UserConfig, UserConfigD
         dto.filter.battery = userConfig.isBattery().orElse(null);
         dto.filter.stallType = userConfig.getStallType().orElse(null);
         dto.filter.plugType = userConfig.getPlugType().orElse(null);
-        dto.filter.parkingId = userConfig.getParkingId().orElse(null);
+        dto.filter.parking = userConfig.getParkingId().orElse(null);
         dto.filter.search = userConfig.getSearch().orElse(null);
 
         dto.latitude = userConfig.getLatitude().orElse(null);

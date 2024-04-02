@@ -70,7 +70,7 @@ public class ChangeLogController {
         @RequestParam(required = false) Integer power,
         @RequestParam(required = false) List<String> stallType,
         @RequestParam(required = false) List<String> plugType,
-        @RequestParam(required = false) List<Integer> parkingId,
+        @RequestParam(required = false) List<Integer> parking,
         @RequestParam(required = false) Boolean otherEVs,
         @RequestParam(required = false) Boolean solarCanopy,
         @RequestParam(required = false) Boolean battery,
@@ -93,7 +93,7 @@ public class ChangeLogController {
                             (cl.getSite().getStalls() != null && cl.getSite().getStalls().matches(String.join(" ", stallType), true)))
                 .filter(cl -> plugType == null || plugType.isEmpty() ||
                             (cl.getSite().getPlugs() != null && cl.getSite().getPlugs().matches(String.join(" ", plugType), true)))
-                .filter(cl -> parkingId == null || parkingId.isEmpty() || parkingId.contains(cl.getSite().getParkingId()))
+                .filter(cl -> parking == null || parking.isEmpty() || parking.contains(cl.getSite().getParkingId()))
                 .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
                 .filter(cl -> solarCanopy == null || cl.getSite().isSolarCanopy() == solarCanopy)
                 .filter(cl -> battery == null || cl.getSite().isBattery() == battery)

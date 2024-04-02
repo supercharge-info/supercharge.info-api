@@ -46,7 +46,7 @@ public class UserConfigFromDTOFunction implements Function<UserConfigDTO, UserCo
                 dto.filter.battery,
                 dto.filter.stallType == null ? emptyString : dto.filter.stallType,
                 dto.filter.plugType == null ? emptyString : dto.filter.plugType,
-                dto.filter.parkingId == null ? emptyInteger : dto.filter.parkingId,
+                dto.filter.parking == null ? emptyInteger : dto.filter.parking,
                 dto.filter.search,
                 dto.latitude,
                 dto.longitude,

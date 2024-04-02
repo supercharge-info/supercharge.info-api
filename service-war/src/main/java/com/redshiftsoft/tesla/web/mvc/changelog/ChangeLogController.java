@@ -94,7 +94,7 @@ public class ChangeLogController {
                 .filter(cl -> plugType == null || plugType.isEmpty() ||
                             (cl.getSite().getPlugs() != null && cl.getSite().getPlugs().matches(String.join(" ", plugType), true)))
                 .filter(cl -> parking == null || parking.isEmpty() || parking.contains(cl.getSite().getParkingId()) ||
-                            (parking.contains(0) && cl.getSite().getParkingId() == null))
+                            (parking.contains(Integer.valueOf(0)) && cl.getSite().getParkingId() == null))
                 .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
                 .filter(cl -> solarCanopy == null || cl.getSite().isSolarCanopy() == solarCanopy)
                 .filter(cl -> battery == null || cl.getSite().isBattery() == battery)

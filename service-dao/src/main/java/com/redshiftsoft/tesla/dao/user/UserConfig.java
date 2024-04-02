@@ -33,12 +33,12 @@ public class UserConfig {
 
     private final Integer stallCount;
     private final Integer powerKilowatt;
-    private final Boolean otherEVs;
-    private final Boolean solarCanopy;
-    private final Boolean battery;
     private final List<String> stallType;
     private final List<String> plugType;
     private final List<Integer> parkingId;
+    private final Boolean otherEVs;
+    private final Boolean solarCanopy;
+    private final Boolean battery;
     private final String search;
 
     private final Unit unit;

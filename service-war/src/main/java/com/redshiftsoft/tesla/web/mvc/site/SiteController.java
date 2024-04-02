@@ -102,7 +102,8 @@ public class SiteController {
                             (s.getStalls() != null && s.getStalls().matches(String.join(" ", stallType), true)))
                 .filter(s -> plugType == null || plugType.isEmpty() ||
                             (s.getPlugs() != null && s.getPlugs().matches(String.join(" ", plugType), true)))
-                .filter(s -> parking == null || parking.isEmpty() || parking.contains(s.getParkingId()))
+                .filter(s -> parking == null || parking.isEmpty() || parking.contains(s.getParkingId()) ||
+                            (parking.contains(0) && s.getParkingId() == null))
                 .filter(s -> otherEVs == null || s.isOtherEVs() == otherEVs)
                 .filter(s -> solarCanopy == null || s.isSolarCanopy() == solarCanopy)
                 .filter(s -> battery == null || s.isBattery() == battery)

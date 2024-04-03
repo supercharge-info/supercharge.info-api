@@ -31,6 +31,7 @@ public class ChangeLogDTO_UT {
         dto.setSiteStatus(SiteStatus.CONSTRUCTION);
         dto.setPrevStatus(SiteStatus.PERMIT);
         dto.setStallCount(19);
+        dto.setPrevCount(11);
         dto.setPowerKilowatt(125);
 
         // when
@@ -45,6 +46,7 @@ public class ChangeLogDTO_UT {
                 "siteStatus\":\"CONSTRUCTION\",\"" +
                 "prevStatus\":\"PERMIT\",\"" +
                 "stallCount\":19,\"" +
+                "prevCount\":11,\"" +
                 "powerKilowatt\":125,\"" +
                 "notify\":false,\"" +
                 "siteName\":\"testSiteName\",\"" +
@@ -53,6 +55,7 @@ public class ChangeLogDTO_UT {
                 "countryId\":8888,\"" +
                 "country\":\"testCountry\",\"" +
                 "state\":\"testState\",\"" +
+                "site\":null,\"" +
                 "dateFormatted\":\"Mon, Nov 20 2017\"" +
                 "}", s);
     }

@@ -118,6 +118,7 @@ public class UserConfigDAO_UT {
         assertEquals(expectedUserConfig.getChangeType(), actualUserConfig.getChangeType());
         assertEquals(expectedUserConfig.getPowerKilowatt(), actualUserConfig.getPowerKilowatt());
         assertEquals(expectedUserConfig.isOtherEVs(), actualUserConfig.isOtherEVs());
+        // TODO: assertEquals for new fields
 
         assertEquals(expectedUserConfig.getMarkerType(), actualUserConfig.getMarkerType());
         assertEquals(expectedUserConfig.getMarkerSize(), actualUserConfig.getMarkerSize());

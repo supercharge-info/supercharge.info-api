@@ -8,6 +8,7 @@ import com.redshiftsoft.tesla.dao.site.SiteGPS;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import com.redshiftsoft.tesla.web.json.LocalDateDeserializer;
 import com.redshiftsoft.tesla.web.json.LocalDateSerializer;
+import com.redshiftsoft.util.NumberUtils;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -135,10 +136,10 @@ public class SiteDTO {
 
         if (otherEVs && plugs != null) {
             // If "NACS" filter is checked, include the site if it's marked as allowing other EVs AND has at least one NACS plug
-            if (openTo.contains(Integer.valueOf(2)) && plugs.getNACS() > 0) return true;
+            if (openTo.contains(Integer.valueOf(2)) && NumberUtils.isPositive(plugs.getNACS())) return true;
 
             // If "Other" filter is checked, include the site if it's marked as allowing other EVs AND has at least one non-Tesla-specific plug other than NACS
-            if (openTo.contains(Integer.valueOf(3)) && (plugs.getCCS1() > 0 || plugs.getCCS2() > 0 || plugs.getGBT() > 0)) return true;
+            if (openTo.contains(Integer.valueOf(3)) && (NumberUtils.isPositive(plugs.getCCS1()) || NumberUtils.isPositive(plugs.getCCS2()) || NumberUtils.isPositive(plugs.getGBT()))) return true;
         }
 
         return false;

@@ -20,6 +20,7 @@ locations = json.load(file)
 # Put the results into a separate dict before printing to prevent duplicates and allow sorting
 # Sorting isn't necessary since the table has a primary key but it's nice to have
 output = {}
+nacs = 0
 
 print("""
 CREATE TABLE IF NOT EXISTS nacsflags (location_id varchar(300) primary key, nacs boolean);
@@ -30,15 +31,16 @@ for site in locations:
     if 'location_type' in site:
         if 'nacs' in site['location_type'] and 'supercharger' in site['location_type']:
             output[site['location_id']] = True
-        #elif 'supercharger' in site['location_type']:
-            #output[site['location_id']] = False
+            nacs += 1
+        elif 'supercharger' in site['location_type']:
+            output[site['location_id']] = False
 
 prefix = " "
 for row in sorted(output.keys()):
     print(f"{prefix}('{row}',{output[row]})")
     prefix = ","
 print(';')
-print(f'-- {len(output)} of {len(locations)} locations are NACS')
+print(f'-- {nacs} of {len(locations)} locations are NACS')
 print("""
 UPDATE site
 SET other_evs = true
@@ -46,4 +48,8 @@ FROM nacsflags n
 WHERE site.location_id = n.location_id
 AND n.nacs = true
 AND site.plugs_nacs > 0;
+      
+UPDATE site
+SET plugs_tpc = COALESCE(plugs_tpc, 0) + plugs_nacs, plugs_nacs = 0
+WHERE plugs_nacs > 0 AND other_evs = false;
 """)

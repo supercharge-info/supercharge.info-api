@@ -14,6 +14,9 @@ create table open_to
     description   text null
 );
 
+-- not sure why this needs to be done separately/explicitly, considering the contents of 03-permissions.sql
+grant all privileges on open_to to supercharge_user;
+
 -- Pre-populate open-to options
 INSERT INTO open_to (name, description) VALUES
     ('Tesla', 'Open to Tesla only'),

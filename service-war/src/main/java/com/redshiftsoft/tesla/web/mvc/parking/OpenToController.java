@@ -25,10 +25,10 @@ public class OpenToController {
 
     @PostConstruct
     public void postConstruct() {
-        cachingHandler = new CachingHandler<>(dbInfoDAO, "opento", openToDAO);
+        cachingHandler = new CachingHandler<>(dbInfoDAO, "openTo", openToDAO);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/opento")
+    @RequestMapping(method = RequestMethod.GET, value = "/openTo")
     @ResponseBody
     public List<OpenTo> openTo() {
         return cachingHandler.getValues();

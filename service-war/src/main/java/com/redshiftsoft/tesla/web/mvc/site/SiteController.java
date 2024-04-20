@@ -78,6 +78,7 @@ public class SiteController {
         @RequestParam(required = false) List<String> stallType,
         @RequestParam(required = false) List<String> plugType,
         @RequestParam(required = false) List<Integer> parking,
+        @RequestParam(required = false) List<Integer> openTo,
         @RequestParam(required = false) Boolean otherEVs,
         @RequestParam(required = false) Boolean solarCanopy,
         @RequestParam(required = false) Boolean battery,
@@ -102,8 +103,9 @@ public class SiteController {
                             (s.getStalls() != null && s.getStalls().matches(String.join(" ", stallType), true)))
                 .filter(s -> plugType == null || plugType.isEmpty() ||
                             (s.getPlugs() != null && s.getPlugs().matches(String.join(" ", plugType), true)))
-                .filter(s -> parking == null || parking.isEmpty() || parking.contains(s.getParkingId()) ||
-                            (parking.contains(Integer.valueOf(0)) && s.getParkingId() == null))
+                .filter(s -> s.hasParking(parking))
+                .filter(s -> s.isOpenTo(openTo))
+                // TODO: remove "other EVs" boolean filter in favor of "open to" above
                 .filter(s -> otherEVs == null || s.isOtherEVs() == otherEVs)
                 .filter(s -> solarCanopy == null || s.isSolarCanopy() == solarCanopy)
                 .filter(s -> battery == null || s.isBattery() == battery)

@@ -30,6 +30,7 @@ public class UserConfigFilterDTO {
     public List<String> stallType;
     public List<String> plugType;
     public List<Integer> parking;
+    public List<Integer> openTo;
     public Boolean otherEVs;
     public Boolean solarCanopy;
     public Boolean battery;
@@ -49,6 +50,7 @@ public class UserConfigFilterDTO {
                 (stallType == null ? "" : "; stallType=" + String.join(",", stallType)) +
                 (plugType == null ? "" : "; plugType=" + String.join(",", plugType)) +
                 (parking == null ? "" : "; parking=" + parking.stream().map(String::valueOf).collect(Collectors.joining(","))) +
+                (openTo == null ? "" : "; openTo=" + openTo.stream().map(String::valueOf).collect(Collectors.joining(","))) +
                 "; otherEVs=" + otherEVs +
                 "; solarCanopy=" + solarCanopy +
                 "; battery=" + battery +

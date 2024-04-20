@@ -19,7 +19,7 @@ public class InsertUserConfigPreparedStatementCreator implements PreparedStateme
 
     @Override
     public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-        String SQL = "INSERT INTO user_config VALUES(?,?::distance_unit_type,?,?,?,?,?,?,?,NOW(),1,?,?,?,?,?,?::site_status_type[],?::change_type,?,?,?::marker_type,?,?,?,?,?,?,?,?,?)";
+        String SQL = "INSERT INTO user_config VALUES(?,?::distance_unit_type,?,?,?,?,?,?,?,NOW(),1,?,?,?,?,?,?::site_status_type[],?::change_type,?,?,?::marker_type,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = con.prepareStatement(SQL);
 
         int c = 1;
@@ -50,6 +50,7 @@ public class InsertUserConfigPreparedStatementCreator implements PreparedStateme
         stat.setObject(c++, con.createArrayOf(JDBCType.VARCHAR.getName(), userConfig.getStallType().orElse(null).toArray(String[]::new)));
         stat.setObject(c++, con.createArrayOf(JDBCType.VARCHAR.getName(), userConfig.getPlugType().orElse(null).toArray(String[]::new)));
         stat.setObject(c++, con.createArrayOf(JDBCType.INTEGER.getName(), userConfig.getParkingId().orElse(null).toArray(Integer[]::new)));
+        stat.setObject(c++, con.createArrayOf(JDBCType.INTEGER.getName(), userConfig.getOpenToId().orElse(null).toArray(Integer[]::new)));
         stat.setObject(c++, userConfig.getSearch().orElse(null));
         return stat;
     }

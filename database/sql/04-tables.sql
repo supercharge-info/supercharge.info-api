@@ -15,6 +15,7 @@ drop table if exists user_reset;
 drop table if exists changelog;
 drop table if exists site_change;
 drop table if exists parking;
+drop table if exists open_to;
 drop table if exists site;
 drop table if exists address;
 drop table if exists country;
@@ -88,6 +89,18 @@ alter sequence address_address_id_seq restart with 2000000;
 create table parking
 (
     parking_id    serial primary key,
+    name          varchar(100) not null,
+    description   text null
+);
+
+-- -----------------------------------------------------------
+-- OPEN_TO - lookup table (for filtering)
+-- Changes to the data in this table will likely require a
+-- corresponding code change in SiteDTO.isOpenTo().
+-- -----------------------------------------------------------
+create table open_to
+(
+    open_to_id    serial primary key,
     name          varchar(100) not null,
     description   text null
 );
@@ -323,6 +336,7 @@ CREATE TABLE user_config
     stall_type        VARCHAR(20) ARRAY,
     plug_type         VARCHAR(10) ARRAY,
     parking_id        INTEGER ARRAY,
+    open_to_id        INTEGER ARRAY,
     search            VARCHAR(200),
 
     CONSTRAINT user_config_users_user_id_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE,

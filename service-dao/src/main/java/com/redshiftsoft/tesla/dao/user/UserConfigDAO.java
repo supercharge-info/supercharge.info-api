@@ -94,6 +94,8 @@ public class UserConfigDAO extends BaseDAO {
         List<String> plugType = plugTypeArr == null ? Lists.newArrayList() : Arrays.asList((String[]) plugTypeArr.getArray());
         Array parkingArr = rs.getArray("parking_id");
         List<Integer> parkingId = parkingArr == null ? Lists.newArrayList() : Arrays.asList((Integer[]) parkingArr.getArray());
+        Array openToArr = rs.getArray("open_to_id");
+        List<Integer> openToId = openToArr == null ? Lists.newArrayList() : Arrays.asList((Integer[]) openToArr.getArray());
         String search = rs.getString("search");
 
         Double latitude = (Double) rs.getObject("map_latitude");
@@ -119,7 +121,8 @@ public class UserConfigDAO extends BaseDAO {
                 siteStatus, changeType,
                 stallCount, powerKilowatt,
                 otherEVs, solarCanopy, battery,
-                stallType, plugType, parkingId, search,
+                stallType, plugType,
+                parkingId, openToId, search,
                 latitude, longitude, zoom,
                 markerType, markerSize, clusterSize,
                 customMarkers, lastModified, version);

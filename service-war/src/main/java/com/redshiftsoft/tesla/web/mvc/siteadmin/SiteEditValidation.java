@@ -116,8 +116,8 @@ public class SiteEditValidation {
         //
         // stall/plug counts
         //
-        if (site.getStallCount() <= 0) {
-            errorMessages.add("stall count must be at least 1");
+        if (site.getStallCount() < 0) {
+            errorMessages.add("stall count must be at least 1 (or 0 for unknown)");
         }
 
         StallsDTO stalls = site.getStalls();

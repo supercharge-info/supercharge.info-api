@@ -27,7 +27,7 @@ public class UpdateUserConfigPreparedStatementCreator implements PreparedStateme
                 "chart_region_id=?,chart_country_id=?," +
                 "site_status=?::site_status_type[],change_type=?::change_type," +
                 "stall_count=?,power_kwatt=?,other_evs=?,solar_canopy=?,battery=?," +
-                "stall_type=?,plug_type=?,parking_id=?,search=?," +
+                "stall_type=?,plug_type=?,parking_id=?,open_to_id=?,search=?," +
                 "map_latitude=?,map_longitude=?,map_zoom=?," +
                 "marker_type=?::marker_type,marker_size=?,cluster_size=?," +
                 "modified_date=now(),version=version+1 " +
@@ -55,6 +55,7 @@ public class UpdateUserConfigPreparedStatementCreator implements PreparedStateme
         stat.setObject(c++, con.createArrayOf(JDBCType.VARCHAR.getName(), userConfig.getStallType().orElse(null).toArray(String[]::new)));
         stat.setObject(c++, con.createArrayOf(JDBCType.VARCHAR.getName(), userConfig.getPlugType().orElse(null).toArray(String[]::new)));
         stat.setObject(c++, con.createArrayOf(JDBCType.INTEGER.getName(), userConfig.getParkingId().orElse(null).toArray(Integer[]::new)));
+        stat.setObject(c++, con.createArrayOf(JDBCType.INTEGER.getName(), userConfig.getOpenToId().orElse(null).toArray(Integer[]::new)));
         stat.setObject(c++, userConfig.getSearch().orElse(null));
         stat.setObject(c++, userConfig.getLatitude().orElse(null));
         stat.setObject(c++, userConfig.getLongitude().orElse(null));

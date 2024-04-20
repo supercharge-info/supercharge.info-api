@@ -117,6 +117,33 @@ public class SiteDTO {
         return false;
     }
 
+    public boolean hasParking(List<Integer> parking) {
+        return parking == null
+            || parking.isEmpty()
+            || parking.contains(parkingId)
+            || parking.contains(Integer.valueOf(0)) && parkingId == null;
+    }
+
+    // When updating the "open_to" lookup table, this should be the only place in the API repo that a corresponding code change is needed
+    public boolean isOpenTo(List<Integer> openTo) {
+
+        // If no filter is selected, don't skip any site
+        if (openTo == null || openTo.isEmpty()) return true;
+
+        // If "Tesla" filter is checked, include the site if it's marked as NOT allowing other EVs
+        if (openTo.contains(Integer.valueOf(1)) && !otherEVs) return true;
+
+        if (otherEVs && plugs != null) {
+            // If "NACS" filter is checked, include the site if it's marked as allowing other EVs AND has at least one NACS plug
+            if (openTo.contains(Integer.valueOf(2)) && plugs.getNACS() > 0) return true;
+
+            // If "Other" filter is checked, include the site if it's marked as allowing other EVs AND has at least one non-Tesla-specific plug other than NACS
+            if (openTo.contains(Integer.valueOf(3)) && (plugs.getCCS1() > 0 || plugs.getCCS2() > 0 || plugs.getGBT() > 0)) return true;
+        }
+
+        return false;
+    }
+
     // - - - - - - - - - - - - - - - - - - - - - - -
     // getters/setters
     // - - - - - - - - - - - - - - - - - - - - - - -

@@ -71,6 +71,7 @@ public class ChangeLogController {
         @RequestParam(required = false) List<String> stallType,
         @RequestParam(required = false) List<String> plugType,
         @RequestParam(required = false) List<Integer> parking,
+        @RequestParam(required = false) List<Integer> openTo,
         @RequestParam(required = false) Boolean otherEVs,
         @RequestParam(required = false) Boolean solarCanopy,
         @RequestParam(required = false) Boolean battery,
@@ -93,8 +94,9 @@ public class ChangeLogController {
                             (cl.getSite().getStalls() != null && cl.getSite().getStalls().matches(String.join(" ", stallType), true)))
                 .filter(cl -> plugType == null || plugType.isEmpty() ||
                             (cl.getSite().getPlugs() != null && cl.getSite().getPlugs().matches(String.join(" ", plugType), true)))
-                .filter(cl -> parking == null || parking.isEmpty() || parking.contains(cl.getSite().getParkingId()) ||
-                            (parking.contains(Integer.valueOf(0)) && cl.getSite().getParkingId() == null))
+                .filter(cl -> cl.getSite().hasParking(parking))
+                .filter(cl -> cl.getSite().isOpenTo(openTo))
+                // TODO: remove "other EVs" boolean filter in favor of "open to" above
                 .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
                 .filter(cl -> solarCanopy == null || cl.getSite().isSolarCanopy() == solarCanopy)
                 .filter(cl -> battery == null || cl.getSite().isBattery() == battery)

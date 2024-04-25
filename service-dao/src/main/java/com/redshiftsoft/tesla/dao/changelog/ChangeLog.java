@@ -1,9 +1,8 @@
 package com.redshiftsoft.tesla.dao.changelog;
 
 import com.google.common.base.Preconditions;
-import com.redshiftsoft.tesla.dao.site.Plugs;
+import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
-import com.redshiftsoft.tesla.dao.site.Stalls;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -42,9 +41,12 @@ public class ChangeLog implements Comparable<ChangeLog> {
     private SiteStatus prevStatus;
 
     private boolean notify;
-    private int stallCount;
+    private Integer stallCount;
+    private Integer prevCount;
     private int powerKilowatt;
     private boolean otherEVs;
+
+    private Site site;
 
     public int getId() {
         return id;
@@ -90,13 +92,21 @@ public class ChangeLog implements Comparable<ChangeLog> {
         this.notify = notify;
     }
 
-    public int getStallCount() {
+    public Integer getStallCount() {
         return stallCount;
     }
-    public void setStallCount(int stallCount) {
+    public void setStallCount(Integer stallCount) {
         this.stallCount = stallCount;
     }
 
+    public Integer getPrevCount() {
+        return prevCount;
+    }
+    public void setPrevCount(Integer prevCount) {
+        this.prevCount = prevCount;
+    }
+
+	// For backward compatibility
     public int getPowerKilowatt() {
         return powerKilowatt;
     }
@@ -104,6 +114,7 @@ public class ChangeLog implements Comparable<ChangeLog> {
         this.powerKilowatt = powerKilowatt;
     }
 
+	// For backward compatibility
     public boolean isOtherEVs() {
         return otherEVs;
     }
@@ -111,6 +122,7 @@ public class ChangeLog implements Comparable<ChangeLog> {
         this.otherEVs = otherEVs;
     }
 
+	// For backward compatibility
     public int getSiteId() {
         return siteId;
     }
@@ -125,6 +137,7 @@ public class ChangeLog implements Comparable<ChangeLog> {
         this.modifiedInstant = modifiedInstant;
     }
 
+	// For backward compatibility
     public String getSiteName() {
         return siteName;
     }
@@ -132,6 +145,7 @@ public class ChangeLog implements Comparable<ChangeLog> {
         this.siteName = siteName;
     }
 
+	// For backward compatibility
     public int getRegionId() {
         return regionId;
     }
@@ -139,6 +153,7 @@ public class ChangeLog implements Comparable<ChangeLog> {
         this.regionId = regionId;
     }
 
+	// For backward compatibility
     public String getRegionName() {
         return regionName;
     }
@@ -146,6 +161,7 @@ public class ChangeLog implements Comparable<ChangeLog> {
         this.regionName = regionName;
     }
 
+	// For backward compatibility
     public int getCountryId() {
         return countryId;
     }
@@ -153,6 +169,7 @@ public class ChangeLog implements Comparable<ChangeLog> {
         this.countryId = countryId;
     }
 
+	// For backward compatibility
     public String getCountryName() {
         return countryName;
     }
@@ -160,11 +177,19 @@ public class ChangeLog implements Comparable<ChangeLog> {
         this.countryName = countryName;
     }
 
+	// For backward compatibility
     public String getState() {
         return state;
     }
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Site getSite() {
+        return site;
+    }
+    public void setSite(Site site) {
+        this.site = site;
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

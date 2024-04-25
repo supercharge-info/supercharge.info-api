@@ -8,6 +8,7 @@ import com.redshiftsoft.tesla.dao.site.SiteGPS;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
 import com.redshiftsoft.tesla.web.json.LocalDateDeserializer;
 import com.redshiftsoft.tesla.web.json.LocalDateSerializer;
+import com.redshiftsoft.util.NumberUtils;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -74,6 +75,74 @@ public class SiteDTO {
 
     private List<?> getIdentityFields() {
         return Collections.singletonList(id);
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - -
+    // search
+    // - - - - - - - - - - - - - - - - - - - - - - -
+    public boolean matches(String search, boolean anyWord) {
+        if (search == null) return true;
+        if (search.indexOf(" ") >= 0) {
+            for (String s : search.split(" ")) {
+                if (this.matches(s)) {
+                    if (anyWord) return true;
+                } else {
+                    if (!anyWord) return false;
+                }
+            }
+            return !anyWord;
+        }
+        return this.matches(search);
+    }
+
+    public boolean matches(String search) {
+        search = search.toLowerCase();
+        if (String.valueOf(id).contains(search)) return true;
+        if (name != null && name.toLowerCase().contains(search)) return true;
+        if (status != null && status.toString().toLowerCase().contains(search)) return true;
+        if (address != null && address.matches(search)) return true;
+        if (gps != null) {
+            if (String.valueOf(gps.getLatitude()).contains(search)) return true;
+            if (String.valueOf(gps.getLongitude()).contains(search)) return true;
+        }
+        if (String.valueOf(stallCount).contains(search)) return true;
+        if (hours != null && hours.toLowerCase().contains(search)) return true;
+        if (elevationMeters != null && String.valueOf(elevationMeters).contains(search)) return true;
+        if (String.valueOf(powerKilowatt).contains(search)) return true;
+        if (stalls != null && stalls.matches(search)) return true;
+        if (plugs != null && plugs.matches(search)) return true;
+        if (facilityName != null && facilityName.toLowerCase().contains(search)) return true;
+        if (facilityHours != null && facilityHours.toLowerCase().contains(search)) return true;
+        if (accessNotes != null && accessNotes.toLowerCase().contains(search)) return true;
+        if (addressNotes != null && addressNotes.toLowerCase().contains(search)) return true;
+        return false;
+    }
+
+    public boolean hasParking(List<Integer> parking) {
+        return parking == null
+            || parking.isEmpty()
+            || parking.contains(parkingId)
+            || parking.contains(Integer.valueOf(0)) && parkingId == null;
+    }
+
+    // When updating the "open_to" lookup table, this should be the only place in the API repo that a corresponding code change is needed
+    public boolean isOpenTo(List<Integer> openTo) {
+
+        // If no filter is selected, don't skip any site
+        if (openTo == null || openTo.isEmpty()) return true;
+
+        // If "Tesla" filter is checked, include the site if it's marked as NOT allowing other EVs
+        if (openTo.contains(Integer.valueOf(1)) && !otherEVs) return true;
+
+        if (otherEVs && plugs != null) {
+            // If "NACS" filter is checked, include the site if it's marked as allowing other EVs AND has at least one NACS plug
+            if (openTo.contains(Integer.valueOf(2)) && NumberUtils.isPositive(plugs.getNACS())) return true;
+
+            // If "Other" filter is checked, include the site if it's marked as allowing other EVs AND has at least one non-Tesla-specific plug other than NACS
+            if (openTo.contains(Integer.valueOf(3)) && (NumberUtils.isPositive(plugs.getCCS1()) || NumberUtils.isPositive(plugs.getCCS2()) || NumberUtils.isPositive(plugs.getGBT()))) return true;
+        }
+
+        return false;
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - -

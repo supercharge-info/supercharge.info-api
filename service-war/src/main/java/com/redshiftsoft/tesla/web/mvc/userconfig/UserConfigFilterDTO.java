@@ -27,7 +27,14 @@ public class UserConfigFilterDTO {
     public ChangeType changeType;
     public Integer stalls;
     public Integer power;
+    public List<String> stallType;
+    public List<String> plugType;
+    public List<Integer> parking;
+    public List<Integer> openTo;
     public Boolean otherEVs;
+    public Boolean solarCanopy;
+    public Boolean battery;
+    public String search;
 
     @Override
     public String toString() {
@@ -40,7 +47,14 @@ public class UserConfigFilterDTO {
                 "; changeType=" + changeType +
                 "; stalls=" + stalls +
                 "; power=" + power +
+                (stallType == null ? "" : "; stallType=" + String.join(",", stallType)) +
+                (plugType == null ? "" : "; plugType=" + String.join(",", plugType)) +
+                (parking == null ? "" : "; parking=" + parking.stream().map(String::valueOf).collect(Collectors.joining(","))) +
+                (openTo == null ? "" : "; openTo=" + openTo.stream().map(String::valueOf).collect(Collectors.joining(","))) +
                 "; otherEVs=" + otherEVs +
+                "; solarCanopy=" + solarCanopy +
+                "; battery=" + battery +
+                "; search=" + search +
                 '}';
     }
 }

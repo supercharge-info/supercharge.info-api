@@ -34,6 +34,10 @@ public final class NumberUtils {
         return test >= lower && test <= upper;
     }
 
+    public static boolean isPositive(Number n) {
+        return n != null && n.doubleValue() > 0;
+    }
+
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     public static long max(long... values) {

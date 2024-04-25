@@ -142,12 +142,12 @@ public class SiteEditController {
         siteDAO.update(site);
 
         if (oldSiteStatus != site.getStatus() && !SiteEditDTO.NotifyEnum.no.equals(notify)) {
-            ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.UPDATE, site.getStatus(), Instant.now(), Instant.now(), SiteEditDTO.NotifyEnum.yes.equals(notify), user.getId());
+            ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.UPDATE, site.getStatus(), Instant.now(), Instant.now(), SiteEditDTO.NotifyEnum.yes.equals(notify), user.getId(), site.getStallCount());
             if (changeLogDAO.getSiteList(site.getId()).isEmpty()) {
                 changeLogEdit.setChangeType(ChangeType.ADD);
             }
             changeLogDAO.insert(changeLogEdit);
-            messages.add(format("INSERTED changelog for '%s' with status %s", site.getName(), changeLogEdit.getSiteStatus()));
+            messages.add(format("INSERTED changelog for '%s' with status %s and %d stalls", site.getName(), changeLogEdit.getSiteStatus(), changeLogEdit.getStallCount()));
         }
 
         return new SiteEditResponse(site.getId(), messages);
@@ -156,12 +156,12 @@ public class SiteEditController {
     private JsonResponse handleSaveNew(User user, Site site) {
         siteDAO.insert(site);
 
-        ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.ADD, site.getStatus(), Instant.now(), Instant.now(), true, user.getId());
+        ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.ADD, site.getStatus(), Instant.now(), Instant.now(), true, user.getId(), site.getStallCount());
         changeLogDAO.insert(changeLogEdit);
         siteDiffLogger.recordNew(user, site);
         return new SiteEditResponse(site.getId(), Lists.newArrayList(
                 format("INSERTED site '%s'", site.getName()),
-                format("INSERTED changelog for '%s' with status %s", site.getName(), changeLogEdit.getSiteStatus())
+                format("INSERTED changelog for '%s' with status %s and %d stalls", site.getName(), changeLogEdit.getSiteStatus(), changeLogEdit.getStallCount())
         ));
     }
 
@@ -194,10 +194,11 @@ public class SiteEditController {
                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                        @RequestParam LocalDate changeDate,
                                        @RequestParam SiteStatus siteStatus,
+                                       @RequestParam(required = false) Integer stallCount,
                                        @RequestParam boolean notify) {
         User user = Security.user();
         Instant changeDateInstant = changeDate.atTime(12, 0).atZone(LocalDateUtil.ZONE_ID).toInstant();
-        ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(siteId, ChangeType.UPDATE, siteStatus, changeDateInstant, Instant.now(), notify, user.getId());
+        ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(siteId, ChangeType.UPDATE, siteStatus, changeDateInstant, Instant.now(), notify, user.getId(), stallCount);
         if (changeLogDAO.getSiteList(siteId).isEmpty()) {
             changeLogEdit.setChangeType(ChangeType.ADD);
         }
@@ -225,12 +226,13 @@ public class SiteEditController {
                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                        @RequestParam LocalDate changeDate,
                                        @RequestParam SiteStatus siteStatus,
+                                       @RequestParam(required = false) Integer stallCount,
                                        @RequestParam boolean notify) {
         User user = Security.user();
         Instant changeDateInstant = changeDate.atTime(12, 0).atZone(LocalDateUtil.ZONE_ID).toInstant();
 
         // Update procedure
-        int siteId = changeLogDAO.update(changeId, changeDateInstant, siteStatus, notify, user.getId());
+        int siteId = changeLogDAO.update(changeId, changeDateInstant, siteStatus, stallCount, notify, user.getId());
         return changeLogDAO.setFirstToAdded(siteId).stream()
             .map(new ChangeLogEditDTOFunction())
             .sorted(Comparator.comparing(ChangeLogEditDTO::getChangeDate)

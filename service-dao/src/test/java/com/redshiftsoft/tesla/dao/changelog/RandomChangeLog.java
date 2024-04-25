@@ -17,6 +17,7 @@ public class RandomChangeLog {
         changeLogIn.setSiteStatus(random.getElement(SiteStatus.values()));
         changeLogIn.setNotify(random.getBoolean());
         changeLogIn.setUserId(userId);
+        changeLogIn.setStallCount(random.getInteger(0, 200));
         return changeLogIn;
     }
 }

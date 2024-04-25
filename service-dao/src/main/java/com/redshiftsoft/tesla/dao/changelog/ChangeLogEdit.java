@@ -25,24 +25,26 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
     // ADD, UPDATE
     private ChangeType changeType;
 
-    // PERMIT, CONSTRUCTION, OPEN
+    // PERMIT, CONSTRUCTION, OPEN, etc
     private SiteStatus siteStatus;
 
     private boolean notify;
     private int userId;
     private String username;
 
+    private Integer stallCount;
+
     /**
      * Factory method with all fields required to persist.
      */
-    public static ChangeLogEdit toPersist(int siteId, ChangeType changeType, SiteStatus siteStatus, Instant date, Instant modifiedInstant, boolean notify, int userId) {
-        return new ChangeLogEdit(siteId, changeType, siteStatus, date, modifiedInstant, notify, userId);
+    public static ChangeLogEdit toPersist(int siteId, ChangeType changeType, SiteStatus siteStatus, Instant date, Instant modifiedInstant, boolean notify, int userId, Integer stallCount) {
+        return new ChangeLogEdit(siteId, changeType, siteStatus, date, modifiedInstant, notify, userId, stallCount);
     }
 
     public ChangeLogEdit() {
     }
 
-    private ChangeLogEdit(int siteId, ChangeType changeType, SiteStatus siteStatus, Instant date, Instant modifiedInstant, boolean notify, int userId) {
+    private ChangeLogEdit(int siteId, ChangeType changeType, SiteStatus siteStatus, Instant date, Instant modifiedInstant, boolean notify, int userId, Integer stallCount) {
         this.siteId = siteId;
         this.date = date;
         this.changeType = changeType;
@@ -50,12 +52,12 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
         this.modifiedInstant = modifiedInstant;
         this.notify = notify;
         this.userId = userId;
+        this.stallCount = stallCount;
     }
 
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -63,7 +65,6 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
     public Instant getDate() {
         return date;
     }
-
     public void setDate(Instant date) {
         Preconditions.checkArgument(date != null);
         this.date = date;
@@ -72,7 +73,6 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
     public ChangeType getChangeType() {
         return changeType;
     }
-
     public void setChangeType(ChangeType changeType) {
         Preconditions.checkArgument(changeType != null);
         this.changeType = changeType;
@@ -81,7 +81,6 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
     public SiteStatus getSiteStatus() {
         return siteStatus;
     }
-
     public void setSiteStatus(SiteStatus siteStatus) {
         this.siteStatus = siteStatus;
     }
@@ -89,7 +88,6 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
     public int getSiteId() {
         return siteId;
     }
-
     public void setSiteId(int siteId) {
         this.siteId = siteId;
     }
@@ -97,7 +95,6 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
     public Instant getModifiedInstant() {
         return modifiedInstant;
     }
-
     public void setModifiedInstant(Instant modifiedInstant) {
         this.modifiedInstant = modifiedInstant;
     }
@@ -105,7 +102,6 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
     public boolean getNotify() {
         return notify;
     }
-
     public void setNotify(boolean notify) {
         this.notify = notify;
     }
@@ -113,7 +109,6 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
     public int getUserId() {
         return userId;
     }
-
     public void setUserId(int userId) {
         this.userId = userId;
     }
@@ -121,9 +116,15 @@ public class ChangeLogEdit implements Comparable<ChangeLogEdit> {
     public String getUsername() {
         return username;
     }
-
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Integer getStallCount() {
+        return stallCount;
+    }
+    public void setStallCount(Integer stallCount) {
+        this.stallCount = stallCount;
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

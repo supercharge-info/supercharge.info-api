@@ -8,10 +8,8 @@ import com.redshiftsoft.tesla.dao.user.UserConfigMarker;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @Component
 public class UserConfigFromDTOFunction implements Function<UserConfigDTO, UserConfig> {
@@ -19,7 +17,9 @@ public class UserConfigFromDTOFunction implements Function<UserConfigDTO, UserCo
     private static final Logger LOG = Logger.getLogger(UserConfigFromDTOFunction.class.getName());
 
     private static final List<SiteStatus> emptyStatus = ImmutableList.of();
-    private static final List<UserConfigMarker> emptyList = ImmutableList.of();
+    private static final List<UserConfigMarker> emptyMarker = ImmutableList.of();
+    private static final List<String> emptyString = ImmutableList.of();
+    private static final List<Integer> emptyInteger = ImmutableList.of();
 
     @Override
     public UserConfig apply(UserConfigDTO dto) {
@@ -42,13 +42,20 @@ public class UserConfigFromDTOFunction implements Function<UserConfigDTO, UserCo
                 dto.filter.stalls,
                 dto.filter.power,
                 dto.filter.otherEVs,
+                dto.filter.solarCanopy,
+                dto.filter.battery,
+                dto.filter.stallType == null ? emptyString : dto.filter.stallType,
+                dto.filter.plugType == null ? emptyString : dto.filter.plugType,
+                dto.filter.parking == null ? emptyInteger : dto.filter.parking,
+                dto.filter.openTo == null ? emptyInteger : dto.filter.openTo,
+                dto.filter.search,
                 dto.latitude,
                 dto.longitude,
                 dto.zoom,
                 dto.markerType,
                 dto.markerSize,
                 dto.clusterSize,
-                dto.customMarkers == null ? emptyList : dto.customMarkers,
+                dto.customMarkers == null ? emptyMarker : dto.customMarkers,
                 null,
                 -1);
     }

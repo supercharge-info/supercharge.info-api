@@ -17,6 +17,7 @@ public class ChangeLogEditDTOFunction implements Function<ChangeLogEdit, ChangeL
         changeLogDTO.setSiteStatus(cl.getSiteStatus());
         changeLogDTO.setNotify(cl.getNotify());
         changeLogDTO.setUserId(cl.getUserId());
+        changeLogDTO.setStallCount(cl.getStallCount());
         changeLogDTO.setUsername(cl.getUsername());
         changeLogDTO.setDateModified(cl.getModifiedInstant());
 

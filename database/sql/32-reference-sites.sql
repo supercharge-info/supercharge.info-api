@@ -7610,3 +7610,11 @@ INSERT INTO parking (name, description) VALUES
     ('Paid - self parking', 'Fee to park at all times'),
     ('Paid - valet parking', 'Fee to park at all times with valet assistance'),
     ('Other - see notes', 'Details provided in "Access Notes"');
+
+-- Pre-populate open-to options
+-- Changes to the data in this table will likely require a
+-- corresponding code change in SiteDTO.isOpenTo().
+INSERT INTO open_to (name, description) VALUES
+    ('Tesla', 'Open to Tesla only'),
+    ('NACS', 'Open to NACS-compatible vehicles (NACS port or adapter required)'),
+    ('Other', 'Open to other EVs (e.g. CCS, GB/T)');

@@ -33,7 +33,14 @@ public class UserConfig {
 
     private final Integer stallCount;
     private final Integer powerKilowatt;
+    private final List<String> stallType;
+    private final List<String> plugType;
+    private final List<Integer> parkingId;
+    private final List<Integer> openToId;
     private final Boolean otherEVs;
+    private final Boolean solarCanopy;
+    private final Boolean battery;
+    private final String search;
 
     private final Unit unit;
 
@@ -56,7 +63,10 @@ public class UserConfig {
                       Integer dataPageRegionId, Integer dataPageCountryId,
                       Integer chartsPageRegionId, Integer chartsPageCountryId,
                       List<SiteStatus> siteStatus, ChangeType changeType,
-                      Integer stallCount, Integer powerKilowatt, Boolean otherEVs,
+                      Integer stallCount, Integer powerKilowatt,
+                      Boolean otherEVs, Boolean solarCanopy, Boolean battery,
+                      List<String> stallType, List<String> plugType,
+                      List<Integer> parkingId, List<Integer> openToId, String search,
                       Double latitude, Double longitude, Integer zoom,
                       MarkerType markerType, Integer markerSize, Integer clusterSize,
                       List<UserConfigMarker> customMarkers,
@@ -78,6 +88,13 @@ public class UserConfig {
         this.stallCount = stallCount;
         this.powerKilowatt = powerKilowatt;
         this.otherEVs = otherEVs;
+        this.solarCanopy = solarCanopy;
+        this.battery = battery;
+        this.stallType = stallType;
+        this.plugType = plugType;
+        this.parkingId = parkingId;
+        this.openToId = openToId;
+        this.search = search;
         this.unit = unit;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -91,7 +108,7 @@ public class UserConfig {
     }
 
     public static UserConfig create(Unit unit) {
-        return new UserConfig(unit, null, null, Lists.newArrayList(), null, null, null, null, null, null, Lists.newArrayList(), null, null, null, null, null, null, null, null, null, null, Lists.newArrayList(), Instant.now(), 1);
+        return new UserConfig(unit, null, null, Lists.newArrayList(), null, null, null, null, null, null, Lists.newArrayList(), null, null, null, null, null, null, Lists.newArrayList(), Lists.newArrayList(), Lists.newArrayList(), Lists.newArrayList(), null, null, null, null, null, null, null, Lists.newArrayList(), Instant.now(), 1);
     }
 
     // - - - - - - - - - - - - - - - - - - -
@@ -103,6 +120,7 @@ public class UserConfig {
         return "UserConfig{" +
                 "regionId=" + changesPageRegionId +
                 ", countryId=" + changesPageCountryId +
+                ", states=" + String.join(",", states) +
                 ", changesPageRegionId=" + changesPageRegionId +
                 ", changesPageCountryId=" + changesPageCountryId +
                 ", dataPageRegionId=" + dataPageRegionId +
@@ -114,6 +132,13 @@ public class UserConfig {
                 ", stallCount=" + stallCount +
                 ", powerKilowatt=" + powerKilowatt +
                 ", otherEVs=" + otherEVs +
+                ", solarCanopy=" + solarCanopy +
+                ", battery=" + battery +
+                ", stallType=" + String.join(",", stallType) +
+                ", plugType=" + String.join(",", plugType) +
+                ", parkingId=" + (parkingId == null ? "" : parkingId.stream().map(String::valueOf).collect(Collectors.joining(","))) +
+                ", openToId=" + (openToId == null ? "" : openToId.stream().map(String::valueOf).collect(Collectors.joining(","))) +
+                ", search=" + search +
                 ", unit=" + unit +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
@@ -194,6 +219,34 @@ public class UserConfig {
 
     public Optional<Boolean> isOtherEVs() {
         return Optional.ofNullable(otherEVs);
+    }
+
+    public Optional<Boolean> isSolarCanopy() {
+        return Optional.ofNullable(solarCanopy);
+    }
+
+    public Optional<Boolean> isBattery() {
+        return Optional.ofNullable(battery);
+    }
+
+    public Optional<List<String>> getStallType() {
+        return Optional.ofNullable(stallType);
+    }
+
+    public Optional<List<String>> getPlugType() {
+        return Optional.ofNullable(plugType);
+    }
+
+    public Optional<List<Integer>> getParkingId() {
+        return Optional.ofNullable(parkingId);
+    }
+
+    public Optional<List<Integer>> getOpenToId() {
+        return Optional.ofNullable(openToId);
+    }
+
+    public Optional<String> getSearch() {
+        return Optional.ofNullable(search);
     }
 
     public Optional<Unit> getUnit() {

@@ -6,6 +6,8 @@ import com.redshiftsoft.tesla.dao.site.Site;
 import com.redshiftsoft.tesla.dao.site.SiteDAO;
 import com.redshiftsoft.tesla.dao.site.Country;
 import com.redshiftsoft.tesla.dao.site.CountryDAO;
+import com.redshiftsoft.tesla.dao.site.OpenToDAO;
+import com.redshiftsoft.tesla.dao.site.ParkingDAO;
 import com.redshiftsoft.tesla.dao.site.Region;
 import com.redshiftsoft.tesla.dao.site.RegionDAO;
 import com.redshiftsoft.tesla.dao.site.SiteStatus;
@@ -31,6 +33,9 @@ public class TestUserConfigs {
 
     private final RandomUtils random = RandomUtils.fast();
 
+    private final static String StallType[] = {"v2", "v3", "v4", "urban", "other", "accessible", "trailerFriendly"};
+    private final static String PlugType[] = {"tpc", "nacs", "ccs1", "ccs2", "type2", "gbt"};
+
     @Resource
     private RegionDAO regionDAO;
 
@@ -40,11 +45,19 @@ public class TestUserConfigs {
     @Resource
     private SiteDAO siteDAO;
 
+    @Resource
+    private ParkingDAO parkingDAO;
+
+    @Resource
+    private OpenToDAO openToDAO;
+
     public UserConfig create() {
 
         List<Country> allCountries = countryDAO.getAll();
         List<Region> allRegions = regionDAO.getAll();
         List<Site> allSites = siteDAO.getAllSites();
+        List<Integer> allParkingIds = parkingDAO.getAll().stream().map(p->p.getParkingId()).collect(Collectors.toList());
+        List<Integer> allOpenToIds = openToDAO.getAll().stream().map(o->o.getOpenToId()).collect(Collectors.toList());
 
         Integer regionId = random.getElement(allRegions).getId();
         Integer countryId = random.getElement(allCountries.stream().filter(e->e.getRegionId() == regionId).collect(Collectors.toList())).getId();
@@ -67,6 +80,13 @@ public class TestUserConfigs {
         Integer stalls = random.getInteger(2, 20);
         Integer power = random.getInteger(50, 250);
         Boolean otherEVs = random.getBoolean();
+        Boolean solarCanopy = random.getBoolean();
+        Boolean battery = random.getBoolean();
+
+        List<String> stallType = random.getElements(Arrays.asList(StallType), random.getInteger(0, StallType.length));
+        List<String> plugType = random.getElements(Arrays.asList(PlugType), random.getInteger(0, PlugType.length));
+        List<Integer> parkingId = random.getElements(allParkingIds, random.getInteger(0, allParkingIds.size()));
+        List<Integer> openToId = random.getElements(allOpenToIds, random.getInteger(0, allOpenToIds.size()));
 
         Double latitude = random.getBoolean() ? null : random.getDouble(-90d, 90d);
         Double longitude = random.getBoolean() ? null : random.getDouble(-180d, 180d);
@@ -82,7 +102,8 @@ public class TestUserConfigs {
         List<UserConfigMarker> customMarkers = createCustomMarkers(0, 10);
 
         return new UserConfig(unit, regionId, countryId, states, changesRegionId, changesCountryId, dataRegionId, dataCountryId, chartsRegionId, chartsCountryId,
-                statuses, changeType, stalls, power, otherEVs, latitude, longitude, zoom, markerType, markerSize, clusterSize, customMarkers, lastModified, version);
+                statuses, changeType, stalls, power, otherEVs, solarCanopy, battery, stallType, plugType, parkingId, openToId, null,
+                latitude, longitude, zoom, markerType, markerSize, clusterSize, customMarkers, lastModified, version);
     }
 
     public List<UserConfigMarker> createCustomMarkers(int min, int max) {

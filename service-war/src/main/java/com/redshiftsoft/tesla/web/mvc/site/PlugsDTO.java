@@ -2,6 +2,7 @@ package com.redshiftsoft.tesla.web.mvc.site;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.redshiftsoft.util.NumberUtils;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlugsDTO {
@@ -30,6 +31,36 @@ public class PlugsDTO {
         if (GBT != null) total += GBT;
         if (Other != null) total += Other;
         return total;
+    }
+
+    public boolean matches(String search, boolean anyWord) {
+        if (search == null) return true;
+        if (search.indexOf(" ") >= 0) {
+            for (String s : search.split(" ")) {
+                if (this.matches(s)) {
+                    if (anyWord) return true;
+                } else {
+                    if (!anyWord) return false;
+                }
+            }
+            return !anyWord;
+        }
+        return this.matches(search);
+    }
+
+    public boolean matches(String search) {
+        search = search.toLowerCase();
+        if (search.equals("tesla") && (NumberUtils.isPositive(TPC) || NumberUtils.isPositive(NACS))) return true;
+        if (search.equals("tpc") && NumberUtils.isPositive(TPC)) return true;
+        if (search.equals("nacs") && NumberUtils.isPositive(NACS)) return true;
+        if (search.equals("ccs1") && NumberUtils.isPositive(CCS1)) return true;
+        if (search.equals("ccs2") && NumberUtils.isPositive(CCS2)) return true;
+        if (search.equals("ccs") && (NumberUtils.isPositive(CCS1) || NumberUtils.isPositive(CCS2))) return true;
+        if (search.equals("type2") && NumberUtils.isPositive(Type2)) return true;
+        if (search.replace("/", "").equals("gbt") && NumberUtils.isPositive(GBT)) return true;
+        if (search.equals("multi") && NumberUtils.isPositive(Multi)) return true;
+        if (search.startsWith("magic") && (NumberUtils.isPositive(TPC) || NumberUtils.isPositive(NACS)) && NumberUtils.isPositive(CCS1) && NumberUtils.isPositive(Multi)) return true;
+        return false;
     }
 
     public Integer getTPC() {

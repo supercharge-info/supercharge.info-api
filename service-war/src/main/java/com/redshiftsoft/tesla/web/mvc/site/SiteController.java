@@ -65,43 +65,51 @@ public class SiteController {
     @Transactional
     @RequestMapping(method = RequestMethod.GET, value = "/sites")
     @ResponseBody
-    public PageDTO<SiteDTO> pageDataTables(@RequestParam(required = false)
-                                                   Integer draw,
-                                           @RequestParam(required = false, defaultValue = "0")
-                                                   Integer start,
-                                           @RequestParam(required = false, defaultValue = "20")
-                                                   Integer length,
-                                           @RequestParam(required = false)
-                                                   Integer regionId,
-                                           @RequestParam(required = false)
-                                                   Integer countryId,
-                                           @RequestParam(required = false)
-                                                   List<String> state,
-                                           @RequestParam(required = false)
-                                                   List<SiteStatus> status,
-                                           @RequestParam(required = false)
-                                                   Integer stalls,
-                                           @RequestParam(required = false)
-                                                   Integer power,
-                                           @RequestParam(required = false)
-                                                   Boolean otherEVs,
-                                           @RequestParam(required = false, value = "order[0][column]", defaultValue = "0")
-                                                   Integer orderCol,
-                                           @RequestParam(required = false, value = "order[0][dir]")
-                                                   String orderDir
+    public PageDTO<SiteDTO> pageDataTables(
+        @RequestParam(required = false) Integer draw,
+        @RequestParam(required = false, defaultValue = "0") Integer start,
+        @RequestParam(required = false, defaultValue = "20") Integer length,
+        @RequestParam(required = false) Integer regionId,
+        @RequestParam(required = false) Integer countryId,
+        @RequestParam(required = false) List<String> state,
+        @RequestParam(required = false) List<SiteStatus> status,
+        @RequestParam(required = false) Integer stalls,
+        @RequestParam(required = false) Integer power,
+        @RequestParam(required = false) List<String> stallType,
+        @RequestParam(required = false) List<String> plugType,
+        @RequestParam(required = false) List<Integer> parking,
+        @RequestParam(required = false) List<Integer> openTo,
+        @RequestParam(required = false) Boolean otherEVs,
+        @RequestParam(required = false) Boolean solarCanopy,
+        @RequestParam(required = false) Boolean battery,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false, defaultValue = "false") Boolean anyWord,
+        @RequestParam(required = false, value = "order[0][column]", defaultValue = "0") Integer orderCol,
+        @RequestParam(required = false, value = "order[0][dir]") String orderDir
     ) {
         List<SiteDTO> allList = cachingHandler.getValues();
 
         List<SiteDTO> filteredList = allList
                 .stream()
                 .sorted(SiteDTOComparatorFactory.build(orderCol, orderDir))
-                .filter(cl -> regionId == null || Objects.equals(cl.getAddress().getRegionId(), regionId))
-                .filter(cl -> countryId == null || Objects.equals(cl.getAddress().getCountryId(), countryId))
-                .filter(cl -> state == null || state.isEmpty() || state.contains(cl.getAddress().getState()))
-                .filter(cl -> status == null || status.isEmpty() || status.contains(cl.getStatus()))
-                .filter(cl -> stalls == null || cl.getStallCount() >= stalls)
-                .filter(cl -> power == null || cl.getPowerKilowatt() >= power)
-                .filter(cl -> otherEVs == null || cl.isOtherEVs() == otherEVs)
+                .filter(s -> regionId == null || Objects.equals(s.getAddress().getRegionId(), regionId))
+                .filter(s -> countryId == null || Objects.equals(s.getAddress().getCountryId(), countryId))
+                .filter(s -> state == null || state.isEmpty() || state.contains(s.getAddress().getState()))
+                .filter(s -> status == null || status.isEmpty() || status.contains(s.getStatus()) ||
+                            (s.getStatus() == SiteStatus.EXPANDING && status.contains(SiteStatus.OPEN)))
+                .filter(s -> stalls == null || s.getStallCount() >= stalls)
+                .filter(s -> power == null || s.getPowerKilowatt() >= power)
+                .filter(s -> stallType == null || stallType.isEmpty() ||
+                            (s.getStalls() != null && s.getStalls().matches(String.join(" ", stallType), true)))
+                .filter(s -> plugType == null || plugType.isEmpty() ||
+                            (s.getPlugs() != null && s.getPlugs().matches(String.join(" ", plugType), true)))
+                .filter(s -> s.hasParking(parking))
+                .filter(s -> s.isOpenTo(openTo))
+                // TODO: remove "other EVs" boolean filter in favor of "open to" above
+                .filter(s -> otherEVs == null || s.isOtherEVs() == otherEVs)
+                .filter(s -> solarCanopy == null || s.isSolarCanopy() == solarCanopy)
+                .filter(s -> battery == null || s.isBattery() == battery)
+                .filter(s -> search == null || s.matches(search, anyWord))
                 .collect(Collectors.toList());
 
         List<SiteDTO> pageList = filteredList.stream()
@@ -142,7 +150,7 @@ public class SiteController {
     public List<SiteHistoryDTO> siteHistory(@RequestParam("siteId") Integer siteId) {
         return changeLogDAO.getSiteList(siteId).entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
-                .map(e -> new SiteHistoryDTO(e.getKey(), e.getValue()))
+                .map(e -> new SiteHistoryDTO(e.getKey(), e.getValue().getSiteStatus(), e.getValue().getStallCount()))
                 .collect(Collectors.toList());
     }
 

@@ -2,7 +2,7 @@ package com.redshiftsoft.tesla.web.mvc.site;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.redshiftsoft.tesla.dao.site.Stalls;
+import com.redshiftsoft.util.NumberUtils;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StallsDTO {
@@ -28,6 +28,32 @@ public class StallsDTO {
         if (v4 != null) total += v4;
         if (other != null) total += other;
         return total;
+    }
+
+    public boolean matches(String search, boolean anyWord) {
+        if (search == null) return true;
+        if (search.indexOf(" ") >= 0) {
+            for (String s : search.split(" ")) {
+                if (this.matches(s)) {
+                    if (anyWord) return true;
+                } else {
+                    if (!anyWord) return false;
+                }
+            }
+            return !anyWord;
+        }
+        return this.matches(search);
+    }
+
+    public boolean matches(String search) {
+        search = search.toLowerCase();
+        if (search.equals("v2") && NumberUtils.isPositive(v2)) return true;
+        if (search.equals("v3") && NumberUtils.isPositive(v3)) return true;
+        if (search.equals("v4") && NumberUtils.isPositive(v4)) return true;
+        if (search.equals("urban") && NumberUtils.isPositive(urban)) return true;
+        if (search.startsWith("access") && NumberUtils.isPositive(accessible)) return true;
+        if (search.startsWith("trailer") && NumberUtils.isPositive(trailerFriendly)) return true;
+        return false;
     }
 
     public Integer getUrban() {

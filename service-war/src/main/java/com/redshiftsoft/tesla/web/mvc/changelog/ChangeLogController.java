@@ -59,7 +59,7 @@ public class ChangeLogController {
         List<ChangeLogDTO> changes = cachingHandler.getValues();
         Map<LocalDate, Map<SiteStatus, Integer>> changesByDate = new HashMap<>();
         for (ChangeLogDTO change : changes) {
-            LocalDate d = LocalDate.from(change.getDate())
+            LocalDate d = LocalDate.from(change.getDate());
             if (!changesByDate.containsKey(d)) changesByDate.put(d, new HashMap<>());
             Map<SiteStatus, Integer> c = changesByDate.get(d);
             if (!c.containsKey(change.getSiteStatus())) c.put(change.getSiteStatus(), 1);

@@ -16,6 +16,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,12 +55,13 @@ public class ChangeLogController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/changesByDate")
     @ResponseBody
-    public Map<Instant, Map<SiteStatus, Integer>> changesByDate() {
+    public Map<LocalDate, Map<SiteStatus, Integer>> changesByDate() {
         List<ChangeLogDTO> changes = cachingHandler.getValues();
-        Map<Instant, Map<SiteStatus, Integer>> changesByDate = new HashMap<>();
+        Map<LocalDate, Map<SiteStatus, Integer>> changesByDate = new HashMap<>();
         for (ChangeLogDTO change : changes) {
-            if (!changesByDate.containsKey(change.getDate())) changesByDate.put(change.getDate(), new HashMap<>());
-            Map<SiteStatus, Integer> c = changesByDate.get(change.getDate());
+            LocalDate d = LocalDate.from(change.getDate())
+            if (!changesByDate.containsKey(d)) changesByDate.put(d, new HashMap<>());
+            Map<SiteStatus, Integer> c = changesByDate.get(d);
             if (!c.containsKey(change.getSiteStatus())) c.put(change.getSiteStatus(), 1);
             else c.put(change.getSiteStatus(), c.get(change.getSiteStatus()) + 1);
         }

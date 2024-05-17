@@ -14,8 +14,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -45,6 +52,21 @@ public class ChangeLogController {
             changes = changes.subList(0, toIndex);
         }
         return changes;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/changesByDate")
+    @ResponseBody
+    public SortedMap<LocalDate, Map<SiteStatus, Integer>> changesByDate() {
+        List<ChangeLogDTO> changes = cachingHandler.getValues();
+        SortedMap<LocalDate, Map<SiteStatus, Integer>> changesByDate = new TreeMap<>();
+        for (ChangeLogDTO change : changes) {
+            LocalDate d = LocalDate.ofInstant(change.getDate(), ZoneOffset.UTC);
+            if (!changesByDate.containsKey(d)) changesByDate.put(d, new HashMap<>());
+            Map<SiteStatus, Integer> c = changesByDate.get(d);
+            if (!c.containsKey(change.getSiteStatus())) c.put(change.getSiteStatus(), 1);
+            else c.put(change.getSiteStatus(), c.get(change.getSiteStatus()) + 1);
+        }
+        return changesByDate;
     }
 
     /**

@@ -30,11 +30,10 @@ public class SiteStallCountDAO extends BaseDAO {
 
     public List<StallCount> getCounts() {
         String SQL = "" +
-                "select date_part('year', day) || '-' || date_part('week', day), max(day), max(count) \n" +
+                "select date_part('year', day) || '-' || date_part('doy', day), max(day), max(count) \n" +
                 "from site_stall_count\n" +
-                "group by date_part('year', day) || '-' || date_part('week', day)\n" +
+                "group by date_part('year', day) || '-' || date_part('doy', day)\n" +
                 "order by max(day) asc;";
-
 
         return getJdbcTemplate().query(SQL, STALL_COUNT_ROW_MAPPER);
     }

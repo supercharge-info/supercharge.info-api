@@ -67,7 +67,7 @@ public class FeatureController {
     @Transactional
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public List<FeatureDTO> insert() {
+    public List<FeatureDTO> list() {
         return featureDAO.list().stream().map(FeatureFunctions.TO_DTO).collect(Collectors.toList());
     }
 

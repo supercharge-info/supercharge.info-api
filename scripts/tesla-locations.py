@@ -47,13 +47,13 @@ print(';')
 print(f'-- {nacs} of {len(locations)} locations are NACS')
 print("""
 UPDATE site
-SET other_evs = true, plugs_nacs = COALESCE(plugs_nacs, 0) + plugs_tpc, plugs_tpc = 0
+SET other_evs = true, plugs_nacs = COALESCE(plugs_nacs, 0) + COALESCE(plugs_tpc, 0), plugs_tpc = 0
 FROM nacsflags n
 WHERE site.location_id = n.location_id
 AND n.nacs = true
 AND (site.plugs_nacs > 0 OR site.plugs_tpc > 0);
       
 UPDATE site
-SET plugs_tpc = COALESCE(plugs_tpc, 0) + plugs_nacs, plugs_nacs = 0
+SET plugs_tpc = COALESCE(plugs_tpc, 0) + COALESCE(plugs_nacs, 0), plugs_nacs = 0
 WHERE plugs_nacs > 0 AND other_evs = false;
 """)

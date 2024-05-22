@@ -283,4 +283,20 @@ public class SiteEditController {
     }
 
 
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //
+    // get distinct list of hosts (facilityName) across all sites
+    //
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @PreAuthorize("hasAnyRole('editor')")
+    @RequestMapping(method = RequestMethod.GET, value = "/allHosts")
+    @ResponseBody
+    @Transactional
+    public List<String> allHosts() {
+        return siteDAO.getDistinctHosts().stream()
+                .collect(Collectors.toList());
+    }
+
+
 }

@@ -131,6 +131,7 @@ public class SiteEditController {
 
         Site oldSite = siteDAO.getById(site.getId());
         SiteStatus oldSiteStatus = oldSite.getStatus();
+        int oldStallCount = oldSite.getStallCount();
 
         boolean changes = siteDiffLogger.record(user, oldSite, site);
         if (!changes) {
@@ -141,7 +142,7 @@ public class SiteEditController {
         messages.add(format("UPDATED site '%s'", site.getName()));
         siteDAO.update(site);
 
-        if (oldSiteStatus != site.getStatus() && !SiteEditDTO.NotifyEnum.no.equals(notify)) {
+        if ((oldSiteStatus != site.getStatus() || oldStallCount != site.getStallCount()) && !SiteEditDTO.NotifyEnum.no.equals(notify)) {
             ChangeLogEdit changeLogEdit = ChangeLogEdit.toPersist(site.getId(), ChangeType.UPDATE, site.getStatus(), Instant.now(), Instant.now(), SiteEditDTO.NotifyEnum.yes.equals(notify), user.getId(), site.getStallCount());
             if (changeLogDAO.getSiteList(site.getId()).isEmpty()) {
                 changeLogEdit.setChangeType(ChangeType.ADD);
@@ -278,6 +279,22 @@ public class SiteEditController {
     public List<ChangeLogEditDTO> listChangeEdits(@RequestParam int siteId) {
         return changeLogDAO.getChangeLogEdits(siteId).stream()
                 .map(new ChangeLogEditDTOFunction())
+                .collect(Collectors.toList());
+    }
+
+
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //
+    // get distinct list of hosts (facilityName) across all sites
+    //
+    // - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @PreAuthorize("hasAnyRole('editor')")
+    @RequestMapping(method = RequestMethod.GET, value = "/allHosts")
+    @ResponseBody
+    @Transactional
+    public List<String> allHosts() {
+        return siteDAO.getDistinctHosts().stream()
                 .collect(Collectors.toList());
     }
 

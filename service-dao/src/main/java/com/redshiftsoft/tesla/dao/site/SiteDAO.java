@@ -3,6 +3,8 @@ package com.redshiftsoft.tesla.dao.site;
 
 import com.google.common.collect.Maps;
 import com.redshiftsoft.tesla.dao.BaseDAO;
+
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -74,5 +76,10 @@ public class SiteDAO extends BaseDAO {
         Site site = getById(siteId);
         addressDAO.delete(site.getAddress().getId());
         getJdbcTemplate().update("DELETE FROM site WHERE site_id=?", siteId);
+    }
+
+    public List<String> getDistinctHosts() {
+        String SQL = "SELECT DISTINCT facility_name FROM site WHERE facility_name IS NOT NULL ORDER BY facility_name";
+        return getJdbcTemplate().queryForList(SQL, String.class);
     }
 }

@@ -19,13 +19,23 @@ def formatStats(data, option=''):
     if not option:
         lines.append('\u2022 \U0001F4CD {} site{} opened'.format(data['sites'], 's' if data['sites'] != 1 else ''))
         lines.append('\u2022 \U0001F50C {} stall{} opened'.format(data['stalls'], 's' if data['stalls'] != 1 else ''))
-        lines.append('\u2022 \U0001F6A7 {} site{} newly under construction'.format(data['construction'], 's' if data['construction'] != 1 else ''))
-        lines.append('\u2022 \U0001F4DD {} site{} newly permitted'.format(data['permit'], 's' if data['permit'] != 1 else ''))
+        if data['expanded'] != 0:
+            lines.append('\u2022 \U0001F4C8 {} site{} expanded by {} stall{}'
+                 .format(data['expanded'], 's' if data['expanded'] != 1 else '', data['expandedStalls'], 's' if data['expandedStalls'] != 1 else ''))
+        if data['expanding'] != 0:
+            lines.append('\u2022 \U000026A0 {} site{} began expansion'.format(data['expanding'], 's' if data['expanding'] != 1 else ''))
+        lines.append('\u2022 \U0001F6A7 {} site{} began construction'.format(data['construction'], 's' if data['construction'] != 1 else ''))
+        lines.append('\u2022 \U0001F4DD {} more site{} planned'.format(data['permit'], 's' if data['permit'] != 1 else ''))
     elif option == 'noemoji':
         lines.append('\xa0\u2022 {} site{} opened'.format(data['sites'], 's' if data['sites'] != 1 else ''))
         lines.append('\xa0\u2022 {} stall{} opened'.format(data['stalls'], 's' if data['stalls'] != 1 else ''))
-        lines.append('\xa0\u2022 {} site{} newly under construction'.format(data['construction'], 's' if data['construction'] != 1 else ''))
-        lines.append('\xa0\u2022 {} site{} newly permitted'.format(data['permit'], 's' if data['permit'] != 1 else ''))
+        if data['expanded'] != 0:
+            lines.append('\xa0\u2022 {} site{} expanded by {} stall{}'
+                .format(data['expanded'], 's' if data['expanded'] != 1 else '', data['expandedStalls'], 's' if data['expandedStalls'] != 1 else ''))
+        if data['expanding'] != 0:
+            lines.append('\xa0\u2022 {} site{} began expansion'.format(data['expanding'], 's' if data['expanding'] != 1 else ''))
+        lines.append('\xa0\u2022 {} site{} began construction'.format(data['construction'], 's' if data['construction'] != 1 else ''))
+        lines.append('\xa0\u2022 {} more site{} planned'.format(data['permit'], 's' if data['permit'] != 1 else ''))
     elif option == 'short':
         lines.append('{} site{} opened ({} stall{})'.format(data['sites'], 's' if data['sites'] != 1 else '', data['stalls'], 's' if data['stalls'] != 1 else ''))
     else:
@@ -71,8 +81,11 @@ changes = list(filter(recentChanges, helpers.getChanges()))
 report = {
     'sites': len(sites),
     'stalls': sum(c['stallCount'] for c in sites),
-    'construction': sum(1 for c in changes if c['siteStatus'] == 'CONSTRUCTION'),
-    'permit': sum(1 for c in changes if c['siteStatus'] == 'PERMIT'),
+    'expanded': sum(1 for c in changes if c['siteStatus'] == 'OPEN' and c['prevStatus'] == 'EXPANDING' and c['prevCount'] < c['stallCount']),
+    'expandedStalls': sum(c['stallCount'] - c['prevCount'] for c in changes if c['siteStatus'] == 'OPEN' and c['prevStatus'] == 'EXPANDING' and c['prevCount'] < c['stallCount']),
+    'expanding': sum(1 for c in changes if c['siteStatus'] == 'EXPANDING' and c['prevStatus'] != 'EXPANDING'),
+    'construction': sum(1 for c in changes if c['siteStatus'] == 'CONSTRUCTION' and c['prevStatus'] != 'CONSTRUCTION'),
+    'permit': sum(1 for c in changes if c['siteStatus'] == 'PERMIT' and c['prevStatus'] not in ['PLAN', 'PERMIT']),
     'regions': {}
 }
 
@@ -82,6 +95,9 @@ for s in sites:
         report['regions'][s['address']['region']] = {
             'sites': 0,
             'stalls': 0,
+            'expanded': 0,
+            'expandedStalls': 0,
+            'expanding': 0,
             'construction': 0,
             'permit': 0,
             'countries': {}
@@ -101,13 +117,21 @@ for c in changes:
         report['regions'][c['region']] = {
             'sites': 0,
             'stalls': 0,
+            'expanded': 0,
+            'expandedStalls': 0,
+            'expanding': 0,
             'construction': 0,
             'permit': 0,
             'countries': {}
         }
-    if c['siteStatus'] == 'CONSTRUCTION':
+    if c['siteStatus'] == 'CONSTRUCTION' and c['prevStatus'] != 'CONSTRUCTION':
         report['regions'][c['region']]['construction'] += 1
-    elif c['siteStatus'] == 'PERMIT':
+    elif c['siteStatus'] == 'OPEN' and c['prevStatus'] == 'EXPANDING' and c['prevCount'] < c['stallCount']:
+        report['regions'][c['region']]['expanded'] += 1
+        report['regions'][c['region']]['expandedStalls'] += c['stallCount'] - c['prevCount']
+    elif c['siteStatus'] == 'EXPANDING' and c['prevStatus'] != 'EXPANDING':
+        report['regions'][c['region']]['expanding'] += 1
+    elif c['siteStatus'] in ['PLAN', 'PERMIT'] and c['prevStatus'] not in ['PLAN', 'PERMIT']:
         report['regions'][c['region']]['permit'] += 1
 
 body = {
@@ -134,4 +158,13 @@ if configProps.keys() & {'smtp.host', 'smtp.port', 'smtp.user', 'smtp.password',
     # Send email
     helpers.sendEmails([msg], configProps)
 else:
-    print("Couldn't find full email server information")
+    print("Couldn't find full email server information... Writing to screen instead")
+    print(body['datespan'] + ':')
+    for a in formatStats(report):
+        print(a)
+    print('Regional:')
+    for a in formatStats(report, 'region'):
+        print(a) 
+    print('National:')
+    for a in formatStats(report, 'country'):
+        print(a) 
